@@ -1,28 +1,35 @@
 package com.softwerke.menu;
 
-import static com.softwerke.console.ConsolePipe.*;
+import com.softwerke.console.IOPipe;
 
-class Menu {
+import static com.softwerke.StringPool.WRONG_COMMAND_TEXT;
+
+public class Menu {
 
     private MenuAction[] actions;
     private String[] descriptionText;
+    private static int rollback = 0;
 
-    Menu(MenuAction[] actions, String[] descriptionText) {
+    protected Menu(MenuAction[] actions, String[] descriptionText) {
         if (actions.length > 9) throw new IllegalArgumentException();
         this.actions = actions;
         this.descriptionText = descriptionText;
     }
 
-    public void executeCommand() {
+    protected static void incrementRollback() {
+        rollback++;
+    }
+
+    public void execute() {
         while (true) {
-            printStringArray(descriptionText);
-            String command = getCommand();
+            IOPipe.printStringArray(descriptionText);
+            String command = IOPipe.getCommand();
             int parsedCommand;
             try {
                 parsedCommand = Integer.parseInt(command);
             } catch (NumberFormatException e) {
                 /* Input error */
-                printWithDelay(WRONG_COMMAND_TEXT);
+                IOPipe.printLine(WRONG_COMMAND_TEXT);
                 continue;
             }
             if (parsedCommand == 0) {
@@ -31,10 +38,14 @@ class Menu {
             }
             if (parsedCommand > actions.length) {
                 /* Input error */
-                printWithDelay(WRONG_COMMAND_TEXT);
+                IOPipe.printLine(WRONG_COMMAND_TEXT);
                 continue;
             }
             actions[parsedCommand - 1].runItem();
+            if (rollback > 0) {
+                rollback--;
+                return;
+            }
         }
     }
 

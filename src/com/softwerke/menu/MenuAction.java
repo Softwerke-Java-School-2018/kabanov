@@ -1,5 +1,5 @@
 package com.softwerke.menu;
 
-interface MenuAction {
+public interface MenuAction {
     void runItem();
 }

@@ -1,10 +1,13 @@
 package com.softwerke.tables;
 
-import com.softwerke.masklist.DeviceList;
-import com.softwerke.masklist.PersonList;
-import com.softwerke.masklist.SaleList;
+import com.softwerke.list.DeviceList;
+import com.softwerke.list.PersonList;
+import com.softwerke.list.SaleList;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Database {
     private final PersonList personList;
@@ -16,6 +19,8 @@ public class Database {
         deviceList = new DeviceList();
         salesHistory = new SaleList();
 
+
+        /* DEBUG CODE */
         addPerson("Vasiliy", "Petrov", LocalDate.of(1971, 12, 5));
         addPerson("Peter", "Zaycev", LocalDate.of(1962, 7, 16));
         addPerson("Ivan", "Smirnov", LocalDate.of(1970, 2, 27));
@@ -30,6 +35,16 @@ public class Database {
         addDevice("Walkman 1", "Sony", Color.GRAY, LocalDate.of(2009, 9, 14), DeviceType.PLAYER, "7990");
         addDevice("Pavillion G6", "HP", Color.BLACK, LocalDate.of(2015, 8, 21), DeviceType.LAPTOP, "45990");
         addDevice("SHIELD K1", "NVIDIA", Color.BLACK, LocalDate.of(2016, 3, 1), DeviceType.TABLET, "24990");
+
+        Random rand = new Random(System.currentTimeMillis());
+        for (int i = 0; i < 10; i++) {
+            ArrayList<SeveralDevices> order = new ArrayList<>();
+            for (int j = 0; j < rand.nextInt(5); j++)
+                order.add(new SeveralDevices(deviceList.get(rand.nextInt(deviceList.size())), rand.nextInt(3) + 1));
+            if (!order.isEmpty())
+                sell(personList.get(rand.nextInt(personList.size())), order, LocalDate.of(rand.nextInt(10) + 2000, rand.nextInt(11) + 1, rand.nextInt(27) + 1));
+        }
+        /* END OF DEBUG CODE */
     }
 
     public void addPerson(String firstName, String lastName, LocalDate birthDate) {
@@ -41,19 +56,39 @@ public class Database {
         deviceList.add(new Device(model, vendor, color, productionDate, deviceType, price, deviceList.size()));
     }
 
-    void sell(int personID, SeveralDevices[] devicesToSell, LocalDate saleDate) {
-        salesHistory.add(new Sale(personID, devicesToSell, saleDate, deviceList));
-    }
-
-    public DeviceList getDeviceList() {
-        return deviceList.clone();
+    public void sell(Person person, List<SeveralDevices> orderItems, LocalDate date) {
+        salesHistory.add(new Sale(person, orderItems, date, salesHistory.size()));
     }
 
     public PersonList getPersonList() {
         return personList.clone();
     }
 
+    public DeviceList getDeviceList() {
+        return deviceList.clone();
+    }
+
+    public SaleList getSalesHistory() {
+        return salesHistory.clone();
+    }
+
     public void updatePerson(int id, Person person) {
         personList.set(id, person);
+    }
+
+    public void updatePerson(Person person) {
+        updatePerson(person.getId(), person);
+    }
+
+    public void updateDevice(Device device) {
+        updateDevice(device.getId(), device);
+    }
+
+    public void updateDevice(int id, Device device) {
+        deviceList.set(id, device);
+    }
+
+    public void updateSell(int id, Sale sale) {
+        salesHistory.set(id, sale);
     }
 }

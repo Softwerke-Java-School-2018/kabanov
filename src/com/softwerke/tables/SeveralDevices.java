@@ -2,22 +2,26 @@ package com.softwerke.tables;
 
 import java.math.BigDecimal;
 
-class SeveralDevices {
-    private final int deviceID;
+public class SeveralDevices {
+    private final Device device;
     private final int amount;
     private final BigDecimal internalSum;
 
-    public SeveralDevices(int deviceID, int amount, BigDecimal internalSum) {
-        this.deviceID = deviceID;
+    public SeveralDevices(Device device, int amount) {
+        this.device = device;
         this.amount = amount;
-        this.internalSum = internalSum;
+        this.internalSum = device.getPrice().multiply(BigDecimal.valueOf(amount));
     }
 
     public int getAmount() {
         return amount;
     }
 
-    public int getDeviceID() {
-        return deviceID;
+    public Device getDevice() {
+        return device;
+    }
+
+    public BigDecimal getInternalSum() {
+        return internalSum;
     }
 }
