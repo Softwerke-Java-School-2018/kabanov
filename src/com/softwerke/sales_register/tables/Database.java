@@ -1,23 +1,20 @@
 package com.softwerke.tables;
 
-import com.softwerke.list.DeviceList;
-import com.softwerke.list.PersonList;
-import com.softwerke.list.SaleList;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class Database {
-    private final PersonList personList;
-    private final DeviceList deviceList;
-    private final SaleList salesHistory;
+    private final List<Person> personList;
+    private final List<Device> deviceList;
+    private final List<Sale> salesHistory;
 
     public Database() {
-        personList = new PersonList();
-        deviceList = new DeviceList();
-        salesHistory = new SaleList();
+        personList = new ArrayList<>();
+        deviceList = new ArrayList<>();
+        salesHistory = new ArrayList<>();
 
 
         /* DEBUG CODE */
@@ -60,24 +57,20 @@ public class Database {
         salesHistory.add(new Sale(person, orderItems, date, salesHistory.size()));
     }
 
-    public PersonList getPersonList() {
-        return personList.clone();
+    public Sale getSale(int id) {
+        return salesHistory.get(id);
     }
 
-    public DeviceList getDeviceList() {
-        return deviceList.clone();
-    }
-
-    public SaleList getSalesHistory() {
-        return salesHistory.clone();
-    }
-
-    public void updatePerson(int id, Person person) {
-        personList.set(id, person);
+    public Device getDevice(int id) {
+        return deviceList.get(id);
     }
 
     public void updatePerson(Person person) {
         updatePerson(person.getId(), person);
+    }
+
+    public void updatePerson(int id, Person person) {
+        personList.set(id, person);
     }
 
     public void updateDevice(Device device) {
@@ -90,5 +83,17 @@ public class Database {
 
     public void updateSell(int id, Sale sale) {
         salesHistory.set(id, sale);
+    }
+
+    public Stream<Device> getDeviceStream() {
+        return deviceList.stream();
+    }
+
+    public Stream<Person> getPersonStream() {
+        return personList.stream();
+    }
+
+    public Stream<Sale> getSaleStream() {
+        return salesHistory.stream();
     }
 }

@@ -1,5 +1,11 @@
 package com.softwerke.menu;
 
-public interface MenuAction {
-    void runItem();
+public abstract class MenuItem {
+    final String label;
+
+    protected MenuItem(String label) {
+        this.label = label;
+    }
+
+    protected abstract void runItem();
 }

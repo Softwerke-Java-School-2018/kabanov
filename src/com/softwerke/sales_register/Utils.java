@@ -1,21 +1,25 @@
 package com.softwerke;
 
 import com.softwerke.console.IOPipe;
-import com.softwerke.list.PersonList;
+import com.softwerke.tables.Device;
 import com.softwerke.tables.Person;
+import com.softwerke.tables.Sale;
 import com.softwerke.tables.SeveralDevices;
 
 import java.math.BigDecimal;
-import java.util.*;
-
-import static com.softwerke.StringPool.*;
-import static com.softwerke.console.IOPipe.getNotNullLineByDialog;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Utils {
 
     public static String[] readRangeFromConsole(String message, String defaultMinValue, String defaultMaxValue) {
         while (true) {
-            String range = getNotNullLineByDialog(message);
+            String range = IOPipe.getNotNullLineByDialog(message);
             if (range.trim().equals("*")) return new String[]{defaultMinValue, defaultMaxValue};
             else {
                 String[] splitRange = range.split("\\s+");
@@ -28,7 +32,7 @@ public class Utils {
                         return new String[]{splitRange[0], splitRange[0]};
                     default:
                         /* Gained something else: input error */
-                        IOPipe.printLine(WRONG_DATA_TEXT);
+                        IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
                 }
             }
         }
@@ -37,7 +41,7 @@ public class Utils {
     public static <T extends Enum<T>> ArrayList<T> getEnumArrayFromString(Class<T> clazz, String message) {
         while (true) {
             /* Getting enum array */
-            String enumList = getNotNullLineByDialog(message);
+            String enumList = IOPipe.getNotNullLineByDialog(message);
             /* If read line is an asterisk wildcard, return all the enumerators */
             if (enumList.trim().equals("*")) return new ArrayList<>(Arrays.asList(clazz.getEnumConstants()));
             else {
@@ -50,39 +54,20 @@ public class Utils {
                         ret.add(T.valueOf(clazz, enumName));
                     return ret;
                 } catch (IllegalArgumentException e) {
-                    IOPipe.printLine(WRONG_DATA_TEXT);
+                    IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
                     // continue;
                 }
             }
         }
     }
 
-    public static boolean checkListSize(int size) {
+    public static boolean checkListSize(long size) {
         /* List contains a lot of elements -> keep filtering */
         if (size > 1) return false;
 
         /* List contains 0 or 1 element -> notify and stop filtering */
-        IOPipe.printLine((size == 0) ? LIST_IS_EMPTY_TEXT : LIST_CONTAINS_ONE_ITEM_TEXT);
+        IOPipe.printLine((size == 0) ? IOPipe.LIST_IS_EMPTY_TEXT : IOPipe.LIST_CONTAINS_ONE_ITEM_TEXT);
         return true;
-    }
-
-    public static <T> void updateList(ArrayList<T> oldList, ArrayList<T> newList) {
-        oldList.clear();
-        oldList.addAll(newList);
-    }
-
-    public static <T> void updateList(ArrayList<T> oldList, T value) {
-        oldList.clear();
-        oldList.add(value);
-    }
-
-    public static boolean isInteger(String s) {
-        Scanner sc = new Scanner(s.trim());
-        if (!sc.hasNextInt()) return false;
-        // we know it starts with a valid character, now make sure
-        // there's nothing left:
-        sc.nextInt();
-        return !sc.hasNext();
     }
 
     public static String leftPad(String text, int length) {
@@ -93,13 +78,15 @@ public class Utils {
         return String.format("%1$-" + length + "s", text);
     }
 
-    public static <T> boolean inBetween(Comparable<T> leftLimit, T value, Comparable<T> rightLimit) {
+    public static <T> boolean isBetween(Comparable<T> leftLimit, T value, Comparable<T> rightLimit) {
         return rightLimit.compareTo(value) > -1 && leftLimit.compareTo(value) < 1;
     }
 
-    public static Person selectPerson(PersonList personList) {
+    public static Person selectPerson(Stream<Person> personStream) {
+        ArrayList<Person> personList = personStream.filter(person -> person.getId() != -1)
+                .collect(Collectors.toCollection(ArrayList::new));
         while (true) {
-            int personListSize = personList.getNotDeletedItemsNumber();
+            int personListSize = personList.size();
             switch (personListSize) {
                 case 0:
                     IOPipe.printLine("Person list is empty. Nothing to choose from.");
@@ -111,26 +98,40 @@ public class Utils {
                 default:
                     IOPipe.printLine("Found " + personList.size() + " persons.");
                     String personIdOrName = IOPipe.getNotNullLineByDialog("Enter person ID or name part:");
-                    if (Utils.isInteger(personIdOrName)) {
-                        try {
-                            int readId = Integer.parseInt(personIdOrName);
-                            Person person = personList.get(readId);
-                            if (readId != person.getId()) {
-                                /* ID belongs to the deleted person */
-                                IOPipe.printLine(ENTRY_IS_DELETED);
-                                return null;
-                            }
-                            Utils.updateList(personList, person);
-                            continue;
-                        } catch (IndexOutOfBoundsException e) {
-                            IOPipe.printLine(WRONG_DATA_TEXT);
-                            return null;
-                        }
+                    try {
+                        personList.removeIf(person -> person.getId() != Integer.parseInt(personIdOrName));
+                    } catch (NumberFormatException e) {
+                        personList.removeIf(person ->
+                                !person.getFirstNameLowerCase().contains(personIdOrName) &&
+                                        !person.getLastNameLowerCase().contains(personIdOrName));
                     }
-                    PersonList searchByFirstName = personList.clone().maskByPersonFirstName(personIdOrName);
-                    PersonList searchByLastName = personList.clone().maskByPersonLastName(personIdOrName);
-                    searchByFirstName.merge(searchByLastName);
-                    Utils.updateList(personList, searchByFirstName);
+            }
+        }
+    }
+
+    public static Device selectDevice(Stream<Device> deviceStream) {
+        ArrayList<Device> deviceList = deviceStream.filter(device -> device.getId() != -1)
+                .collect(Collectors.toCollection(ArrayList::new));
+        while (true) {
+            int personListSize = deviceList.size();
+            switch (personListSize) {
+                case 0:
+                    IOPipe.printLine("Person list is empty. Nothing to choose from.");
+                    return null;
+                case 1:
+                    Device tempDevice = deviceList.get(0);
+                    IOPipe.printLine("Found one person: " + tempDevice);
+                    return tempDevice;
+                default:
+                    IOPipe.printLine("Found " + deviceList.size() + " persons.");
+                    String deviceIdOrName = IOPipe.getNotNullLineByDialog("Enter device ID or vendor / model name part:");
+                    try {
+                        deviceList.removeIf(person -> person.getId() != Integer.parseInt(deviceIdOrName));
+                    } catch (NumberFormatException e) {
+                        deviceList.removeIf(device ->
+                                !device.getModelLowerCase().contains(deviceIdOrName) &&
+                                        !device.getVendorLowerCase().contains(deviceIdOrName));
+                    }
             }
         }
     }
@@ -153,5 +154,33 @@ public class Utils {
         String formattedTotal = Utils.leftPad(total.toString(), 43);
         IOPipe.printLine(" Total:" + formattedTotal);
         IOPipe.printLine();
+    }
+
+    public static LocalDate[] convertToDate(String... dates) {
+        LocalDate[] returning = new LocalDate[dates.length];
+        for (int i = 0; i < dates.length; i++)
+            returning[i] = LocalDate.parse(dates[i].replaceAll("\\D+", "-"),
+                    DateTimeFormatter.ofPattern("d-MM-yyyy"));
+        return returning;
+    }
+
+    public static int[] convertToInt(String... ints) {
+        int[] returning = new int[ints.length];
+        for (int i = 0; i < ints.length; i++)
+            returning[i] = Integer.parseInt(ints[i]);
+        return returning;
+    }
+
+    public static BigDecimal[] convertToBigDecimal(String... bigDecimals) {
+        BigDecimal[] returning = new BigDecimal[bigDecimals.length];
+        for (int i = 0; i < bigDecimals.length; i++)
+            returning[i] = new BigDecimal(bigDecimals[i]);
+        return returning;
+    }
+
+    public static void printReceipt(Sale sale) {
+        IOPipe.printLine(" Shopping date: " + sale.getSaleDate());
+        IOPipe.printLine(" Customer name: " + sale.getPerson());
+        Utils.printShopList(sale.getSeveralDevices());
     }
 }

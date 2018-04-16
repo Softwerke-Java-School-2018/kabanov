@@ -1,16 +1,12 @@
 package com.softwerke.tables;
 
-import com.softwerke.list.HasId;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static com.softwerke.Utils.leftPad;
-
-/* Immutable */
-public class Device extends HasId {
+public class Device {
     public static final Device DELETED_DEVICE =
             new Device("N/A", "N/A", Color.BLACK, LocalDate.now(), DeviceType.PHONE, "0", -1);
+    private final int id;
     private final String model;
     private final String vendor;
     private final String modelLowerCase;
@@ -21,7 +17,7 @@ public class Device extends HasId {
     private final BigDecimal price;
 
     public Device(String model, String vendor, Color color, LocalDate productionDate, DeviceType deviceType, String price, int id) {
-        super(id);
+        this.id = id;
         this.model = model;
         this.vendor = vendor;
         this.modelLowerCase = model.toLowerCase();
@@ -32,23 +28,14 @@ public class Device extends HasId {
         this.price = new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
-    public String toFormattedString() {
-        return leftPad(String.valueOf(id), 3) + " | " +
-                leftPad(vendor + " " + model, 21) + " | " +
-                leftPad(color.toString(), 9) + " | " +
-                leftPad(deviceType.toString(), 6) + " | " +
-                productionDate + " | " +
-                leftPad(price.toString(), 9);
+    public int getId() {
+        return id;
     }
 
     public BigDecimal getPrice() {
         return price;
     }
 
-    @Override
-    public String toString() {
-        return vendor + " " + model + " @ " + color;
-    }
 
     public LocalDate getProductionDate() {
         return productionDate;
@@ -70,27 +57,27 @@ public class Device extends HasId {
         return deviceType;
     }
 
-    public Device setModelName(String newName) {
+    public Device cloneWithNewModelName(String newName) {
         return new Device(newName, vendor, color, productionDate, deviceType, price.toString(), id);
     }
 
-    public Device setVendorName(String newName) {
+    public Device cloneWithNewVendorName(String newName) {
         return new Device(model, newName, color, productionDate, deviceType, price.toString(), id);
     }
 
-    public Device setColor(Color newColor) {
+    public Device cloneWithNewColor(Color newColor) {
         return new Device(model, vendor, newColor, productionDate, deviceType, price.toString(), id);
     }
 
-    public Device setType(DeviceType newType) {
+    public Device cloneWithNewType(DeviceType newType) {
         return new Device(model, vendor, color, productionDate, newType, price.toString(), id);
     }
 
-    public Device setProductionDate(LocalDate newProductionDate) {
+    public Device cloneWithNewProductionDate(LocalDate newProductionDate) {
         return new Device(model, vendor, color, newProductionDate, deviceType, price.toString(), id);
     }
 
-    public Device setPrice(String newPrice) {
+    public Device cloneWithNewPrice(String newPrice) {
         return new Device(model, vendor, color, productionDate, deviceType, newPrice, id);
     }
 
@@ -100,5 +87,10 @@ public class Device extends HasId {
 
     public String getVendorLowerCase() {
         return vendorLowerCase;
+    }
+
+    @Override
+    public String toString() {
+        return vendor + " " + model + " @ " + color;
     }
 }

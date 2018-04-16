@@ -1,66 +1,92 @@
 package com.softwerke.menu.menu_items;
 
 import com.softwerke.console.IOPipe;
-import com.softwerke.list.comparators.*;
 import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuAction;
+import com.softwerke.menu.MenuItem;
+import com.softwerke.tables.Device;
 
-import static com.softwerke.StringPool.ENTER_SORT_ORDER_TEXT;
-import static com.softwerke.StringPool.SORT_DEVICE_LIST_COMMANDS;
-import static com.softwerke.menu.menu_items.MenuInternalData.searchDeviceList;
+import java.util.Comparator;
 
 class SortDeviceListMenu extends Menu {
     SortDeviceListMenu() {
         /* Sort device list menu */
-        super(new MenuAction[]{
-                /* Sort by ID */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchDeviceList.sort(new HasIdComparator<>(isOrderAscending));
-                    incrementRollback();
+        super("-- Sort device list menu --", new MenuItem[]{
+                new MenuItem("Sort by ID") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.deviceList.sort(isOrderAscending
+                                ? Comparator.comparingInt(Device::getId)
+                                : Comparator.comparingInt(Device::getId).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by production date */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchDeviceList.sort(new DeviceProductionDateComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by production date") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.deviceList.sort(isOrderAscending
+                                ? Comparator.comparing(Device::getProductionDate)
+                                : Comparator.comparing(Device::getProductionDate).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by vendor name */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchDeviceList.sort(new DeviceVendorComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by vendor name") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.deviceList.sort(isOrderAscending
+                                ? Comparator.comparing(Device::getVendor)
+                                : Comparator.comparing(Device::getVendor).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by model name */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchDeviceList.sort(new DeviceModelComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by model name") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.deviceList.sort(isOrderAscending
+                                ? Comparator.comparing(Device::getModel)
+                                : Comparator.comparing(Device::getModel).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by color */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchDeviceList.sort(new DeviceColorComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by color") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.deviceList.sort(isOrderAscending
+                                ? Comparator.comparing(Device::getColor)
+                                : Comparator.comparing(Device::getColor).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by device type */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchDeviceList.sort(new DeviceTypeComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by device type") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.deviceList.sort(isOrderAscending
+                                ? Comparator.comparing(Device::getDeviceType)
+                                : Comparator.comparing(Device::getDeviceType).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by price */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchDeviceList.sort(new DevicePriceComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by price") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.deviceList.sort(isOrderAscending
+                                ? Comparator.comparing(Device::getPrice)
+                                : Comparator.comparing(Device::getPrice).reversed());
+                        incrementRollback();
+                    }
                 },
-        }, SORT_DEVICE_LIST_COMMANDS);
+        });
     }
 }

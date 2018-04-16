@@ -2,47 +2,52 @@ package com.softwerke.menu.menu_items;
 
 import com.softwerke.console.IOPipe;
 import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuAction;
+import com.softwerke.menu.MenuItem;
 import com.softwerke.tables.Person;
 
 import java.time.LocalDate;
 
-import static com.softwerke.StringPool.EDIT_PERSON_COMMANDS;
-import static com.softwerke.StringPool.SUCCESSFUL;
-import static com.softwerke.menu.menu_items.MenuInternalData.currentPerson;
-import static com.softwerke.menu.menu_items.MenuInternalData.database;
-
 class EditPersonMenu extends Menu {
     EditPersonMenu() {
-        super(new MenuAction[]{
-                /* Update first name menu item */
-                () -> {
-                    String newName = IOPipe.getNotNullLineByDialog("Enter person's new first name:");
-                    database.updatePerson(currentPerson.setFirstName(newName));
-                    IOPipe.printLine(SUCCESSFUL);
+        super("-- Edit person menu --", new MenuItem[]{
+                new MenuItem("Update first name") {
+                    @Override
+                    public void runItem() {
+                        String newName = IOPipe.getNotNullLineByDialog("Enter person's new first name:");
+                        internalData.currentPerson = internalData.currentPerson.cloneWithNewFirstName(newName);
+                        internalData.database.updatePerson(internalData.currentPerson);
+                        IOPipe.printLine(IOPipe.SUCCESSFUL);
+                    }
                 },
 
-                /* Update last name */
-                () -> {
-                    String newName = IOPipe.getNotNullLineByDialog("Enter person's new last name:");
-                    database.updatePerson(currentPerson.setLastName(newName));
-                    IOPipe.printLine(SUCCESSFUL);
+                new MenuItem("Update last name") {
+                    @Override
+                    public void runItem() {
+                        String newName = IOPipe.getNotNullLineByDialog("Enter person's new last name:");
+                        internalData.currentPerson = internalData.currentPerson.cloneWithNewLastName(newName);
+                        internalData.database.updatePerson(internalData.currentPerson);
+                        IOPipe.printLine(IOPipe.SUCCESSFUL);
+                    }
                 },
 
-                /* Update birth date */
-                () -> {
-                    LocalDate newDate = IOPipe.getLocalDateByDialog("Enter person's new birth date (dd/mm/yyyy with any separator):");
-                    database.updatePerson(currentPerson.setBirthDate(newDate));
-                    IOPipe.printLine(SUCCESSFUL);
+                new MenuItem("Update birth date") {
+                    @Override
+                    public void runItem() {
+                        LocalDate newDate = IOPipe.getLocalDateByDialog("Enter person's new birth date (dd/mm/yyyy with any separator):");
+                        internalData.currentPerson = internalData.currentPerson.cloneWithNewBirthDate(newDate);
+                        internalData.database.updatePerson(internalData.currentPerson);
+                        IOPipe.printLine(IOPipe.SUCCESSFUL);
+                    }
                 },
 
-                /* Delete person */
-                () -> {
-                    database.updatePerson(currentPerson.getId(), Person.DELETED_PERSON);
-                    IOPipe.printLine(SUCCESSFUL);
-                    Menu.incrementRollback();
+                new MenuItem("Delete person") {
+                    @Override
+                    public void runItem() {
+                        internalData.database.updatePerson(internalData.currentPerson.getId(), Person.DELETED_PERSON);
+                        IOPipe.printLine(IOPipe.SUCCESSFUL);
+                        Menu.incrementRollback();
+                    }
                 },
-        }, EDIT_PERSON_COMMANDS);
+        });
     }
-
 }

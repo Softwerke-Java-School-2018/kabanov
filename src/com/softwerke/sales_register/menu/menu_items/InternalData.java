@@ -1,28 +1,39 @@
 package com.softwerke.menu.menu_items;
 
-import com.softwerke.list.DeviceList;
-import com.softwerke.list.PersonList;
-import com.softwerke.list.SaleList;
-import com.softwerke.tables.Database;
-import com.softwerke.tables.Device;
-import com.softwerke.tables.Person;
-import com.softwerke.tables.SeveralDevices;
+import com.softwerke.tables.*;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /* Singleton, connecting all the menus */
-class MenuInternalData {
-    static Database database;
+public class InternalData {
+    final Database database;
 
-    static PersonList searchPersonList;
-    static Person currentPerson;
+    List<Person> personList;
+    Person currentPerson;
 
-    static DeviceList searchDeviceList;
-    static Device currentDevice;
+    List<Device> deviceList;
+    Device currentDevice;
 
-    static List<SeveralDevices> orderItems;
-    static LocalDate saleDate;
+    List<SeveralDevices> orderItems;
+    LocalDate saleDate;
 
-    static SaleList searchSalesList;
+    List<Sale> saleList;
+
+    public InternalData(Database database) {
+        this.database = database;
+    }
+
+    void resetDeviceList() {
+        deviceList = database.getDeviceStream().collect(Collectors.toList());
+    }
+
+    void resetPersonList() {
+        personList = database.getPersonStream().collect(Collectors.toList());
+    }
+
+    void resetSaleList() {
+        saleList = database.getSaleStream().collect(Collectors.toList());
+    }
 }

@@ -5,9 +5,16 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
-import static com.softwerke.StringPool.WRONG_DATA_TEXT;
-
 public class IOPipe {
+    public static final String WRONG_COMMAND_TEXT = "Read command is wrong. Retry input.";
+    public static final String WRONG_DATA_TEXT = "Read value is illegal.";
+    public static final String ENTRY_IS_DELETED = "Entry with this ID has been deleted.";
+    public static final String LIST_IS_EMPTY_TEXT = "List is empty. There's no items to process.";
+    public static final String LIST_CONTAINS_ONE_ITEM_TEXT = "List already contains one item.";
+    public static final String PRESS_ANYKEY_TEXT = "Enter something to continue...";
+    public static final String ENTER_SORT_ORDER_TEXT = "Enter \"Y\" to set ascending order, otherwise - descending.";
+    public static final String SUCCESSFUL = "Operation successful.";
+
     private static final Scanner scanner = new Scanner(System.in);
 
     public static String getNotNullLineByDialog(String message) {
@@ -58,20 +65,15 @@ public class IOPipe {
         return scanner.nextLine();                      // FIXME Sometimes freezing at line getting
     }
 
+    public static String getCommand() {
+        return scanner.nextLine();
+    }
+
     public static void printLine(String message) {
         System.out.println(message);
     }
 
     public static void printLine() {
         printLine("");
-    }
-
-    public static void printStringArray(String... strings) {
-        for (String s : strings)
-            System.out.println(s);
-    }
-
-    public static String getCommand() {
-        return scanner.nextLine();
     }
 }

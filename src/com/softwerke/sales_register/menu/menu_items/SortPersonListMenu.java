@@ -1,48 +1,59 @@
 package com.softwerke.menu.menu_items;
 
 import com.softwerke.console.IOPipe;
-import com.softwerke.list.comparators.PersonBirthDateComparator;
-import com.softwerke.list.comparators.PersonFirstNameComparator;
-import com.softwerke.list.comparators.HasIdComparator;
-import com.softwerke.list.comparators.PersonLastNameComparator;
 import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuAction;
+import com.softwerke.menu.MenuItem;
+import com.softwerke.tables.Person;
 
-import static com.softwerke.StringPool.ENTER_SORT_ORDER_TEXT;
-import static com.softwerke.StringPool.SORT_PERSON_LIST_COMMANDS;
-import static com.softwerke.menu.menu_items.MenuInternalData.searchPersonList;
+import java.util.Comparator;
 
 class SortPersonListMenu extends Menu {
     SortPersonListMenu() {
         /* Sort person list menu */
-        super(new MenuAction[]{
-                /* Sort by ID */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchPersonList.sort(new HasIdComparator<>(isOrderAscending));
-                    incrementRollback();
+        super("-- Sort person list menu --", new MenuItem[]{
+                new MenuItem("Sort by ID") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.personList.sort(isOrderAscending
+                                ? Comparator.comparingInt(Person::getId)
+                                : Comparator.comparingInt(Person::getId).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by first name */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchPersonList.sort(new PersonFirstNameComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by birth date") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.personList.sort(isOrderAscending
+                                ? Comparator.comparing(Person::getBirthDate)
+                                : Comparator.comparing(Person::getBirthDate).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by last name */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchPersonList.sort(new PersonLastNameComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by first name") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.personList.sort(isOrderAscending
+                                ? Comparator.comparing(Person::getFirstName)
+                                : Comparator.comparing(Person::getFirstName).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by birth date */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchPersonList.sort(new PersonBirthDateComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by last name") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.personList.sort(isOrderAscending
+                                ? Comparator.comparing(Person::getLastName)
+                                : Comparator.comparing(Person::getLastName).reversed());
+                        incrementRollback();
+                    }
                 },
-        }, SORT_PERSON_LIST_COMMANDS);
+        });
     }
 }

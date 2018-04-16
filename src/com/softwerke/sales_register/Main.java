@@ -1,17 +1,20 @@
 package com.softwerke;
 
 import com.softwerke.console.IOPipe;
+import com.softwerke.menu.Menu;
+import com.softwerke.menu.menu_items.InternalData;
 import com.softwerke.menu.menu_items.MainMenu;
 import com.softwerke.tables.Database;
 
-import static com.softwerke.StringPool.USERNAME;
 
 class Main {
+    public static final String USERNAME = "%username%";
+
     public static void main(String[] args) {
         Database database = new Database();
 
-        /* Setting the static link for database */
-        MainMenu.setDatabase(database);
+        /* Setting the link for database */
+        Menu.setInternalData(new InternalData(database));
 
         IOPipe.printLine("Hello, " + USERNAME + ".");
 

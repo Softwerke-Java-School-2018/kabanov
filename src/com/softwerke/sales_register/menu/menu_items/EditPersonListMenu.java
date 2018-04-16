@@ -1,41 +1,44 @@
 package com.softwerke.menu.menu_items;
 
-import com.softwerke.console.IOPipe;
 import com.softwerke.Utils;
+import com.softwerke.console.Formatter;
+import com.softwerke.console.IOPipe;
 import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuAction;
+import com.softwerke.menu.MenuItem;
 
 import java.time.LocalDate;
 
-import static com.softwerke.StringPool.EDIT_PERSON_LIST_COMMANDS;
-import static com.softwerke.StringPool.SUCCESSFUL;
-import static com.softwerke.menu.menu_items.MenuInternalData.*;
-
-/* Since it should be instantiated after setting the static currentPerson in EditPersonListMenu, it's package private */
 class EditPersonListMenu extends Menu {
     EditPersonListMenu() {
         /* Edit person list menu */
-        super(new MenuAction[]{
-                /* Print person list */
-                () -> database.getPersonList().print(),
-
-                /* Add person */
-                () -> {
-                    String firstName = IOPipe.getNotNullLineByDialog("Enter person's first name:");
-                    String lastName = IOPipe.getNotNullLineByDialog("Enter person's last name:");
-                    LocalDate birthDate = IOPipe.getLocalDateByDialog("Enter person's birth date (dd/mm/yyyy with any separator):");
-                    database.addPerson(firstName, lastName, birthDate);
-                    IOPipe.printLine(SUCCESSFUL);
-                    searchPersonList = database.getPersonList();
+        super("-- Edit person list menu --", new MenuItem[]{
+                new MenuItem("Print person list") {
+                    @Override
+                    public void runItem() {
+                        Formatter.printFormatPerson(
+                                internalData.database.getPersonStream().filter(person -> person.getId() != -1));
+                    }
                 },
 
-                /* Edit person */
-                () -> {
-                    currentPerson = Utils.selectPerson(database.getPersonList());
-                    if (currentPerson == null) return;
-                    new EditPersonMenu().execute();
+                new MenuItem("Add person") {
+                    @Override
+                    public void runItem() {
+                        String firstName = IOPipe.getNotNullLineByDialog("Enter person's first name:");
+                        String lastName = IOPipe.getNotNullLineByDialog("Enter person's last name:");
+                        LocalDate birthDate = IOPipe.getLocalDateByDialog("Enter person's birth date (dd/mm/yyyy with any separator):");
+                        internalData.database.addPerson(firstName, lastName, birthDate);
+                        IOPipe.printLine(IOPipe.SUCCESSFUL);
+                    }
                 },
-        }, EDIT_PERSON_LIST_COMMANDS);
+
+                new MenuItem("Edit person") {
+                    @Override
+                    public void runItem() {
+                        internalData.currentPerson = Utils.selectPerson(internalData.database.getPersonStream());
+                        if (internalData.currentPerson == null) return;
+                        new EditPersonMenu().execute();
+                    }
+                },
+        });
     }
 }
-

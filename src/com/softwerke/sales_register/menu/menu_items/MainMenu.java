@@ -1,82 +1,84 @@
 package com.softwerke.menu.menu_items;
 
 
-import com.softwerke.StringPool;
 import com.softwerke.console.IOPipe;
-import com.softwerke.list.SaleList;
 import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuAction;
-import com.softwerke.tables.Database;
+import com.softwerke.menu.MenuItem;
 import com.softwerke.tables.Person;
+import com.softwerke.tables.Sale;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import static com.softwerke.StringPool.SUCCESSFUL;
-import static com.softwerke.StringPool.WRONG_DATA_TEXT;
-import static com.softwerke.tables.Sale.DELETED_SALE;
-
 public class MainMenu extends Menu {
     public MainMenu() {
         /* Application start point */
-        super(new MenuAction[]{
-                /* Sell device */                                           // TODO
-                () -> {
-                    MenuInternalData.currentPerson = Person.DELETED_PERSON;
-                    MenuInternalData.orderItems = new ArrayList<>();
-                    MenuInternalData.saleDate = LocalDate.now();
-                    new OrderCheckoutMenu().execute();
-                },
-
-                /* Edit device list */
-                () -> {
-                    MenuInternalData.searchDeviceList = MenuInternalData.database.getDeviceList();
-                    new EditDeviceListMenu().execute();
-                },
-
-                /* Edit person list */
-                () -> {
-                    MenuInternalData.searchPersonList = MenuInternalData.database.getPersonList();
-                    new EditPersonListMenu().execute();
-                },
-
-                /* Delete the sell record from history */
-                () -> {
-                    SaleList salesHistory = MenuInternalData.database.getSalesHistory();
-                    if (salesHistory.isEmpty()) {
-                        IOPipe.printLine("Sales history is empty yet. Nothing to delete.");
-                        return;
+        super("-- Main menu --", new MenuItem[]{
+                new MenuItem("Sell device") {
+                    @Override
+                    public void runItem() {
+                        internalData.currentPerson = Person.DELETED_PERSON;
+                        internalData.orderItems = new ArrayList<>();
+                        internalData.saleDate = LocalDate.now();
+                        new OrderCheckoutMenu().execute();
                     }
-                    int idForDelete = IOPipe.getIntegerByDialog("Enter sale ID for removing:");
-                    if (idForDelete < salesHistory.size()) {
-                        MenuInternalData.database.updateSell(idForDelete, DELETED_SALE);
-                        IOPipe.printLine(SUCCESSFUL);
-                        return;
+                },
+
+                new MenuItem("Edit device list") {
+                    @Override
+                    public void runItem() {
+                        new EditDeviceListMenu().execute();
                     }
-                    IOPipe.printLine(WRONG_DATA_TEXT);
                 },
 
-                /* Browse device list */
-                () -> {
-                    MenuInternalData.searchDeviceList = MenuInternalData.database.getDeviceList();
-                    new BrowseDeviceListMenu().execute();
+                new MenuItem("Edit person list") {
+                    @Override
+                    public void runItem() {
+                        new EditPersonListMenu().execute();
+                    }
                 },
 
-                /* Browse person list */
-                () -> {
-                    MenuInternalData.searchPersonList = MenuInternalData.database.getPersonList();
-                    new BrowsePersonListMenu().execute();
+                new MenuItem("Delete the sell record from history") {
+                    @Override
+                    public void runItem() {
+                        long salesAmount = internalData.database.getSaleStream().count();
+                        if (salesAmount == 0) {
+                            IOPipe.printLine("Sales history is empty yet. Nothing to delete.");
+                            return;
+                        }
+                        int idForDelete = IOPipe.getIntegerByDialog("Enter sale ID for removing:");
+                        if (idForDelete < salesAmount) {
+                            internalData.database.updateSell(idForDelete, Sale.DELETED_SALE);
+                            IOPipe.printLine(IOPipe.SUCCESSFUL);
+                            return;
+                        }
+                        IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
+                    }
                 },
 
-                /* Browse sales history */
-                () -> {
-                    MenuInternalData.searchSalesList = MenuInternalData.database.getSalesHistory();
-                    new BrowseSalesHistoryMenu().execute();
+                new MenuItem("Browse device list") {
+                    @Override
+                    public void runItem() {
+                        internalData.resetDeviceList();
+                        new BrowseDeviceListMenu().execute();
+                    }
                 },
-        }, StringPool.MAIN_COMMANDS);
-    }
 
-    public static void setDatabase(Database database) {
-        MenuInternalData.database = database;
+                new MenuItem("Browse person list") {
+                    @Override
+                    public void runItem() {
+                        internalData.resetPersonList();
+                        new BrowsePersonListMenu().execute();
+                    }
+                },
+
+                new MenuItem("Browse sales history") {
+                    @Override
+                    public void runItem() {
+                        internalData.resetSaleList();
+                        new BrowseSalesHistoryMenu().execute();
+                    }
+                },
+        });
     }
 }

@@ -1,98 +1,117 @@
 package com.softwerke.menu.menu_items;
 
 import com.softwerke.Utils;
+import com.softwerke.console.Formatter;
 import com.softwerke.console.IOPipe;
-import com.softwerke.list.DeviceList;
 import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuAction;
+import com.softwerke.menu.MenuItem;
 import com.softwerke.tables.Color;
+import com.softwerke.tables.Device;
 import com.softwerke.tables.DeviceType;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-
-import static com.softwerke.StringPool.BROWSE_DEVICE_LIST_COMMANDS;
-import static com.softwerke.StringPool.WRONG_DATA_TEXT;
-import static com.softwerke.menu.menu_items.MenuInternalData.database;
-import static com.softwerke.menu.menu_items.MenuInternalData.searchDeviceList;
+import java.util.ArrayList;
+import java.util.List;
 
 class BrowseDeviceListMenu extends Menu {
     BrowseDeviceListMenu() {
         /* Browse device list */
-        super(new MenuAction[]{
-                /* Print current list */
-                () -> searchDeviceList.print(),
-
-                /* Apply filter to current list */
-                () -> {
-                    DeviceList oldDeviceList = searchDeviceList;
-                    oldDeviceList.removeIf(x -> x.getId() == -1);
-                    while (true) {
-                        try {
-                            /* Check the list size */
-                            /* If list contains 0 or 1 element -> notify and stop filtering */
-                            if (Utils.checkListSize(oldDeviceList.size())) break;
-
-                            /* Filter by ID */
-                            String[] idFromTo = Utils.readRangeFromConsole(
-                                    "Enter ID range to filter (\"X Y\", \"X\" or \"*\" for any ID)",
-                                    "0",
-                                    String.valueOf(oldDeviceList.size()));
-                            oldDeviceList = oldDeviceList.maskByDeviceId(idFromTo[0], idFromTo[1]);
-                            if (Utils.checkListSize(oldDeviceList.size())) break;           /* Check the list size */
-
-                            /* Filter by production date */
-                            String[] dateFromTo = Utils.readRangeFromConsole(
-                                    "Enter production date range to filter (\"X Y\", \"X\" or \"*\" for any date, format: dd-mm-yyyy)",
-                                    "01-01-0001",
-                                    "31-12-9999");
-                            oldDeviceList = oldDeviceList.maskByDeviceProductionDate(dateFromTo[0], dateFromTo[1]);
-                            if (Utils.checkListSize(oldDeviceList.size())) break;           /* Check the list size */
-
-                            /* Filter by vendor */
-                            String vendorMask = IOPipe.getNotNullLineByDialog("Enter vendor name (or name part) to filter or \"*\" for any vendor.");
-                            oldDeviceList = oldDeviceList.maskByDeviceVendor(vendorMask);
-                            if (Utils.checkListSize(oldDeviceList.size())) break;           /* Check the list size */
-
-                            /* Filter by model */
-                            String modelMask = IOPipe.getNotNullLineByDialog("Enter model name (or name part) to filter or \"*\" for any model.");
-                            oldDeviceList = oldDeviceList.maskByDeviceModel(modelMask);
-                            if (Utils.checkListSize(oldDeviceList.size())) break;           /* Check the list size */
-
-                            /* Filter by color */
-                            Color[] preferredColors = Utils.getEnumArrayFromString(Color.class,
-                                    "Enter preferred colors to filter or \"*\" for any color (colors should be separated by any non-character symbol[s]).")
-                                    .toArray(new Color[]{});
-                            oldDeviceList = oldDeviceList.maskByDeviceColor(preferredColors);
-                            if (Utils.checkListSize(oldDeviceList.size())) break;           /* Check the list size */
-
-                            /* Filter by device type */
-                            DeviceType[] preferredTypes = Utils.getEnumArrayFromString(DeviceType.class,
-                                    "Enter preferred device types to filter or \"*\" for any device type (device types should be separated by any non-character symbol[s]).")
-                                    .toArray(new DeviceType[]{});
-                            oldDeviceList = oldDeviceList.maskByDeviceType(preferredTypes);
-                            if (Utils.checkListSize(oldDeviceList.size())) break;           /* Check the list size */
-
-                            /* Filter by price */
-                            String[] priceFromTo = Utils.readRangeFromConsole(
-                                    "Enter price range to filter (\"X Y\", \"X\" or \"*\" for any price)",
-                                    "0.00",
-                                    "999999.99");
-                            oldDeviceList = oldDeviceList.maskByDevicePrice(priceFromTo[0], priceFromTo[1]);
-                            /* No need to check the list size */
-                            break;
-                        } catch (DateTimeParseException | NumberFormatException e) {
-                            IOPipe.printLine(WRONG_DATA_TEXT);
-                        }
+        super("-- Browse and search in device list menu --", new MenuItem[]{
+                new MenuItem("Print current list") {
+                    @Override
+                    public void runItem() {
+                        Formatter.printFormatDevice(internalData.deviceList.stream().filter(x -> x.getId() != -1));
                     }
-                    /* Update value with a filtered one */
-                    Utils.updateList(searchDeviceList, oldDeviceList);
                 },
 
-                /* Reset current list */
-                () -> Utils.updateList(searchDeviceList, database.getDeviceList()),
+                new MenuItem("Apply filter to current list") {
+                    @Override
+                    public void runItem() {
+                        List<Device> deviceList = new ArrayList<>(internalData.deviceList);
+                        deviceList.removeIf(device -> device.getId() == -1);
+                        while (true) {
+                            try {
+                                /* Check the list size: if it contains 0 or 1 elements -> notify and stop filtering */
+                                if (Utils.checkListSize(deviceList.size())) break;
 
-                /* Sort current list */
-                () -> new SortDeviceListMenu().execute(),
-        }, BROWSE_DEVICE_LIST_COMMANDS);
+                                /* Filter by ID */
+                                int[] idBounds = Utils.convertToInt(Utils.readRangeFromConsole(
+                                        "Enter ID range to filter (\"X Y\", \"X\" or \"*\" for any ID)",
+                                        "0",
+                                        String.valueOf(Integer.MAX_VALUE)));
+                                deviceList.removeIf(device ->
+                                        !Utils.isBetween(idBounds[0], device.getId(), idBounds[1]));
+                                if (Utils.checkListSize(deviceList.size())) break;       /* Check the list size */
+
+                                /* Filter by production date */
+                                LocalDate[] dateBounds = Utils.convertToDate(Utils.readRangeFromConsole(
+                                        "Enter production date range to filter (\"X Y\", \"X\" or \"*\" for any date, format: dd-mm-yyyy)",
+                                        "01-01-0001",
+                                        "31-12-9999"));
+                                deviceList.removeIf(device ->
+                                        !Utils.isBetween(dateBounds[0], device.getProductionDate(), dateBounds[1]));
+                                if (Utils.checkListSize(deviceList.size())) break;       /* Check the list size */
+
+                                /* Filter by vendor */
+                                String vendorMask = IOPipe.getNotNullLineByDialog("Enter vendor name (or name part) to filter or \"*\" for any vendor.")
+                                        .toLowerCase();
+                                deviceList.removeIf(device ->
+                                        !("*".equals(vendorMask) || device.getVendorLowerCase().contains(vendorMask)));
+                                if (Utils.checkListSize(deviceList.size())) break;       /* Check the list size */
+
+                                /* Filter by model */
+                                String modelMask = IOPipe.getNotNullLineByDialog("Enter model name (or name part) to filter or \"*\" for any model.")
+                                        .toLowerCase();
+                                deviceList.removeIf(device ->
+                                        !("*".equals(modelMask) || device.getModelLowerCase().contains(modelMask)));
+                                if (Utils.checkListSize(deviceList.size())) break;       /* Check the list size */
+
+                                /* Filter by color */
+                                ArrayList<Color> preferredColors = Utils.getEnumArrayFromString(Color.class,
+                                        "Enter preferred colors to filter or \"*\" for any color (colors should be separated by any non-character symbol[s]).");
+                                deviceList.removeIf(device -> preferredColors.stream()
+                                        .noneMatch(color -> color.equals(device.getColor())));
+                                if (Utils.checkListSize(deviceList.size())) break;       /* Check the list size */
+
+                                /* Filter by device type */
+                                ArrayList<DeviceType> preferredTypes = Utils.getEnumArrayFromString(DeviceType.class,
+                                        "Enter preferred device types to filter or \"*\" for any device type (device types should be separated by any non-character symbol[s]).");
+                                deviceList.removeIf(device -> preferredTypes.stream()
+                                        .noneMatch(color -> color.equals(device.getDeviceType())));
+                                if (Utils.checkListSize(deviceList.size())) break;       /* Check the list size */
+
+                                /* Filter by price */
+                                BigDecimal[] priceBounds = Utils.convertToBigDecimal(Utils.readRangeFromConsole(
+                                        "Enter price range to filter (\"X Y\", \"X\" or \"*\" for any price)",
+                                        "0.00",
+                                        "99999999.99"));
+                                deviceList.removeIf(device ->
+                                        !Utils.isBetween(priceBounds[0], device.getPrice(), priceBounds[1]));
+                                /* No need to check the list size */
+                                break;
+                            } catch (DateTimeParseException | NumberFormatException e) {
+                                IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
+                            }
+                        }
+                        internalData.deviceList = deviceList;
+                    }
+                },
+
+                new MenuItem("Reset current list") {
+                    @Override
+                    public void runItem() {
+                        internalData.resetDeviceList();
+                    }
+                },
+
+                new MenuItem("Sort current list") {
+                    @Override
+                    public void runItem() {
+                        new SortDeviceListMenu().execute();
+                    }
+                },
+        });
     }
 }

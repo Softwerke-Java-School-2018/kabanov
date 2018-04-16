@@ -1,48 +1,60 @@
 package com.softwerke.menu.menu_items;
 
 import com.softwerke.console.IOPipe;
-import com.softwerke.list.comparators.HasIdComparator;
-import com.softwerke.list.comparators.SaleDateComparator;
-import com.softwerke.list.comparators.SaleLastNameComparator;
-import com.softwerke.list.comparators.SaleTotalComparator;
 import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuAction;
+import com.softwerke.menu.MenuItem;
+import com.softwerke.tables.Sale;
 
-import static com.softwerke.StringPool.ENTER_SORT_ORDER_TEXT;
-import static com.softwerke.StringPool.SORT_SALES_HISTORY_COMMANDS;
-import static com.softwerke.menu.menu_items.MenuInternalData.searchSalesList;
+import java.util.Comparator;
 
 class SortSalesHistoryMenu extends Menu {
     SortSalesHistoryMenu() {
         /* Sort person list menu */
-        super(new MenuAction[]{
-                /* Sort by ID */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchSalesList.sort(new HasIdComparator<>(isOrderAscending));
-                    incrementRollback();
+        super("-- Sort sales history menu --", new MenuItem[]{
+                new MenuItem("Sort by ID") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.saleList.sort(isOrderAscending
+                                ? Comparator.comparingInt(Sale::getId)
+                                : Comparator.comparingInt(Sale::getId).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by last name */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchSalesList.sort(new SaleLastNameComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by sale date") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.saleList.sort(isOrderAscending
+                                ? Comparator.comparing(Sale::getSaleDate)
+                                : Comparator.comparing(Sale::getSaleDate).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by sale date */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchSalesList.sort(new SaleDateComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by total sum") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.saleList.sort(isOrderAscending
+                                ? Comparator.comparing(Sale::getTotalSum)
+                                : Comparator.comparing(Sale::getTotalSum).reversed());
+                        incrementRollback();
+                    }
                 },
 
-                /* Sort by total sum */
-                () -> {
-                    boolean isOrderAscending = IOPipe.getBooleanByDialog(ENTER_SORT_ORDER_TEXT);
-                    searchSalesList.sort(new SaleTotalComparator(isOrderAscending));
-                    incrementRollback();
+                new MenuItem("Sort by last name") {
+                    @Override
+                    public void runItem() {
+                        boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
+                        internalData.saleList.sort(isOrderAscending
+                                /* IntelliJ IDEA reports an error; though there isn't any */
+                                ? Comparator.comparing(sale -> sale.getPerson().getLastName())
+                                : Comparator.comparing(sale -> sale.getPerson().getLastName()));
+                        incrementRollback();
+                    }
                 },
-        }, SORT_SALES_HISTORY_COMMANDS);
+        });
     }
 }

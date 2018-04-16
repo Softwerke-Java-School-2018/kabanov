@@ -1,22 +1,19 @@
 package com.softwerke.tables;
 
-import com.softwerke.list.HasId;
-
 import java.time.LocalDate;
 
-import static com.softwerke.Utils.leftPad;
-
-/* Immutable */
-public class Person extends HasId {
+public class Person {
     public static final Person DELETED_PERSON = new Person("N/A", "N/A", LocalDate.now(), -1);
+    private final int id;
     private final String firstName;
     private final String lastName;
     private final String firstNameLowerCase;
     private final String lastNameLowerCase;
     private final LocalDate birthDate;
 
+
     public Person(String firstName, String lastName, LocalDate birthDate, int id) {
-        super(id);
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.firstNameLowerCase = firstName.toLowerCase();
@@ -24,15 +21,8 @@ public class Person extends HasId {
         this.birthDate = birthDate;
     }
 
-    @Override
-    public String toString() {
-        return firstName.charAt(0) + ". " + lastName;
-    }
-
-    public String toFormattedString() {
-        return leftPad(String.valueOf(id), 3) + " | " +
-                leftPad(firstName + " " + lastName, 25) + " | " +
-                birthDate;
+    public int getId() {
+        return id;
     }
 
     public String getFirstName() {
@@ -55,15 +45,20 @@ public class Person extends HasId {
         return birthDate;
     }
 
-    public Person setFirstName(String newName) {
+    public Person cloneWithNewFirstName(String newName) {
         return new Person(newName, lastName, birthDate, id);
     }
 
-    public Person setLastName(String newName) {
+    public Person cloneWithNewLastName(String newName) {
         return new Person(firstName, newName, birthDate, id);
     }
 
-    public Person setBirthDate(LocalDate newDateParsed) {
+    public Person cloneWithNewBirthDate(LocalDate newDateParsed) {
         return new Person(firstName, lastName, newDateParsed, id);
+    }
+
+    @Override
+    public String toString() {
+        return firstName.charAt(0) + ". " + lastName;
     }
 }
