@@ -1,11 +1,11 @@
-package com.softwerke.menu.menu_items;
+package com.softwerke.salesregister.menu.menuitems;
 
 
-import com.softwerke.console.IOPipe;
-import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuItem;
-import com.softwerke.tables.Person;
-import com.softwerke.tables.Sale;
+import com.softwerke.salesregister.console.IOPipe;
+import com.softwerke.salesregister.menu.Menu;
+import com.softwerke.salesregister.menu.MenuItem;
+import com.softwerke.salesregister.tables.Invoice;
+import com.softwerke.salesregister.tables.Person;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class MainMenu extends Menu {
                     public void runItem() {
                         internalData.currentPerson = Person.DELETED_PERSON;
                         internalData.orderItems = new ArrayList<>();
-                        internalData.saleDate = LocalDate.now();
+                        internalData.invoiceDate = LocalDate.now();
                         new OrderCheckoutMenu().execute();
                     }
                 },
@@ -38,17 +38,17 @@ public class MainMenu extends Menu {
                     }
                 },
 
-                new MenuItem("Delete the sell record from history") {
+                new MenuItem("Delete invoice from history") {
                     @Override
                     public void runItem() {
-                        long salesAmount = internalData.database.getSaleStream().count();
-                        if (salesAmount == 0) {
-                            IOPipe.printLine("Sales history is empty yet. Nothing to delete.");
+                        long invoicesAmount = internalData.database.getInvoiceStream().count();
+                        if (invoicesAmount == 0) {
+                            IOPipe.printLine("Invoice history is empty yet. Nothing to delete.");
                             return;
                         }
-                        int idForDelete = IOPipe.getIntegerByDialog("Enter sale ID for removing:");
-                        if (idForDelete < salesAmount) {
-                            internalData.database.updateSell(idForDelete, Sale.DELETED_SALE);
+                        int idForDelete = IOPipe.getIntegerByDialog("Enter invoice ID for removing:");
+                        if (idForDelete < invoicesAmount) {
+                            internalData.database.updateInvoice(idForDelete, Invoice.DELETED_INVOICE);
                             IOPipe.printLine(IOPipe.SUCCESSFUL);
                             return;
                         }
@@ -72,10 +72,10 @@ public class MainMenu extends Menu {
                     }
                 },
 
-                new MenuItem("Browse sales history") {
+                new MenuItem("Browse invoice history") {
                     @Override
                     public void runItem() {
-                        internalData.resetSaleList();
+                        internalData.resetInvoiceList();
                         new BrowseSalesHistoryMenu().execute();
                     }
                 },

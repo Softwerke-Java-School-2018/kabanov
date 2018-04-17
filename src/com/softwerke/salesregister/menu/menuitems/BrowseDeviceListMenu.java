@@ -1,13 +1,13 @@
-package com.softwerke.menu.menu_items;
+package com.softwerke.salesregister.menu.menuitems;
 
-import com.softwerke.Utils;
-import com.softwerke.console.Formatter;
-import com.softwerke.console.IOPipe;
-import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuItem;
-import com.softwerke.tables.Color;
-import com.softwerke.tables.Device;
-import com.softwerke.tables.DeviceType;
+import com.softwerke.salesregister.Utils;
+import com.softwerke.salesregister.console.Formatter;
+import com.softwerke.salesregister.console.IOPipe;
+import com.softwerke.salesregister.menu.Menu;
+import com.softwerke.salesregister.menu.MenuItem;
+import com.softwerke.salesregister.tables.Color;
+import com.softwerke.salesregister.tables.Device;
+import com.softwerke.salesregister.tables.DeviceType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

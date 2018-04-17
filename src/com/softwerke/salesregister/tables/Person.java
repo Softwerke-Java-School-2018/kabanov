@@ -1,4 +1,4 @@
-package com.softwerke.tables;
+package com.softwerke.salesregister.tables;
 
 import java.time.LocalDate;
 

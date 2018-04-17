@@ -1,11 +1,11 @@
-package com.softwerke.menu.menu_items;
+package com.softwerke.salesregister.menu.menuitems;
 
-import com.softwerke.Utils;
-import com.softwerke.console.Formatter;
-import com.softwerke.console.IOPipe;
-import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuItem;
-import com.softwerke.tables.Person;
+import com.softwerke.salesregister.Utils;
+import com.softwerke.salesregister.console.Formatter;
+import com.softwerke.salesregister.console.IOPipe;
+import com.softwerke.salesregister.menu.Menu;
+import com.softwerke.salesregister.menu.MenuItem;
+import com.softwerke.salesregister.tables.Person;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;

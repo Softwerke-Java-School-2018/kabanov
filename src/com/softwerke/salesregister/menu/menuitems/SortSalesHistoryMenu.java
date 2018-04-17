@@ -1,23 +1,23 @@
-package com.softwerke.menu.menu_items;
+package com.softwerke.salesregister.menu.menuitems;
 
-import com.softwerke.console.IOPipe;
-import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuItem;
-import com.softwerke.tables.Sale;
+import com.softwerke.salesregister.console.IOPipe;
+import com.softwerke.salesregister.menu.Menu;
+import com.softwerke.salesregister.menu.MenuItem;
+import com.softwerke.salesregister.tables.Invoice;
 
 import java.util.Comparator;
 
 class SortSalesHistoryMenu extends Menu {
     SortSalesHistoryMenu() {
         /* Sort person list menu */
-        super("-- Sort sales history menu --", new MenuItem[]{
+        super("-- Sort invoice history menu --", new MenuItem[]{
                 new MenuItem("Sort by ID") {
                     @Override
                     public void runItem() {
                         boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
                         internalData.saleList.sort(isOrderAscending
-                                ? Comparator.comparingInt(Sale::getId)
-                                : Comparator.comparingInt(Sale::getId).reversed());
+                                ? Comparator.comparingInt(Invoice::getId)
+                                : Comparator.comparingInt(Invoice::getId).reversed());
                         incrementRollback();
                     }
                 },
@@ -27,8 +27,8 @@ class SortSalesHistoryMenu extends Menu {
                     public void runItem() {
                         boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
                         internalData.saleList.sort(isOrderAscending
-                                ? Comparator.comparing(Sale::getSaleDate)
-                                : Comparator.comparing(Sale::getSaleDate).reversed());
+                                ? Comparator.comparing(Invoice::getDate)
+                                : Comparator.comparing(Invoice::getDate).reversed());
                         incrementRollback();
                     }
                 },
@@ -38,8 +38,8 @@ class SortSalesHistoryMenu extends Menu {
                     public void runItem() {
                         boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
                         internalData.saleList.sort(isOrderAscending
-                                ? Comparator.comparing(Sale::getTotalSum)
-                                : Comparator.comparing(Sale::getTotalSum).reversed());
+                                ? Comparator.comparing(Invoice::getTotalSum)
+                                : Comparator.comparing(Invoice::getTotalSum).reversed());
                         incrementRollback();
                     }
                 },
@@ -50,8 +50,8 @@ class SortSalesHistoryMenu extends Menu {
                         boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
                         internalData.saleList.sort(isOrderAscending
                                 /* IntelliJ IDEA reports an error; though there isn't any */
-                                ? Comparator.comparing(sale -> sale.getPerson().getLastName())
-                                : Comparator.comparing(sale -> sale.getPerson().getLastName()));
+                                ? Comparator.comparing(invoice -> invoice.getPerson().getLastName())
+                                : Comparator.comparing(invoice -> invoice.getPerson().getLastName()));
                         incrementRollback();
                     }
                 },

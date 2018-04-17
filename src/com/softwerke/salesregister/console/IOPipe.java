@@ -1,4 +1,4 @@
-package com.softwerke.console;
+package com.softwerke.salesregister.console;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

@@ -1,4 +1,4 @@
-package com.softwerke.tables;
+package com.softwerke.salesregister.tables;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -9,12 +9,12 @@ import java.util.stream.Stream;
 public class Database {
     private final List<Person> personList;
     private final List<Device> deviceList;
-    private final List<Sale> salesHistory;
+    private final List<Invoice> invoiceList;
 
     public Database() {
         personList = new ArrayList<>();
         deviceList = new ArrayList<>();
-        salesHistory = new ArrayList<>();
+        invoiceList = new ArrayList<>();
 
 
         /* DEBUG CODE */
@@ -35,9 +35,9 @@ public class Database {
 
         Random rand = new Random(System.currentTimeMillis());
         for (int i = 0; i < 10; i++) {
-            ArrayList<SeveralDevices> order = new ArrayList<>();
+            ArrayList<InvoiceLine> order = new ArrayList<>();
             for (int j = 0; j < rand.nextInt(5); j++)
-                order.add(new SeveralDevices(deviceList.get(rand.nextInt(deviceList.size())), rand.nextInt(3) + 1));
+                order.add(new InvoiceLine(deviceList.get(rand.nextInt(deviceList.size())), rand.nextInt(3) + 1));
             if (!order.isEmpty())
                 sell(personList.get(rand.nextInt(personList.size())), order, LocalDate.of(rand.nextInt(10) + 2000, rand.nextInt(11) + 1, rand.nextInt(27) + 1));
         }
@@ -53,12 +53,12 @@ public class Database {
         deviceList.add(new Device(model, vendor, color, productionDate, deviceType, price, deviceList.size()));
     }
 
-    public void sell(Person person, List<SeveralDevices> orderItems, LocalDate date) {
-        salesHistory.add(new Sale(person, orderItems, date, salesHistory.size()));
+    public void sell(Person person, List<InvoiceLine> orderItems, LocalDate date) {
+        invoiceList.add(new Invoice(person, orderItems, date, invoiceList.size()));
     }
 
-    public Sale getSale(int id) {
-        return salesHistory.get(id);
+    public Invoice getInvoice(int id) {
+        return invoiceList.get(id);
     }
 
     public Device getDevice(int id) {
@@ -81,8 +81,8 @@ public class Database {
         deviceList.set(id, device);
     }
 
-    public void updateSell(int id, Sale sale) {
-        salesHistory.set(id, sale);
+    public void updateInvoice(int id, Invoice invoice) {
+        invoiceList.set(id, invoice);
     }
 
     public Stream<Device> getDeviceStream() {
@@ -93,7 +93,7 @@ public class Database {
         return personList.stream();
     }
 
-    public Stream<Sale> getSaleStream() {
-        return salesHistory.stream();
+    public Stream<Invoice> getInvoiceStream() {
+        return invoiceList.stream();
     }
 }

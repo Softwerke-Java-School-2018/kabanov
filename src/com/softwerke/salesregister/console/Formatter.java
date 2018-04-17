@@ -1,9 +1,9 @@
-package com.softwerke.console;
+package com.softwerke.salesregister.console;
 
-import com.softwerke.Utils;
-import com.softwerke.tables.Device;
-import com.softwerke.tables.Person;
-import com.softwerke.tables.Sale;
+import com.softwerke.salesregister.Utils;
+import com.softwerke.salesregister.tables.Device;
+import com.softwerke.salesregister.tables.Invoice;
+import com.softwerke.salesregister.tables.Person;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,21 +30,21 @@ public class Formatter {
         IOPipe.getLineByDialog(IOPipe.PRESS_ANYKEY_TEXT);
     }
 
-    public static void printFormatSale(Stream<Sale> stream) {
-        List<Sale> saleList = stream.collect(Collectors.toList());
-        if (saleList.isEmpty()) {
+    public static void printFormatInvoice(Stream<com.softwerke.salesregister.tables.Invoice> stream) {
+        List<Invoice> invoiceList = stream.collect(Collectors.toList());
+        if (invoiceList.isEmpty()) {
             IOPipe.printLine();                         /* Separating blank line */
             IOPipe.printLine(IOPipe.LIST_IS_EMPTY_TEXT);
             return;
         }
         IOPipe.printLine();                             /* Separating blank line */
-        IOPipe.printLine(" ID |   Customer name   |    Total    |  Sale date");
-        IOPipe.printLine("----------------------------------------------------");
-        saleList.forEach(sale -> IOPipe.printLine(
-                Utils.leftPad(String.valueOf(sale.getId()), 3) + " | " +
-                        Utils.leftPad(sale.getPerson().toString(), 17) + " | " +
-                        Utils.leftPad(sale.getTotalSum().toString(), 11) + " |  " +
-                        sale.getSaleDate()));
+        IOPipe.printLine(" ID |   Customer name   |    Total    | Invoice date");
+        IOPipe.printLine("-----------------------------------------------------");
+        invoiceList.forEach(invoice -> IOPipe.printLine(
+                Utils.leftPad(String.valueOf(invoice.getId()), 3) + " | " +
+                        Utils.leftPad(invoice.getPerson().toString(), 17) + " | " +
+                        Utils.leftPad(invoice.getTotalSum().toString(), 11) + " |  " +
+                        invoice.getDate()));
         IOPipe.getLineByDialog(IOPipe.PRESS_ANYKEY_TEXT);
     }
 

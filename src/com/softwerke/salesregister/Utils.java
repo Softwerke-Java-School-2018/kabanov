@@ -1,10 +1,9 @@
-package com.softwerke;
+package com.softwerke.salesregister;
 
-import com.softwerke.console.IOPipe;
-import com.softwerke.tables.Device;
-import com.softwerke.tables.Person;
-import com.softwerke.tables.Sale;
-import com.softwerke.tables.SeveralDevices;
+import com.softwerke.salesregister.console.IOPipe;
+import com.softwerke.salesregister.tables.Device;
+import com.softwerke.salesregister.tables.Invoice;
+import com.softwerke.salesregister.tables.Person;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -136,7 +135,7 @@ public class Utils {
         }
     }
 
-    public static void printShopList(Collection<SeveralDevices> orderItems) {
+    public static void printShopList(Collection<com.softwerke.salesregister.tables.InvoiceLine> orderItems) {
         if (orderItems.isEmpty()) {
             IOPipe.printLine("Shop list is empty.");
             return;
@@ -144,11 +143,11 @@ public class Utils {
         IOPipe.printLine("            Items            | Amount |   Total");
         IOPipe.printLine("--------------------------------------------------");
         BigDecimal total = BigDecimal.ZERO;
-        for (SeveralDevices severalDevices : orderItems) {
-            total = total.add(severalDevices.getInternalSum());
-            String formattedName = Utils.rightPad(severalDevices.getDevice().toString(), 29);
-            String formattedAmount = Utils.leftPad(String.valueOf(severalDevices.getAmount()), 7);
-            String formattedInternalSum = Utils.leftPad(severalDevices.getInternalSum().toString(), 11);
+        for (com.softwerke.salesregister.tables.InvoiceLine invoiceLine : orderItems) {
+            total = total.add(invoiceLine.getInternalSum());
+            String formattedName = Utils.rightPad(invoiceLine.getDevice().toString(), 29);
+            String formattedAmount = Utils.leftPad(String.valueOf(invoiceLine.getAmount()), 7);
+            String formattedInternalSum = Utils.leftPad(invoiceLine.getInternalSum().toString(), 11);
             IOPipe.printLine(formattedName + "|" + formattedAmount + " |" + formattedInternalSum);
         }
         String formattedTotal = Utils.leftPad(total.toString(), 43);
@@ -178,9 +177,9 @@ public class Utils {
         return returning;
     }
 
-    public static void printReceipt(Sale sale) {
-        IOPipe.printLine(" Shopping date: " + sale.getSaleDate());
-        IOPipe.printLine(" Customer name: " + sale.getPerson());
-        Utils.printShopList(sale.getSeveralDevices());
+    public static void printReceipt(Invoice invoice) {
+        IOPipe.printLine(" Shopping date: " + invoice.getDate());
+        IOPipe.printLine(" Customer name: " + invoice.getPerson());
+        Utils.printShopList(invoice.getInvoiceLine());
     }
 }

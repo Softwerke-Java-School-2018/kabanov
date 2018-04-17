@@ -1,13 +1,13 @@
-package com.softwerke.tables;
+package com.softwerke.salesregister.tables;
 
 import java.math.BigDecimal;
 
-public class SeveralDevices {
+public class InvoiceLine {
     private final Device device;
     private final int amount;
     private final BigDecimal internalSum;
 
-    public SeveralDevices(Device device, int amount) {
+    public InvoiceLine(Device device, int amount) {
         this.device = device;
         this.amount = amount;
         this.internalSum = device.getPrice().multiply(BigDecimal.valueOf(amount));

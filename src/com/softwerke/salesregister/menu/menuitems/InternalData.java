@@ -1,6 +1,6 @@
-package com.softwerke.menu.menu_items;
+package com.softwerke.salesregister.menu.menuitems;
 
-import com.softwerke.tables.*;
+import com.softwerke.salesregister.tables.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,10 +16,10 @@ public class InternalData {
     List<Device> deviceList;
     Device currentDevice;
 
-    List<SeveralDevices> orderItems;
-    LocalDate saleDate;
+    List<InvoiceLine> orderItems;
+    LocalDate invoiceDate;
 
-    List<Sale> saleList;
+    List<Invoice> saleList;
 
     public InternalData(Database database) {
         this.database = database;
@@ -33,7 +33,7 @@ public class InternalData {
         personList = database.getPersonStream().collect(Collectors.toList());
     }
 
-    void resetSaleList() {
-        saleList = database.getSaleStream().collect(Collectors.toList());
+    void resetInvoiceList() {
+        saleList = database.getInvoiceStream().collect(Collectors.toList());
     }
 }

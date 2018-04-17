@@ -1,4 +1,4 @@
-package com.softwerke.tables;
+package com.softwerke.salesregister.tables;
 
 
 import java.math.BigDecimal;
@@ -6,22 +6,23 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Sale {
-    public static final Sale DELETED_SALE = new Sale(Person.DELETED_PERSON,
+public class Invoice {
+    public static final Invoice DELETED_INVOICE = new Invoice(Person.DELETED_PERSON,
             new ArrayList<>(0), LocalDate.now(), -1);
     private final int id;
     private final Person person;
-    private final List<SeveralDevices> severalDevices;
-    private final LocalDate saleDate;
+    private final List<InvoiceLine> invoiceLine;
+    private final LocalDate invoiceDate;
     private final BigDecimal totalSum;
 
-    public Sale(Person person, List<SeveralDevices> orderItems, LocalDate date, int id) {
+    public Invoice(Person person, List<InvoiceLine> orderItems, LocalDate date, int id) {
         this.id = id;
         this.person = person;
-        severalDevices = orderItems;
-        saleDate = date;
+        invoiceLine = orderItems;
+        invoiceDate = date;
         BigDecimal sum = BigDecimal.ZERO;
-        for (SeveralDevices devices : severalDevices) sum = sum.add(devices.getInternalSum());
+        //orderItems.forEach(item -> sum = sum.add(item.getDevice().getPrice().multiply(BigDecimal.valueOf(item.getAmount()))));
+        for (InvoiceLine devices : invoiceLine) sum = sum.add(devices.getInternalSum());
         totalSum = sum;
     }
 
@@ -33,12 +34,12 @@ public class Sale {
         return person;
     }
 
-    public List<SeveralDevices> getSeveralDevices() {
-        return severalDevices;
+    public List<InvoiceLine> getInvoiceLine() {
+        return invoiceLine;
     }
 
-    public LocalDate getSaleDate() {
-        return saleDate;
+    public LocalDate getDate() {
+        return invoiceDate;
     }
 
     public BigDecimal getTotalSum() {
@@ -47,6 +48,6 @@ public class Sale {
 
     @Override
     public String toString() {
-        return person + " | " + saleDate + " | " + totalSum;
+        return person + " | " + invoiceDate + " | " + totalSum;
     }
 }

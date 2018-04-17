@@ -1,4 +1,4 @@
-package com.softwerke.tables;
+package com.softwerke.salesregister.tables;
 
 public enum Color {
     BLACK,

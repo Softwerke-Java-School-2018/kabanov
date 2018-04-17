@@ -1,9 +1,9 @@
-package com.softwerke.menu.menu_items;
+package com.softwerke.salesregister.menu.menuitems;
 
-import com.softwerke.console.IOPipe;
-import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuItem;
-import com.softwerke.tables.Person;
+import com.softwerke.salesregister.console.IOPipe;
+import com.softwerke.salesregister.menu.Menu;
+import com.softwerke.salesregister.menu.MenuItem;
+import com.softwerke.salesregister.tables.Person;
 
 import java.util.Comparator;
 

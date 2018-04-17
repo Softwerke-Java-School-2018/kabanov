@@ -1,13 +1,12 @@
-package com.softwerke.menu.menu_items;
+package com.softwerke.salesregister.menu.menuitems;
 
 
-import com.softwerke.Utils;
-import com.softwerke.console.IOPipe;
-import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuItem;
-import com.softwerke.tables.Device;
-import com.softwerke.tables.Person;
-import com.softwerke.tables.SeveralDevices;
+import com.softwerke.salesregister.Utils;
+import com.softwerke.salesregister.console.IOPipe;
+import com.softwerke.salesregister.menu.Menu;
+import com.softwerke.salesregister.menu.MenuItem;
+import com.softwerke.salesregister.tables.Device;
+import com.softwerke.salesregister.tables.Person;
 
 class OrderCheckoutMenu extends Menu {
     OrderCheckoutMenu() {
@@ -24,8 +23,8 @@ class OrderCheckoutMenu extends Menu {
                 new MenuItem("Add item") {
                     @Override
                     public void runItem() {
-                        int deviceId = IOPipe.getIntegerByDialog("Enter the device ID for sale:");
-                        for (SeveralDevices orderItem : internalData.orderItems)
+                        int deviceId = IOPipe.getIntegerByDialog("Enter the device ID to sell:");
+                        for (com.softwerke.salesregister.tables.InvoiceLine orderItem : internalData.orderItems)
                             if (orderItem.getDevice().getId() == deviceId) {
                                 IOPipe.printLine("Device with this ID has already been added to shop list.");
                                 return;
@@ -41,12 +40,12 @@ class OrderCheckoutMenu extends Menu {
                             IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
                             return;
                         }
-                        int amount = IOPipe.getIntegerByDialog("Enter the device's amount for sale:");
+                        int amount = IOPipe.getIntegerByDialog("Enter the device's amount to sell:");
                         if (amount < 1) {
                             IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
                             return;
                         }
-                        internalData.orderItems.add(new SeveralDevices(device, amount));
+                        internalData.orderItems.add(new com.softwerke.salesregister.tables.InvoiceLine(device, amount));
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
 
                     }
@@ -59,10 +58,10 @@ class OrderCheckoutMenu extends Menu {
                     }
                 },
 
-                new MenuItem("Select sale date") {
+                new MenuItem("Select the sale date") {
                     @Override
                     public void runItem() {
-                        internalData.saleDate = IOPipe.getLocalDateByDialog("Enter the sale date:");
+                        internalData.invoiceDate = IOPipe.getLocalDateByDialog("Enter the sale date:");
                     }
                 },
 
@@ -87,7 +86,7 @@ class OrderCheckoutMenu extends Menu {
                             IOPipe.printLine("Customer isn't set or shop list is empty.");
                             return;
                         }
-                        internalData.database.sell(internalData.currentPerson, internalData.orderItems, internalData.saleDate);
+                        internalData.database.sell(internalData.currentPerson, internalData.orderItems, internalData.invoiceDate);
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
                         incrementRollback();
                     }

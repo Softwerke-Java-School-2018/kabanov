@@ -1,11 +1,11 @@
-package com.softwerke.menu.menu_items;
+package com.softwerke.salesregister.menu.menuitems;
 
-import com.softwerke.console.IOPipe;
-import com.softwerke.menu.Menu;
-import com.softwerke.menu.MenuItem;
-import com.softwerke.tables.Color;
-import com.softwerke.tables.Device;
-import com.softwerke.tables.DeviceType;
+import com.softwerke.salesregister.console.IOPipe;
+import com.softwerke.salesregister.menu.Menu;
+import com.softwerke.salesregister.menu.MenuItem;
+import com.softwerke.salesregister.tables.Color;
+import com.softwerke.salesregister.tables.Device;
+import com.softwerke.salesregister.tables.DeviceType;
 
 import java.time.LocalDate;
 
