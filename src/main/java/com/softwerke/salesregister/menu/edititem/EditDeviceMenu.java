@@ -7,6 +7,7 @@ import com.softwerke.salesregister.tables.device.Color;
 import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.device.DeviceType;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class EditDeviceMenu extends Menu {
@@ -16,8 +17,8 @@ public class EditDeviceMenu extends Menu {
                     @Override
                     public void runItem() {
                         String newName = IOPipe.getNotNullLineByDialog("Enter the new device manufacturer name:");
-                        internalData.currentDevice = internalData.currentDevice.cloneWithNewVendorName(newName);
-                        internalData.database.updateDevice(internalData.currentDevice);
+                        Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
+                        internalData.daoDevice.updateDevice(builder.vendor(newName).build());
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
                     }
                 },
@@ -26,8 +27,8 @@ public class EditDeviceMenu extends Menu {
                     @Override
                     public void runItem() {
                         String newName = IOPipe.getNotNullLineByDialog("Enter the new device model name:");
-                        internalData.currentDevice = internalData.currentDevice.cloneWithNewModelName(newName);
-                        internalData.database.updateDevice(internalData.currentDevice);
+                        Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
+                        internalData.daoDevice.updateDevice(builder.model(newName).build());
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
                     }
                 },
@@ -37,9 +38,9 @@ public class EditDeviceMenu extends Menu {
                     public void runItem() {
                         String newColor = IOPipe.getNotNullLineByDialog("Enter the new device color:").toUpperCase();
                         try {
-                            internalData.currentDevice = internalData.currentDevice
-                                    .cloneWithNewColor(Color.valueOf(newColor));
-                            internalData.database.updateDevice(internalData.currentDevice);
+                            Device.DeviceBuilder builder =
+                                    Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
+                            internalData.daoDevice.updateDevice(builder.color(Color.valueOf(newColor)).build());
                             IOPipe.printLine(IOPipe.SUCCESSFUL);
                         } catch (IllegalArgumentException e) {
                             IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
@@ -52,9 +53,9 @@ public class EditDeviceMenu extends Menu {
                     public void runItem() {
                         String newType = IOPipe.getNotNullLineByDialog("Enter the new device type:").toUpperCase();
                         try {
-                            internalData.currentDevice = internalData.currentDevice
-                                    .cloneWithNewType(DeviceType.valueOf(newType));
-                            internalData.database.updateDevice(internalData.currentDevice);
+                            Device.DeviceBuilder builder =
+                                    Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
+                            internalData.daoDevice.updateDevice(builder.type(DeviceType.valueOf(newType)).build());
                             IOPipe.printLine(IOPipe.SUCCESSFUL);
                         } catch (IllegalArgumentException e) {
                             IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
@@ -67,8 +68,9 @@ public class EditDeviceMenu extends Menu {
                     public void runItem() {
                         String newPrice = IOPipe.getNotNullLineByDialog("Enter the new device price:");
                         try {
-                            internalData.currentDevice = internalData.currentDevice.cloneWithNewPrice(newPrice);
-                            internalData.database.updateDevice(internalData.currentDevice);
+                            Device.DeviceBuilder builder =
+                                    Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
+                            internalData.daoDevice.updateDevice(builder.price(new BigDecimal(newPrice)).build());
                             IOPipe.printLine(IOPipe.SUCCESSFUL);
                         } catch (NumberFormatException e) {
                             IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
@@ -80,8 +82,8 @@ public class EditDeviceMenu extends Menu {
                     @Override
                     public void runItem() {
                         LocalDate newDate = IOPipe.getLocalDateByDialog("Enter the new device production date (dd-mm-yyyy with any separator):");
-                        internalData.currentDevice = internalData.currentDevice.cloneWithNewProductionDate(newDate);
-                        internalData.database.updateDevice(internalData.currentDevice);
+                        Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
+                        internalData.daoDevice.updateDevice(builder.productionDate(newDate).build());
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
                     }
                 },
@@ -89,7 +91,8 @@ public class EditDeviceMenu extends Menu {
                 new MenuItem("Delete device") {
                     @Override
                     public void runItem() {
-                        internalData.database.updateDevice(internalData.currentDevice.getId(), Device.DELETED_DEVICE);
+                        Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
+                        internalData.daoDevice.updateDevice(builder.isDeleted(true).build());
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
                         Menu.incrementRollback();
                     }

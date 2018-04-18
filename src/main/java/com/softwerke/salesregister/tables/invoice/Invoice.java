@@ -2,30 +2,29 @@ package com.softwerke.salesregister.tables.invoice;
 
 
 import com.softwerke.salesregister.tables.person.Person;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Invoice {
-    public static final Invoice DELETED_INVOICE = new Invoice(Person.DELETED_PERSON,
-            new ArrayList<>(0), LocalDate.now(), -1);
     private final int id;
     private final Person person;
-    private final List<InvoiceLine> invoiceLine;
-    private final LocalDate invoiceDate;
+    private final List<InvoiceLine> invoiceItems;
+    private final LocalDate date;
     private final BigDecimal totalSum;
+    private final boolean isDeleted;
 
-    public Invoice(Person person, List<InvoiceLine> orderItems, LocalDate date, int id) {
+    public Invoice(Person person, List<InvoiceLine> invoiceItems, LocalDate date, int id, boolean isDeleted) {
         this.id = id;
         this.person = person;
-        invoiceLine = orderItems;
-        invoiceDate = date;
-        BigDecimal sum = BigDecimal.ZERO;
-        //orderItems.forEach(item -> sum = sum.add(item.getDevice().getPrice().multiply(BigDecimal.valueOf(item.getAmount()))));
-        for (InvoiceLine devices : invoiceLine) sum = sum.add(devices.getInternalSum());
-        totalSum = sum;
+        this.invoiceItems = invoiceItems;
+        this.date = date;
+        this.isDeleted = isDeleted;
+        this.totalSum = invoiceItems.stream()
+                .map(invoice -> invoice.getInternalSum().multiply(BigDecimal.valueOf(invoice.getAmount())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public int getId() {
@@ -36,20 +35,33 @@ public class Invoice {
         return person;
     }
 
-    public List<InvoiceLine> getInvoiceLine() {
-        return invoiceLine;
+    public List<InvoiceLine> getInvoiceItems() {
+        return invoiceItems;
     }
 
     public LocalDate getDate() {
-        return invoiceDate;
+        return date;
     }
 
     public BigDecimal getTotalSum() {
         return totalSum;
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public Invoice getDisabledCopy() {
+        return new Invoice(person, invoiceItems, date, id, false);
+    }
+
     @Override
     public String toString() {
-        return person + " | " + invoiceDate + " | " + totalSum;
+        return new ToStringBuilder(this).
+                append("ID", id).
+                append("person", person).
+                append("date", date).
+                append("totalSum", totalSum).
+                toString();
     }
 }

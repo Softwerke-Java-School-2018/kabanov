@@ -20,7 +20,8 @@ public class BrowsePersonListMenu extends Menu {
                 new MenuItem("Print current list") {
                     @Override
                     public void runItem() {
-                        Formatter.printFormatPerson(internalData.personList.stream().filter(x -> x.getId() != -1));
+                        Formatter.printFormatPerson(internalData.personList.stream()
+                                .filter(person -> !person.isDeleted()));
                     }
                 },
 
@@ -28,7 +29,7 @@ public class BrowsePersonListMenu extends Menu {
                     @Override
                     public void runItem() {
                         List<Person> personList = new ArrayList<>(internalData.personList);
-                        personList.removeIf(person -> person.getId() == -1);
+                        personList.removeIf(person -> !person.isDeleted());
                         while (true) {
                             try {
                                 /* Check the list size: if it contains 0 or 1 elements -> notify and stop filtering */

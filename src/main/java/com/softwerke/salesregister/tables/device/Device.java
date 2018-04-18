@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Device {
-    public static final Device DELETED_DEVICE =
-            new Device("N/A", "N/A", Color.BLACK, LocalDate.now(), DeviceType.PHONE, "0", -1);
     private final int id;
     private final String model;
     private final String vendor;
@@ -15,8 +13,10 @@ public class Device {
     private final LocalDate productionDate;
     private final DeviceType deviceType;
     private final BigDecimal price;
+    private final boolean isDeleted;
 
-    public Device(String model, String vendor, Color color, LocalDate productionDate, DeviceType deviceType, String price, int id) {
+    private Device(String model, String vendor, Color color, LocalDate productionDate,
+                   DeviceType deviceType, String price, int id, boolean isDeleted) {
         this.id = id;
         this.model = model;
         this.vendor = vendor;
@@ -26,6 +26,7 @@ public class Device {
         this.productionDate = productionDate;
         this.deviceType = deviceType;
         this.price = new BigDecimal(price).setScale(2, BigDecimal.ROUND_HALF_UP);
+        this.isDeleted = isDeleted;
     }
 
     public int getId() {
@@ -35,7 +36,6 @@ public class Device {
     public BigDecimal getPrice() {
         return price;
     }
-
 
     public LocalDate getProductionDate() {
         return productionDate;
@@ -57,30 +57,6 @@ public class Device {
         return deviceType;
     }
 
-    public Device cloneWithNewModelName(String newName) {
-        return new Device(newName, vendor, color, productionDate, deviceType, price.toString(), id);
-    }
-
-    public Device cloneWithNewVendorName(String newName) {
-        return new Device(model, newName, color, productionDate, deviceType, price.toString(), id);
-    }
-
-    public Device cloneWithNewColor(Color newColor) {
-        return new Device(model, vendor, newColor, productionDate, deviceType, price.toString(), id);
-    }
-
-    public Device cloneWithNewType(DeviceType newType) {
-        return new Device(model, vendor, color, productionDate, newType, price.toString(), id);
-    }
-
-    public Device cloneWithNewProductionDate(LocalDate newProductionDate) {
-        return new Device(model, vendor, color, newProductionDate, deviceType, price.toString(), id);
-    }
-
-    public Device cloneWithNewPrice(String newPrice) {
-        return new Device(model, vendor, color, productionDate, deviceType, newPrice, id);
-    }
-
     public String getModelLowerCase() {
         return modelLowerCase;
     }
@@ -89,8 +65,91 @@ public class Device {
         return vendorLowerCase;
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
     @Override
     public String toString() {
         return vendor + " " + model + " @ " + color;
+    }
+
+    public static class DeviceBuilder {
+        static int id;
+        static String model;
+        static String vendor;
+        static Color color;
+        static LocalDate productionDate;
+        static DeviceType deviceType;
+        static BigDecimal price;
+        static boolean isDeleted;
+
+        public DeviceBuilder() {
+            id = -1;
+            model = "N/A";
+            vendor = "N/A";
+            color = Color.BLACK;
+            deviceType = DeviceType.PLAYER;
+            productionDate = LocalDate.MIN;
+            price = BigDecimal.ZERO;
+            isDeleted = true;
+        }
+
+        public static DeviceBuilder setupFromDevice(Device device) {
+            DeviceBuilder deviceBuilder = new DeviceBuilder();
+            return deviceBuilder
+                    .id(device.id)
+                    .model(device.model)
+                    .vendor(device.vendor)
+                    .color(device.color)
+                    .productionDate(device.productionDate)
+                    .type(device.deviceType)
+                    .isDeleted(device.isDeleted)
+                    .price(device.price);
+        }
+
+        public DeviceBuilder id(int id) {
+            DeviceBuilder.id = id;
+            return this;
+        }
+
+        public DeviceBuilder model(String model) {
+            DeviceBuilder.model = model;
+            return this;
+        }
+
+        public DeviceBuilder vendor(String vendor) {
+            DeviceBuilder.vendor = vendor;
+            return this;
+        }
+
+        public DeviceBuilder color(Color color) {
+            DeviceBuilder.color = color;
+            return this;
+        }
+
+        public DeviceBuilder productionDate(LocalDate productionDate) {
+            DeviceBuilder.productionDate = productionDate;
+            return this;
+        }
+
+        public DeviceBuilder type(DeviceType deviceType) {
+            DeviceBuilder.deviceType = deviceType;
+            return this;
+        }
+
+        public DeviceBuilder isDeleted(boolean isDeleted) {
+            DeviceBuilder.isDeleted = isDeleted;
+            return this;
+        }
+
+        public DeviceBuilder price(BigDecimal price) {
+            DeviceBuilder.price = price;
+            return this;
+        }
+
+        public Device build() {
+            return new Device(model, vendor, color, productionDate, deviceType, price.toString(), id, isDeleted);
+        }
     }
 }

@@ -6,8 +6,10 @@ import com.softwerke.salesregister.console.IOPipe;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.tables.device.Device;
-import com.softwerke.salesregister.tables.person.Person;
 import com.softwerke.salesregister.tables.invoice.InvoiceLine;
+import com.softwerke.salesregister.tables.person.Person;
+
+import java.util.Objects;
 
 public class OrderCheckoutMenu extends Menu {
     public OrderCheckoutMenu() {
@@ -16,8 +18,10 @@ public class OrderCheckoutMenu extends Menu {
                 new MenuItem("Select the customer") {
                     @Override
                     public void runItem() {
-                        internalData.currentPerson = Utils.selectPerson(internalData.database.getPersonStream());
-                        if (internalData.currentPerson == null) internalData.currentPerson = Person.DELETED_PERSON;
+                        internalData.currentPerson = Utils.selectPerson(internalData.daoPerson.getPersonStream());
+                        if (Objects.isNull(internalData.currentPerson)) {
+                            internalData.currentPerson = new Person.PersonBuilder().build();
+                        }
                     }
                 },
 
@@ -32,7 +36,7 @@ public class OrderCheckoutMenu extends Menu {
                             }
                         Device device;
                         try {
-                            device = internalData.database.getDevice(deviceId);
+                            device = internalData.daoDevice.getDevice(deviceId);
                             if (device.getId() == -1) {
                                 IOPipe.printLine(IOPipe.ENTRY_IS_DELETED);
                                 return;
@@ -83,11 +87,12 @@ public class OrderCheckoutMenu extends Menu {
                 new MenuItem("Proceed") {
                     @Override
                     public void runItem() {
-                        if (internalData.currentPerson.getId() == -1 || internalData.orderItems.isEmpty()) {
+                        if (internalData.currentPerson.isDeleted() || internalData.orderItems.isEmpty()) {
                             IOPipe.printLine("Customer isn't set or shop list is empty.");
                             return;
                         }
-                        internalData.database.sell(internalData.currentPerson, internalData.orderItems, internalData.invoiceDate);
+                        internalData.daoInvoice
+                                .sell(internalData.currentPerson, internalData.orderItems, internalData.invoiceDate);
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
                         incrementRollback();
                     }

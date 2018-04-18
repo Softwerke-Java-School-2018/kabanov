@@ -22,7 +22,8 @@ public class BrowseSalesHistoryMenu extends Menu {
                 new MenuItem("Print current list") {
                     @Override
                     public void runItem() {
-                        Formatter.printFormatInvoice(internalData.saleList.stream().filter(x -> x.getId() != -1));
+                        Formatter.printFormatInvoice(internalData.saleList.stream()
+                                .filter(invoice -> !invoice.isDeleted()));
                     }
                 },
 
@@ -30,7 +31,7 @@ public class BrowseSalesHistoryMenu extends Menu {
                     @Override
                     public void runItem() {
                         List<Invoice> invoiceList = new ArrayList<>(internalData.saleList);
-                        invoiceList.removeIf(invoice -> invoice.getId() == -1);
+                        invoiceList.removeIf(Invoice::isDeleted);
                         while (true) {
                             try {
                                 /* Check the list size: if it contains 0 or 1 elements -> notify and stop filtering */
@@ -77,7 +78,7 @@ public class BrowseSalesHistoryMenu extends Menu {
                                         "Enter device ID range to filter (\"X Y\", \"X\" or \"*\" for any ID)",
                                         "0",
                                         String.valueOf(Integer.MAX_VALUE)));
-                                invoiceList.removeIf(invoice -> invoice.getInvoiceLine().stream()
+                                invoiceList.removeIf(invoice -> invoice.getInvoiceItems().stream()
                                         .noneMatch(device -> Utils.isBetween(deviceIdBounds[0],
                                                 device.getDevice().getId(), deviceIdBounds[1])));
                                 if (Utils.checkListSize(invoiceList.size())) break;         /* Check the list size */
@@ -87,7 +88,7 @@ public class BrowseSalesHistoryMenu extends Menu {
                                         "Enter preferred device types to filter or \"*\" for any device type " +
                                                 "(device types should be separated by any non-character symbol[s], " +
                                                 "returns all the sales containing at least one device of entered type).");
-                                invoiceList.removeIf(invoice -> invoice.getInvoiceLine().stream()
+                                invoiceList.removeIf(invoice -> invoice.getInvoiceItems().stream()
                                         .noneMatch(devices -> preferredTypes.stream()
                                                 .anyMatch(type -> type.equals(devices.getDevice().getDeviceType()))));
                                 /* No need to check the list size */
@@ -118,8 +119,8 @@ public class BrowseSalesHistoryMenu extends Menu {
                     @Override
                     public void runItem() {
                         int saleId = IOPipe.getIntegerByDialog("Enter invoice ID for printing:");
-                        Invoice invoice = internalData.database.getInvoice(saleId);
-                        if (invoice.getId() == -1) IOPipe.printLine(IOPipe.ENTRY_IS_DELETED);
+                        Invoice invoice = internalData.daoInvoice.getInvoice(saleId);
+                        if (invoice.isDeleted()) IOPipe.printLine(IOPipe.ENTRY_IS_DELETED);
                         else Utils.printReceipt(invoice);
                     }
                 }

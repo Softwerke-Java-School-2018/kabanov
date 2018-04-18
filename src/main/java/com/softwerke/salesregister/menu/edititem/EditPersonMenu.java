@@ -14,8 +14,8 @@ public class EditPersonMenu extends Menu {
                     @Override
                     public void runItem() {
                         String newName = IOPipe.getNotNullLineByDialog("Enter person's new first name:");
-                        internalData.currentPerson = internalData.currentPerson.cloneWithNewFirstName(newName);
-                        internalData.database.updatePerson(internalData.currentPerson);
+                        Person.PersonBuilder builder = Person.PersonBuilder.setupFromPerson(internalData.currentPerson);
+                        internalData.daoPerson.updatePerson(builder.firstName(newName).build());
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
                     }
                 },
@@ -24,8 +24,8 @@ public class EditPersonMenu extends Menu {
                     @Override
                     public void runItem() {
                         String newName = IOPipe.getNotNullLineByDialog("Enter person's new last name:");
-                        internalData.currentPerson = internalData.currentPerson.cloneWithNewLastName(newName);
-                        internalData.database.updatePerson(internalData.currentPerson);
+                        Person.PersonBuilder builder = Person.PersonBuilder.setupFromPerson(internalData.currentPerson);
+                        internalData.daoPerson.updatePerson(builder.lastName(newName).build());
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
                     }
                 },
@@ -34,8 +34,8 @@ public class EditPersonMenu extends Menu {
                     @Override
                     public void runItem() {
                         LocalDate newDate = IOPipe.getLocalDateByDialog("Enter person's new birth date (dd/mm/yyyy with any separator):");
-                        internalData.currentPerson = internalData.currentPerson.cloneWithNewBirthDate(newDate);
-                        internalData.database.updatePerson(internalData.currentPerson);
+                        Person.PersonBuilder builder = Person.PersonBuilder.setupFromPerson(internalData.currentPerson);
+                        internalData.daoPerson.updatePerson(builder.birthDate(newDate).build());
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
                     }
                 },
@@ -43,7 +43,8 @@ public class EditPersonMenu extends Menu {
                 new MenuItem("Delete person") {
                     @Override
                     public void runItem() {
-                        internalData.database.updatePerson(internalData.currentPerson.getId(), Person.DELETED_PERSON);
+                        Person.PersonBuilder builder = Person.PersonBuilder.setupFromPerson(internalData.currentPerson);
+                        internalData.daoPerson.updatePerson(builder.isDeleted(true).build());
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
                         Menu.incrementRollback();
                     }

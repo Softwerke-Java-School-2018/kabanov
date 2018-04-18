@@ -11,10 +11,11 @@ import com.softwerke.salesregister.menu.browselist.BrowseSalesHistoryMenu;
 import com.softwerke.salesregister.menu.editlist.EditDeviceListMenu;
 import com.softwerke.salesregister.menu.editlist.EditPersonListMenu;
 import com.softwerke.salesregister.tables.invoice.Invoice;
-import com.softwerke.salesregister.tables.person.Person;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainMenu extends Menu {
     public MainMenu() {
@@ -23,7 +24,7 @@ public class MainMenu extends Menu {
                 new MenuItem("Sell device") {
                     @Override
                     public void runItem() {
-                        internalData.currentPerson = Person.DELETED_PERSON;
+                        internalData.currentPerson = null;
                         internalData.orderItems = new ArrayList<>();
                         internalData.invoiceDate = LocalDate.now();
                         new OrderCheckoutMenu().execute();
@@ -47,14 +48,14 @@ public class MainMenu extends Menu {
                 new MenuItem("Delete invoice from history") {
                     @Override
                     public void runItem() {
-                        long invoicesAmount = internalData.database.getInvoiceStream().count();
-                        if (invoicesAmount == 0) {
+                        List<Invoice> invoices = internalData.daoInvoice.getInvoiceStream().collect(Collectors.toList());
+                        if (invoices.isEmpty()) {
                             IOPipe.printLine("Invoice history is empty yet. Nothing to delete.");
                             return;
                         }
                         int idForDelete = IOPipe.getIntegerByDialog("Enter invoice ID for removing:");
-                        if (idForDelete < invoicesAmount) {
-                            internalData.database.updateInvoice(idForDelete, Invoice.DELETED_INVOICE);
+                        if (idForDelete < invoices.size()) {
+                            internalData.daoInvoice.updateInvoice(invoices.get(idForDelete).getDisabledCopy());
                             IOPipe.printLine(IOPipe.SUCCESSFUL);
                             return;
                         }

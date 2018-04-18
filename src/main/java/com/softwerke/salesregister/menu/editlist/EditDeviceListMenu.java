@@ -7,8 +7,10 @@ import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.menu.edititem.EditDeviceMenu;
 import com.softwerke.salesregister.tables.device.Color;
+import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.device.DeviceType;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 
@@ -19,8 +21,8 @@ public class EditDeviceListMenu extends Menu {
                 new MenuItem("Print device list") {
                     @Override
                     public void runItem() {
-                        Formatter.printFormatDevice(
-                                internalData.database.getDeviceStream().filter(x -> x.getId() != -1));
+                        Formatter.printFormatDevice(internalData.daoDevice.getDeviceStream()
+                                .filter(device -> !device.isDeleted()));
                     }
                 },
 
@@ -36,7 +38,15 @@ public class EditDeviceListMenu extends Menu {
                         try {
                             color = Color.valueOf(IOPipe.getNotNullLineByDialog("Enter device color:").toUpperCase());
                             type = DeviceType.valueOf(IOPipe.getNotNullLineByDialog("Enter device type:").toUpperCase());
-                            internalData.database.addDevice(model, vendor, color, productionDate, type, price);
+                            Device.DeviceBuilder builder = new Device.DeviceBuilder()
+                                    .model(model)
+                                    .vendor(vendor)
+                                    .color(color)
+                                    .productionDate(productionDate)
+                                    .type(type)
+                                    .price(new BigDecimal(price))
+                                    .isDeleted(false);
+                            internalData.daoDevice.addDevice(builder.build());
                         } catch (IllegalArgumentException e) {
                             IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
                             return;
@@ -48,7 +58,7 @@ public class EditDeviceListMenu extends Menu {
                 new MenuItem("Edit device") {
                     @Override
                     public void runItem() {
-                        internalData.currentDevice = Utils.selectDevice(internalData.database.getDeviceStream());
+                        internalData.currentDevice = Utils.selectDevice(internalData.daoDevice.getDeviceStream());
                         if (internalData.currentDevice == null) return;
                         new EditDeviceMenu().execute();
                     }

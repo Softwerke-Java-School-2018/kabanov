@@ -23,7 +23,8 @@ public class BrowseDeviceListMenu extends Menu {
                 new MenuItem("Print current list") {
                     @Override
                     public void runItem() {
-                        Formatter.printFormatDevice(internalData.deviceList.stream().filter(x -> x.getId() != -1));
+                        Formatter.printFormatDevice(internalData.deviceList.stream()
+                                .filter(device -> !device.isDeleted()));
                     }
                 },
 
@@ -31,7 +32,7 @@ public class BrowseDeviceListMenu extends Menu {
                     @Override
                     public void runItem() {
                         List<Device> deviceList = new ArrayList<>(internalData.deviceList);
-                        deviceList.removeIf(device -> device.getId() == -1);
+                        deviceList.removeIf(Device::isDeleted);
                         while (true) {
                             try {
                                 /* Check the list size: if it contains 0 or 1 elements -> notify and stop filtering */

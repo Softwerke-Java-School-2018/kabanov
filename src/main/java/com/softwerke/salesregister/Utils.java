@@ -83,7 +83,7 @@ public class Utils {
     }
 
     public static Person selectPerson(Stream<Person> personStream) {
-        ArrayList<Person> personList = personStream.filter(person -> person.getId() != -1)
+        ArrayList<Person> personList = personStream.filter(person -> !person.isDeleted())
                 .collect(Collectors.toCollection(ArrayList::new));
         while (true) {
             int personListSize = personList.size();
@@ -110,7 +110,7 @@ public class Utils {
     }
 
     public static Device selectDevice(Stream<Device> deviceStream) {
-        ArrayList<Device> deviceList = deviceStream.filter(device -> device.getId() != -1)
+        ArrayList<Device> deviceList = deviceStream.filter(device -> !device.isDeleted())
                 .collect(Collectors.toCollection(ArrayList::new));
         while (true) {
             int personListSize = deviceList.size();
@@ -181,6 +181,6 @@ public class Utils {
     public static void printReceipt(Invoice invoice) {
         IOPipe.printLine(" Shopping date: " + invoice.getDate());
         IOPipe.printLine(" Customer name: " + invoice.getPerson());
-        Utils.printShopList(invoice.getInvoiceLine());
+        Utils.printShopList(invoice.getInvoiceItems());
     }
 }

@@ -1,10 +1,12 @@
 package com.softwerke.salesregister.menu;
 
+import com.softwerke.salesregister.tables.data.dao.DaoDevice;
+import com.softwerke.salesregister.tables.data.dao.DaoInvoice;
+import com.softwerke.salesregister.tables.data.dao.DaoPerson;
 import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.invoice.Invoice;
 import com.softwerke.salesregister.tables.invoice.InvoiceLine;
 import com.softwerke.salesregister.tables.person.Person;
-import com.softwerke.salesregister.tables.data.Database;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,7 +14,9 @@ import java.util.stream.Collectors;
 
 /* Singleton, connecting all the menus */
 public class InternalData {
-    public final Database database;
+    public final DaoPerson daoPerson;
+    public final DaoDevice daoDevice;
+    public final DaoInvoice daoInvoice;
 
     public List<Person> personList;
     public Person currentPerson;
@@ -25,19 +29,21 @@ public class InternalData {
 
     public List<Invoice> saleList;
 
-    public InternalData(Database database) {
-        this.database = database;
-    }
-
-    public void resetDeviceList() {
-        deviceList = database.getDeviceStream().collect(Collectors.toList());
+    public InternalData(DaoPerson daoPerson, DaoDevice daoDevice, DaoInvoice daoInvoice) {
+        this.daoPerson = daoPerson;
+        this.daoDevice = daoDevice;
+        this.daoInvoice = daoInvoice;
     }
 
     public void resetPersonList() {
-        personList = database.getPersonStream().collect(Collectors.toList());
+        personList = daoPerson.getPersonStream().collect(Collectors.toList());
+    }
+
+    public void resetDeviceList() {
+        deviceList = daoDevice.getDeviceStream().collect(Collectors.toList());
     }
 
     void resetInvoiceList() {
-        saleList = database.getInvoiceStream().collect(Collectors.toList());
+        saleList = daoInvoice.getInvoiceStream().collect(Collectors.toList());
     }
 }
