@@ -1,15 +1,16 @@
-package com.softwerke.salesregister.menu.menuitems;
+package com.softwerke.salesregister.menu.editlist;
 
 import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.console.Formatter;
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.MenuItem;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.menu.edititem.EditPersonMenu;
 
 import java.time.LocalDate;
 
-class EditPersonListMenu extends Menu {
-    EditPersonListMenu() {
+public class EditPersonListMenu extends Menu {
+    public EditPersonListMenu() {
         /* Edit person list menu */
         super("-- Edit person list menu --", new MenuItem[]{
                 new MenuItem("Print person list") {

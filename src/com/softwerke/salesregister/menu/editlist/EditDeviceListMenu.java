@@ -1,18 +1,19 @@
-package com.softwerke.salesregister.menu.menuitems;
+package com.softwerke.salesregister.menu.editlist;
 
 import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.console.Formatter;
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.MenuItem;
-import com.softwerke.salesregister.tables.Color;
-import com.softwerke.salesregister.tables.DeviceType;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.menu.edititem.EditDeviceMenu;
+import com.softwerke.salesregister.tables.device.Color;
+import com.softwerke.salesregister.tables.device.DeviceType;
 
 import java.time.LocalDate;
 
 
-class EditDeviceListMenu extends Menu {
-    EditDeviceListMenu() {
+public class EditDeviceListMenu extends Menu {
+    public EditDeviceListMenu() {
         /* Edit device list menu */
         super("-- Edit device list menu --", new MenuItem[]{
                 new MenuItem("Print device list") {

@@ -1,4 +1,4 @@
-package com.softwerke.salesregister.tables;
+package com.softwerke.salesregister.tables.device;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

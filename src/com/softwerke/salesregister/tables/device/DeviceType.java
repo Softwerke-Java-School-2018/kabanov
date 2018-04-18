@@ -1,4 +1,4 @@
-package com.softwerke.salesregister.tables;
+package com.softwerke.salesregister.tables.device;
 
 public enum DeviceType {
     LAPTOP,

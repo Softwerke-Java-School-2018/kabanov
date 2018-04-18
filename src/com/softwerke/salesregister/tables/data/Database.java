@@ -1,4 +1,11 @@
-package com.softwerke.salesregister.tables;
+package com.softwerke.salesregister.tables.data;
+
+import com.softwerke.salesregister.tables.device.Color;
+import com.softwerke.salesregister.tables.device.Device;
+import com.softwerke.salesregister.tables.device.DeviceType;
+import com.softwerke.salesregister.tables.invoice.Invoice;
+import com.softwerke.salesregister.tables.invoice.InvoiceLine;
+import com.softwerke.salesregister.tables.person.Person;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.softwerke.salesregister.menu;
+package com.softwerke.salesregister.menu.base;
 
 public abstract class MenuItem {
     final String label;

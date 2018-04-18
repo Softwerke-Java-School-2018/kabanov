@@ -1,14 +1,14 @@
-package com.softwerke.salesregister.menu.menuitems;
+package com.softwerke.salesregister.menu.edititem;
 
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.MenuItem;
-import com.softwerke.salesregister.tables.Person;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.tables.person.Person;
 
 import java.time.LocalDate;
 
-class EditPersonMenu extends Menu {
-    EditPersonMenu() {
+public class EditPersonMenu extends Menu {
+    public EditPersonMenu() {
         super("-- Edit person menu --", new MenuItem[]{
                 new MenuItem("Update first name") {
                     @Override

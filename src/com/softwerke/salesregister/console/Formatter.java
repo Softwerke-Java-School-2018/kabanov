@@ -1,9 +1,9 @@
 package com.softwerke.salesregister.console;
 
 import com.softwerke.salesregister.Utils;
-import com.softwerke.salesregister.tables.Device;
-import com.softwerke.salesregister.tables.Invoice;
-import com.softwerke.salesregister.tables.Person;
+import com.softwerke.salesregister.tables.device.Device;
+import com.softwerke.salesregister.tables.invoice.Invoice;
+import com.softwerke.salesregister.tables.person.Person;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,7 +30,7 @@ public class Formatter {
         IOPipe.getLineByDialog(IOPipe.PRESS_ANYKEY_TEXT);
     }
 
-    public static void printFormatInvoice(Stream<com.softwerke.salesregister.tables.Invoice> stream) {
+    public static void printFormatInvoice(Stream<Invoice> stream) {
         List<Invoice> invoiceList = stream.collect(Collectors.toList());
         if (invoiceList.isEmpty()) {
             IOPipe.printLine();                         /* Separating blank line */

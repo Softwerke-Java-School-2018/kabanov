@@ -1,15 +1,16 @@
-package com.softwerke.salesregister.menu.menuitems;
+package com.softwerke.salesregister.menu.checkout;
 
 
 import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.MenuItem;
-import com.softwerke.salesregister.tables.Device;
-import com.softwerke.salesregister.tables.Person;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.tables.device.Device;
+import com.softwerke.salesregister.tables.person.Person;
+import com.softwerke.salesregister.tables.invoice.InvoiceLine;
 
-class OrderCheckoutMenu extends Menu {
-    OrderCheckoutMenu() {
+public class OrderCheckoutMenu extends Menu {
+    public OrderCheckoutMenu() {
         /* Order checkout menu actions */
         super("-- Order checkout menu --", new MenuItem[]{
                 new MenuItem("Select the customer") {
@@ -24,7 +25,7 @@ class OrderCheckoutMenu extends Menu {
                     @Override
                     public void runItem() {
                         int deviceId = IOPipe.getIntegerByDialog("Enter the device ID to sell:");
-                        for (com.softwerke.salesregister.tables.InvoiceLine orderItem : internalData.orderItems)
+                        for (InvoiceLine orderItem : internalData.orderItems)
                             if (orderItem.getDevice().getId() == deviceId) {
                                 IOPipe.printLine("Device with this ID has already been added to shop list.");
                                 return;
@@ -45,7 +46,7 @@ class OrderCheckoutMenu extends Menu {
                             IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
                             return;
                         }
-                        internalData.orderItems.add(new com.softwerke.salesregister.tables.InvoiceLine(device, amount));
+                        internalData.orderItems.add(new InvoiceLine(device, amount));
                         IOPipe.printLine(IOPipe.SUCCESSFUL);
 
                     }

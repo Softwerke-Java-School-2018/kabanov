@@ -1,4 +1,6 @@
-package com.softwerke.salesregister.tables;
+package com.softwerke.salesregister.tables.invoice;
+
+import com.softwerke.salesregister.tables.device.Device;
 
 import java.math.BigDecimal;
 

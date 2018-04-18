@@ -1,5 +1,7 @@
-package com.softwerke.salesregister.tables;
+package com.softwerke.salesregister.tables.invoice;
 
+
+import com.softwerke.salesregister.tables.person.Person;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

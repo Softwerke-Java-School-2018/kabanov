@@ -1,16 +1,16 @@
-package com.softwerke.salesregister.menu.menuitems;
+package com.softwerke.salesregister.menu.edititem;
 
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.MenuItem;
-import com.softwerke.salesregister.tables.Color;
-import com.softwerke.salesregister.tables.Device;
-import com.softwerke.salesregister.tables.DeviceType;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.tables.device.Color;
+import com.softwerke.salesregister.tables.device.Device;
+import com.softwerke.salesregister.tables.device.DeviceType;
 
 import java.time.LocalDate;
 
-class EditDeviceMenu extends Menu {
-    EditDeviceMenu() {
+public class EditDeviceMenu extends Menu {
+    public EditDeviceMenu() {
         super("-- Edit device menu --", new MenuItem[]{
                 new MenuItem("Update vendor name") {
                     @Override

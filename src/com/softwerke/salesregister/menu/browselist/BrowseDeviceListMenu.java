@@ -1,13 +1,14 @@
-package com.softwerke.salesregister.menu.menuitems;
+package com.softwerke.salesregister.menu.browselist;
 
 import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.console.Formatter;
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.MenuItem;
-import com.softwerke.salesregister.tables.Color;
-import com.softwerke.salesregister.tables.Device;
-import com.softwerke.salesregister.tables.DeviceType;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.menu.sortlist.SortDeviceListMenu;
+import com.softwerke.salesregister.tables.device.Color;
+import com.softwerke.salesregister.tables.device.Device;
+import com.softwerke.salesregister.tables.device.DeviceType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,8 +16,8 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-class BrowseDeviceListMenu extends Menu {
-    BrowseDeviceListMenu() {
+public class BrowseDeviceListMenu extends Menu {
+    public BrowseDeviceListMenu() {
         /* Browse device list */
         super("-- Browse and search in device list menu --", new MenuItem[]{
                 new MenuItem("Print current list") {

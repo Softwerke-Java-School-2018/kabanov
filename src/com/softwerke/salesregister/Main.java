@@ -1,10 +1,10 @@
 package com.softwerke.salesregister;
 
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.menuitems.InternalData;
-import com.softwerke.salesregister.menu.menuitems.MainMenu;
-import com.softwerke.salesregister.tables.Database;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.InternalData;
+import com.softwerke.salesregister.menu.MainMenu;
+import com.softwerke.salesregister.tables.data.Database;
 
 
 class Main {

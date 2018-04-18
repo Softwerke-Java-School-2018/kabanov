@@ -1,7 +1,7 @@
-package com.softwerke.salesregister.menu;
+package com.softwerke.salesregister.menu.base;
 
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.menuitems.InternalData;
+import com.softwerke.salesregister.menu.InternalData;
 
 public class Menu {
 

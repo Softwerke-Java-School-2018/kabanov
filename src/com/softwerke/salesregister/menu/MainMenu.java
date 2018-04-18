@@ -1,11 +1,17 @@
-package com.softwerke.salesregister.menu.menuitems;
+package com.softwerke.salesregister.menu;
 
 
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.MenuItem;
-import com.softwerke.salesregister.tables.Invoice;
-import com.softwerke.salesregister.tables.Person;
+import com.softwerke.salesregister.menu.checkout.OrderCheckoutMenu;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.menu.browselist.BrowseDeviceListMenu;
+import com.softwerke.salesregister.menu.browselist.BrowsePersonListMenu;
+import com.softwerke.salesregister.menu.browselist.BrowseSalesHistoryMenu;
+import com.softwerke.salesregister.menu.editlist.EditDeviceListMenu;
+import com.softwerke.salesregister.menu.editlist.EditPersonListMenu;
+import com.softwerke.salesregister.tables.invoice.Invoice;
+import com.softwerke.salesregister.tables.person.Person;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

@@ -1,9 +1,10 @@
 package com.softwerke.salesregister;
 
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.tables.Device;
-import com.softwerke.salesregister.tables.Invoice;
-import com.softwerke.salesregister.tables.Person;
+import com.softwerke.salesregister.tables.device.Device;
+import com.softwerke.salesregister.tables.invoice.Invoice;
+import com.softwerke.salesregister.tables.person.Person;
+import com.softwerke.salesregister.tables.invoice.InvoiceLine;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -135,7 +136,7 @@ public class Utils {
         }
     }
 
-    public static void printShopList(Collection<com.softwerke.salesregister.tables.InvoiceLine> orderItems) {
+    public static void printShopList(Collection<InvoiceLine> orderItems) {
         if (orderItems.isEmpty()) {
             IOPipe.printLine("Shop list is empty.");
             return;
@@ -143,7 +144,7 @@ public class Utils {
         IOPipe.printLine("            Items            | Amount |   Total");
         IOPipe.printLine("--------------------------------------------------");
         BigDecimal total = BigDecimal.ZERO;
-        for (com.softwerke.salesregister.tables.InvoiceLine invoiceLine : orderItems) {
+        for (InvoiceLine invoiceLine : orderItems) {
             total = total.add(invoiceLine.getInternalSum());
             String formattedName = Utils.rightPad(invoiceLine.getDevice().toString(), 29);
             String formattedAmount = Utils.leftPad(String.valueOf(invoiceLine.getAmount()), 7);

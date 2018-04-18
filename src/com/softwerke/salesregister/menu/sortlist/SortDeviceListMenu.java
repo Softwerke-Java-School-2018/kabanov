@@ -1,14 +1,14 @@
-package com.softwerke.salesregister.menu.menuitems;
+package com.softwerke.salesregister.menu.sortlist;
 
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.MenuItem;
-import com.softwerke.salesregister.tables.Device;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.tables.device.Device;
 
 import java.util.Comparator;
 
-class SortDeviceListMenu extends Menu {
-    SortDeviceListMenu() {
+public class SortDeviceListMenu extends Menu {
+    public SortDeviceListMenu() {
         /* Sort device list menu */
         super("-- Sort device list menu --", new MenuItem[]{
                 new MenuItem("Sort by ID") {

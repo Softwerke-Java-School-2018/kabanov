@@ -1,12 +1,13 @@
-package com.softwerke.salesregister.menu.menuitems;
+package com.softwerke.salesregister.menu.browselist;
 
 import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.console.Formatter;
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.MenuItem;
-import com.softwerke.salesregister.tables.DeviceType;
-import com.softwerke.salesregister.tables.Invoice;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.menu.sortlist.SortInvoiceListMenu;
+import com.softwerke.salesregister.tables.device.DeviceType;
+import com.softwerke.salesregister.tables.invoice.Invoice;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,8 +15,8 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-class BrowseSalesHistoryMenu extends Menu {
-    BrowseSalesHistoryMenu() {
+public class BrowseSalesHistoryMenu extends Menu {
+    public BrowseSalesHistoryMenu() {
         /* Browse device list */
         super("-- Browse and search in sales history menu --", new MenuItem[]{
                 new MenuItem("Print current list") {
@@ -109,7 +110,7 @@ class BrowseSalesHistoryMenu extends Menu {
                 new MenuItem("Sort current list") {
                     @Override
                     public void runItem() {
-                        new SortSalesHistoryMenu().execute();
+                        new SortInvoiceListMenu().execute();
                     }
                 },
 

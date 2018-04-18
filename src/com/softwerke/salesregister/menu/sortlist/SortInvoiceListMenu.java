@@ -1,14 +1,14 @@
-package com.softwerke.salesregister.menu.menuitems;
+package com.softwerke.salesregister.menu.sortlist;
 
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.MenuItem;
-import com.softwerke.salesregister.tables.Invoice;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.tables.invoice.Invoice;
 
 import java.util.Comparator;
 
-class SortSalesHistoryMenu extends Menu {
-    SortSalesHistoryMenu() {
+public class SortInvoiceListMenu extends Menu {
+    public SortInvoiceListMenu() {
         /* Sort person list menu */
         super("-- Sort invoice history menu --", new MenuItem[]{
                 new MenuItem("Sort by ID") {

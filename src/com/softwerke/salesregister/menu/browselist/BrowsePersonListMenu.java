@@ -1,19 +1,20 @@
-package com.softwerke.salesregister.menu.menuitems;
+package com.softwerke.salesregister.menu.browselist;
 
 import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.console.Formatter;
 import com.softwerke.salesregister.console.IOPipe;
-import com.softwerke.salesregister.menu.Menu;
-import com.softwerke.salesregister.menu.MenuItem;
-import com.softwerke.salesregister.tables.Person;
+import com.softwerke.salesregister.menu.base.Menu;
+import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.menu.sortlist.SortPersonListMenu;
+import com.softwerke.salesregister.tables.person.Person;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-class BrowsePersonListMenu extends Menu {
-    BrowsePersonListMenu() {
+public class BrowsePersonListMenu extends Menu {
+    public BrowsePersonListMenu() {
         /* Browse person list */
         super("-- Browse and search in person list menu --", new MenuItem[]{
                 new MenuItem("Print current list") {
