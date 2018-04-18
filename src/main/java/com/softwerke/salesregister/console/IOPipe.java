@@ -1,9 +1,10 @@
 package com.softwerke.salesregister.console;
 
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Scanner;
+import java.util.Objects;
 
 public class IOPipe {
     public static final String WRONG_COMMAND_TEXT = "Read command is wrong. Retry input.";
@@ -15,7 +16,9 @@ public class IOPipe {
     public static final String ENTER_SORT_ORDER_TEXT = "Enter \"Y\" to set ascending order, otherwise - descending.";
     public static final String SUCCESSFUL = "Operation successful.";
 
-    private static final Scanner scanner = new Scanner(System.in);
+    private static final BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    private static final BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
+
 
     public static String getNotNullLineByDialog(String message) {
         String answer = getLineByDialog(message);
@@ -61,16 +64,28 @@ public class IOPipe {
     }
 
     public static String getLineByDialog(String message) {
-        System.out.println(message);
-        return scanner.nextLine();                      // FIXME Sometimes freezing at line getting
+        if (Objects.nonNull(message) && !message.trim().equals("")) {
+            System.out.println(message);
+        }
+        try {
+            return reader.readLine();
+        } catch (IOException e) {
+            printLine("Occurred an input error.");
+            return "";
+        }
     }
 
     public static String getCommand() {
-        return scanner.nextLine();
+        return getLineByDialog("");
     }
 
     public static void printLine(String message) {
-        System.out.println(message);
+        try {
+            writer.write(message + System.getProperty("line.separator"));
+            writer.flush();
+        } catch (IOException e) {
+            printLine("Occurred an output error.");
+        }
     }
 
     public static void printLine() {

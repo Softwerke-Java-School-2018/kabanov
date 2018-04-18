@@ -7,7 +7,7 @@ import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.menu.browselist.BrowseDeviceListMenu;
 import com.softwerke.salesregister.menu.browselist.BrowsePersonListMenu;
-import com.softwerke.salesregister.menu.browselist.BrowseSalesHistoryMenu;
+import com.softwerke.salesregister.menu.browselist.BrowseInvoiceListMenu;
 import com.softwerke.salesregister.menu.editlist.EditDeviceListMenu;
 import com.softwerke.salesregister.menu.editlist.EditPersonListMenu;
 import com.softwerke.salesregister.tables.invoice.Invoice;
@@ -83,7 +83,7 @@ public class MainMenu extends Menu {
                     @Override
                     public void runItem() {
                         internalData.resetInvoiceList();
-                        new BrowseSalesHistoryMenu().execute();
+                        new BrowseInvoiceListMenu().execute();
                     }
                 },
         });

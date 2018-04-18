@@ -15,7 +15,7 @@ public class SortInvoiceListMenu extends Menu {
                     @Override
                     public void runItem() {
                         boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
-                        internalData.saleList.sort(isOrderAscending
+                        internalData.invoiceList.sort(isOrderAscending
                                 ? Comparator.comparingInt(Invoice::getId)
                                 : Comparator.comparingInt(Invoice::getId).reversed());
                         incrementRollback();
@@ -26,7 +26,7 @@ public class SortInvoiceListMenu extends Menu {
                     @Override
                     public void runItem() {
                         boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
-                        internalData.saleList.sort(isOrderAscending
+                        internalData.invoiceList.sort(isOrderAscending
                                 ? Comparator.comparing(Invoice::getDate)
                                 : Comparator.comparing(Invoice::getDate).reversed());
                         incrementRollback();
@@ -37,7 +37,7 @@ public class SortInvoiceListMenu extends Menu {
                     @Override
                     public void runItem() {
                         boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
-                        internalData.saleList.sort(isOrderAscending
+                        internalData.invoiceList.sort(isOrderAscending
                                 ? Comparator.comparing(Invoice::getTotalSum)
                                 : Comparator.comparing(Invoice::getTotalSum).reversed());
                         incrementRollback();
@@ -48,7 +48,7 @@ public class SortInvoiceListMenu extends Menu {
                     @Override
                     public void runItem() {
                         boolean isOrderAscending = IOPipe.getBooleanByDialog(IOPipe.ENTER_SORT_ORDER_TEXT);
-                        internalData.saleList.sort(isOrderAscending
+                        internalData.invoiceList.sort(isOrderAscending
                                 /* IntelliJ IDEA reports an error; though there isn't any */
                                 ? Comparator.comparing(invoice -> invoice.getPerson().getLastName())
                                 : Comparator.comparing(invoice -> invoice.getPerson().getLastName()));

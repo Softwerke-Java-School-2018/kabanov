@@ -27,7 +27,7 @@ public class InternalData {
     public List<InvoiceLine> orderItems;
     public LocalDate invoiceDate;
 
-    public List<Invoice> saleList;
+    public List<Invoice> invoiceList;
 
     public InternalData(DaoPerson daoPerson, DaoDevice daoDevice, DaoInvoice daoInvoice) {
         this.daoPerson = daoPerson;
@@ -43,7 +43,7 @@ public class InternalData {
         deviceList = daoDevice.getDeviceStream().collect(Collectors.toList());
     }
 
-    void resetInvoiceList() {
-        saleList = daoInvoice.getInvoiceStream().collect(Collectors.toList());
+    public void resetInvoiceList() {
+        invoiceList = daoInvoice.getInvoiceStream().collect(Collectors.toList());
     }
 }

@@ -15,14 +15,14 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BrowseSalesHistoryMenu extends Menu {
-    public BrowseSalesHistoryMenu() {
+public class BrowseInvoiceListMenu extends Menu {
+    public BrowseInvoiceListMenu() {
         /* Browse device list */
         super("-- Browse and search in sales history menu --", new MenuItem[]{
                 new MenuItem("Print current list") {
                     @Override
                     public void runItem() {
-                        Formatter.printFormatInvoice(internalData.saleList.stream()
+                        Formatter.printFormatInvoice(internalData.invoiceList.stream()
                                 .filter(invoice -> !invoice.isDeleted()));
                     }
                 },
@@ -30,7 +30,7 @@ public class BrowseSalesHistoryMenu extends Menu {
                 new MenuItem("Apply filter to current list") {
                     @Override
                     public void runItem() {
-                        List<Invoice> invoiceList = new ArrayList<>(internalData.saleList);
+                        List<Invoice> invoiceList = new ArrayList<>(internalData.invoiceList);
                         invoiceList.removeIf(Invoice::isDeleted);
                         while (true) {
                             try {
@@ -97,14 +97,14 @@ public class BrowseSalesHistoryMenu extends Menu {
                                 IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
                             }
                         }
-                        internalData.saleList = invoiceList;
+                        internalData.invoiceList = invoiceList;
                     }
                 },
 
                 new MenuItem("Reset current list") {
                     @Override
                     public void runItem() {
-                        internalData.resetPersonList();
+                        internalData.resetInvoiceList();
                     }
                 },
 

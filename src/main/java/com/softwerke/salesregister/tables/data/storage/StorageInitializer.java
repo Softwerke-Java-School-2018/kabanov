@@ -29,6 +29,7 @@ public class StorageInitializer {
         pBuilder.firstName("Elisabeth").lastName("Bolshevikova").birthDate(LocalDate.of(1987, 4, 11)).id(id++);
         daoPerson.addPerson(pBuilder.build());
         pBuilder.firstName("Inna").lastName("Listkova").birthDate(LocalDate.of(1981, 11, 2)).id(id++);
+        daoPerson.addPerson(pBuilder.build());
 
         Device.DeviceBuilder dBuilder = new Device.DeviceBuilder().isDeleted(false);
         id = 0;

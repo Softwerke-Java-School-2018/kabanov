@@ -88,8 +88,8 @@ public class Device {
             id = -1;
             model = "N/A";
             vendor = "N/A";
-            color = Color.BLACK;
-            deviceType = DeviceType.PLAYER;
+            color = null;
+            deviceType = null;
             productionDate = LocalDate.MIN;
             price = BigDecimal.ZERO;
             isDeleted = true;

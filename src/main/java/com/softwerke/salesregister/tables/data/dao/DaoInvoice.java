@@ -16,7 +16,7 @@ public class DaoInvoice extends Dao {
 
     public void sell(Person person, List<InvoiceLine> orderItems, LocalDate date) {
         List<Invoice> invoiceList = storage.getInvoiceList();
-        invoiceList.add(new Invoice(person, orderItems, date, invoiceList.size(), true));
+        invoiceList.add(new Invoice(person, orderItems, date, invoiceList.size(), false));
     }
 
     public void updateInvoice(Invoice invoice) {
