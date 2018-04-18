@@ -12,6 +12,7 @@ import com.softwerke.salesregister.tables.person.Person;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 public class StorageInitializer {
@@ -51,10 +52,12 @@ public class StorageInitializer {
         Random rand = new Random(System.currentTimeMillis());
         for (int i = 0; i < 10; i++) {
             ArrayList<InvoiceLine> order = new ArrayList<>();
-            for (int j = 0; j < rand.nextInt(5); j++)
+            for (int j = 0; j < rand.nextInt(5); j++) {
                 order.add(new InvoiceLine(daoDevice.getDevice(rand.nextInt(daoDevice.getSize())), rand.nextInt(3) + 1));
-            if (!order.isEmpty())
+            }
+            if (!order.isEmpty()) {
                 daoInvoice.sell(daoPerson.getPerson(rand.nextInt(daoPerson.getSize())), order, LocalDate.of(rand.nextInt(10) + 2000, rand.nextInt(11) + 1, rand.nextInt(27) + 1));
+            }
         }
     }
 }

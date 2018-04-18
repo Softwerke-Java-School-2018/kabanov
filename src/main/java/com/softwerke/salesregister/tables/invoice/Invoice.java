@@ -6,6 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Invoice {
@@ -19,7 +20,8 @@ public class Invoice {
     public Invoice(Person person, List<InvoiceLine> invoiceItems, LocalDate date, int id, boolean isDeleted) {
         this.id = id;
         this.person = person;
-        this.invoiceItems = invoiceItems;
+        this.invoiceItems = new ArrayList<>();
+        this.invoiceItems.addAll(invoiceItems);
         this.date = date;
         this.isDeleted = isDeleted;
         this.totalSum = invoiceItems.stream()
