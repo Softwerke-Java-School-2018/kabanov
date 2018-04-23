@@ -28,7 +28,11 @@ public class DaoDevice extends Dao {
         return storage.getDeviceList().size();
     }
 
-    public Stream<Device> getDeviceStream() {
+    public Stream<Device> devices() {
         return storage.getDeviceList().stream();
+    }
+
+    public void clearStorage() {
+        storage.getDeviceList().clear();
     }
 }

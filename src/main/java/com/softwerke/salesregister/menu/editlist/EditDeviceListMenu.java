@@ -1,8 +1,8 @@
 package com.softwerke.salesregister.menu.editlist;
 
 import com.softwerke.salesregister.Utils;
+import com.softwerke.salesregister.console.ConsoleIOStream;
 import com.softwerke.salesregister.console.Formatter;
-import com.softwerke.salesregister.console.IOPipe;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.menu.edititem.EditDeviceMenu;
@@ -12,57 +12,50 @@ import com.softwerke.salesregister.tables.device.DeviceType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 
 public class EditDeviceListMenu extends Menu {
     public EditDeviceListMenu() {
-        /* Edit device list menu */
-        super("-- Edit device list menu --", new MenuItem[]{
-                new MenuItem("Print device list") {
-                    @Override
-                    public void runItem() {
-                        Formatter.printFormatDevice(internalData.daoDevice.getDeviceStream()
-                                .filter(device -> !device.isDeleted()));
-                    }
-                },
+        super("-- Edit device list menu --",
+                new MenuItem("Print device list",
+                        () -> Formatter.printFormatDevice(internalData.daoDevice.devices()
+                                .filter(device -> !device.isDeleted()), internalData.ioStream)),
 
-                new MenuItem("Add device") {
-                    @Override
-                    public void runItem() {
-                        String vendor = IOPipe.getNotNullLineByDialog("Enter device manufacturer:");
-                        String model = IOPipe.getNotNullLineByDialog("Enter device model:");
-                        LocalDate productionDate = IOPipe.getLocalDateByDialog("Enter production date (dd/mm/yyyy with any separator):");
-                        String price = IOPipe.getNotNullLineByDialog("Enter device price:");
-                        Color color;
-                        DeviceType type;
-                        try {
-                            color = Color.valueOf(IOPipe.getNotNullLineByDialog("Enter device color:").toUpperCase());
-                            type = DeviceType.valueOf(IOPipe.getNotNullLineByDialog("Enter device type:").toUpperCase());
-                            Device.DeviceBuilder builder = new Device.DeviceBuilder()
-                                    .model(model)
-                                    .vendor(vendor)
-                                    .color(color)
-                                    .productionDate(productionDate)
-                                    .type(type)
-                                    .price(new BigDecimal(price))
-                                    .isDeleted(false);
-                            internalData.daoDevice.addDevice(builder.build());
-                        } catch (IllegalArgumentException e) {
-                            IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
-                            return;
-                        }
-                        IOPipe.printLine(IOPipe.SUCCESSFUL);
+                new MenuItem("Add device", () -> {
+                    String vendor = internalData.ioStream.askNonEmptyString("Enter device manufacturer:");
+                    String model = internalData.ioStream.askNonEmptyString("Enter device model:");
+                    LocalDate productionDate = internalData.ioStream.askLocalDate("Enter production date (dd/mm/yyyy with any separator):");
+                    String price = internalData.ioStream.askNonEmptyString("Enter device price:");
+                    Color color;
+                    DeviceType type;
+                    try {
+                        color = Color.valueOf(internalData.ioStream.askNonEmptyString("Enter device color:").toUpperCase());
+                        type = DeviceType.valueOf(internalData.ioStream.askNonEmptyString("Enter device type:").toUpperCase());
+                        Device.DeviceBuilder builder = new Device.DeviceBuilder()
+                                .model(model)
+                                .vendor(vendor)
+                                .color(color)
+                                .productionDate(productionDate)
+                                .type(type)
+                                .price(new BigDecimal(price))
+                                .id(internalData.daoDevice.getSize())
+                                .isDeleted(false);
+                        internalData.daoDevice.addDevice(builder.build());
+                    } catch (IllegalArgumentException e) {
+                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        return;
                     }
-                },
+                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                }),
 
-                new MenuItem("Edit device") {
-                    @Override
-                    public void runItem() {
-                        internalData.currentDevice = Utils.selectDevice(internalData.daoDevice.getDeviceStream());
-                        if (internalData.currentDevice == null) return;
-                        new EditDeviceMenu().execute();
+                new MenuItem("Edit device", () -> {
+                    internalData.currentDevice =
+                            Utils.selectDevice(internalData.daoDevice.devices(), internalData.ioStream);
+                    if (Objects.isNull(internalData.currentDevice)) {
+                        return;
                     }
-                },
-        });
+                    new EditDeviceMenu().execute();
+                }));
     }
 }

@@ -27,7 +27,11 @@ public class DaoInvoice extends Dao {
         return storage.getInvoiceList().get(id);
     }
 
-    public Stream<Invoice> getInvoiceStream() {
+    public Stream<Invoice> invoices() {
         return storage.getInvoiceList().stream();
+    }
+
+    public void clearStorage() {
+        storage.getInvoiceList().clear();
     }
 }

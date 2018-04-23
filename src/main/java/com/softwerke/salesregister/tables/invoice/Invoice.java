@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Invoice {
     private final int id;
@@ -39,6 +40,10 @@ public class Invoice {
 
     public List<InvoiceLine> getInvoiceItems() {
         return invoiceItems;
+    }
+
+    public Stream<InvoiceLine> getInvoices() {
+        return invoiceItems.stream().unordered();
     }
 
     public LocalDate getDate() {

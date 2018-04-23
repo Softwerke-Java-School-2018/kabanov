@@ -1,103 +1,80 @@
 package com.softwerke.salesregister;
 
-import com.softwerke.salesregister.console.IOPipe;
+import com.softwerke.salesregister.console.IOStream;
 import com.softwerke.salesregister.tables.device.Device;
-import com.softwerke.salesregister.tables.invoice.Invoice;
 import com.softwerke.salesregister.tables.person.Person;
-import com.softwerke.salesregister.tables.invoice.InvoiceLine;
 
+import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Utils {
 
-    public static String[] readRangeFromConsole(String message, String defaultMinValue, String defaultMaxValue) {
-        while (true) {
-            String range = IOPipe.getNotNullLineByDialog(message);
-            if (range.trim().equals("*")) return new String[]{defaultMinValue, defaultMaxValue};
-            else {
-                String[] splitRange = range.split("\\s+");
-                switch (splitRange.length) {
-                    case 2:
-                        /* Gained two values: from and to; all okay */
-                        return splitRange;
-                    case 1:
-                        /* Gained one value: from and to are the same */
-                        return new String[]{splitRange[0], splitRange[0]};
-                    default:
-                        /* Gained something else: input error */
-                        IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
-                }
+    @Nullable
+    public static String[] splitInTwo(String valueToSplit, String defaultLeftValue, String defaultRightValue) {
+        valueToSplit = valueToSplit.trim();
+        if (valueToSplit.trim().equals("*")) {
+            return new String[]{defaultLeftValue, defaultRightValue};
+        } else {
+            String[] splitValue = valueToSplit.split("\\s+");
+            switch (splitValue.length) {
+                case 2:
+                    /* Gained two values: from and to; all okay */
+                    return splitValue;
+                case 1:
+                    /* Gained one value: from and to are the same */
+                    return new String[]{splitValue[0], splitValue[0]};
+                default:
+                    /* Gained something else: input error */
+                    return null;
             }
         }
     }
 
-    public static <T extends Enum<T>> ArrayList<T> getEnumArrayFromString(Class<T> clazz, String message) {
-        while (true) {
-            /* Getting enum array */
-            String enumList = IOPipe.getNotNullLineByDialog(message);
-            /* If read line is an asterisk wildcard, return all the enumerators */
-            if (enumList.trim().equals("*")) return new ArrayList<>(Arrays.asList(clazz.getEnumConstants()));
-            else {
-                /* Otherwise - split and cast */
-                String[] splitEnumList = enumList.toUpperCase().split("[^A-Z]+");
-                ArrayList<T> ret = new ArrayList<>();
-
-                try {
-                    for (String enumName : splitEnumList)
-                        ret.add(T.valueOf(clazz, enumName));
-                    return ret;
-                } catch (IllegalArgumentException e) {
-                    IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
-                    // continue;
-                }
-            }
+    public static <T extends Enum<T>> Stream<T> convertToEnumInstances(String valueToConvert, Class<T> clazz)
+            throws IllegalArgumentException {
+        /* If line is an asterisk wildcard, return all the enumerators */
+        if (valueToConvert.trim().equals("*")) {
+            return Arrays.stream(clazz.getEnumConstants());
+        } else {
+            /* Otherwise - split and cast */
+            String[] splitEnumList = valueToConvert.toUpperCase().split("[^A-Z]+");
+            return Arrays.stream(splitEnumList).map(enumName -> T.valueOf(clazz, enumName));
         }
-    }
-
-    public static boolean checkListSize(long size) {
-        /* List contains a lot of elements -> keep filtering */
-        if (size > 1) return false;
-
-        /* List contains 0 or 1 element -> notify and stop filtering */
-        IOPipe.printLine((size == 0) ? IOPipe.LIST_IS_EMPTY_TEXT : IOPipe.LIST_CONTAINS_ONE_ITEM_TEXT);
-        return true;
-    }
-
-    public static String leftPad(String text, int length) {
-        return String.format("%1$" + length + "s", text);
-    }
-
-    public static String rightPad(String text, int length) {
-        return String.format("%1$-" + length + "s", text);
     }
 
     public static <T> boolean isBetween(Comparable<T> leftLimit, T value, Comparable<T> rightLimit) {
         return rightLimit.compareTo(value) > -1 && leftLimit.compareTo(value) < 1;
     }
 
-    public static Person selectPerson(Stream<Person> personStream) {
-        ArrayList<Person> personList = personStream.filter(person -> !person.isDeleted())
-                .collect(Collectors.toCollection(ArrayList::new));
+    /**
+     * Filters given {@code Stream} of {@code Person}'s by read
+     * parameters from IO until there is one or zero elements left.
+     *
+     * @param personStream stream of elements, which will be cured inside as {@code List}
+     * @return the {@code Person} matching required name/ID or null if there is no such element
+     */
+    public static Person selectPerson(Stream<Person> personStream, IOStream source) {
+        List<Person> personList = personStream.filter(person -> !person.isDeleted()).collect(Collectors.toList());
         while (true) {
             int personListSize = personList.size();
             switch (personListSize) {
                 case 0:
-                    IOPipe.printLine("Person list is empty. Nothing to choose from.");
+                    source.printLine("Person list is empty. Nothing to choose from.");
                     return null;
                 case 1:
                     Person tempPerson = personList.get(0);
-                    IOPipe.printLine("Found one person: " + tempPerson);
+                    source.printLine("Found one person: " + tempPerson);
                     return tempPerson;
                 default:
-                    IOPipe.printLine("Found " + personList.size() + " persons.");
-                    String personIdOrName = IOPipe.getNotNullLineByDialog("Enter person ID or name part:");
+                    source.printLine("Found " + personList.size() + " persons.");
+                    String personIdOrName = source.askNonEmptyString("Enter person ID or name part:");
                     try {
                         personList.removeIf(person -> person.getId() != Integer.parseInt(personIdOrName));
                     } catch (NumberFormatException e) {
@@ -109,22 +86,29 @@ public class Utils {
         }
     }
 
-    public static Device selectDevice(Stream<Device> deviceStream) {
-        ArrayList<Device> deviceList = deviceStream.filter(device -> !device.isDeleted())
-                .collect(Collectors.toCollection(ArrayList::new));
+    /**
+     * Filters given {@code Stream} of {@code Device}'s by read
+     * parameters from IO until there is one or zero elements left.
+     *
+     * @param deviceStream stream of elements, which will be cured inside as {@code List}
+     * @return the {@code Device} matching required name/ID or null if there is no such element
+     */
+    public static Device selectDevice(Stream<Device> deviceStream, IOStream source) {
+        List<Device> deviceList = deviceStream.filter(device -> !device.isDeleted())
+                .collect(Collectors.toList());
         while (true) {
             int personListSize = deviceList.size();
             switch (personListSize) {
                 case 0:
-                    IOPipe.printLine("Person list is empty. Nothing to choose from.");
+                    source.printLine("Person list is empty. Nothing to choose from.");
                     return null;
                 case 1:
                     Device tempDevice = deviceList.get(0);
-                    IOPipe.printLine("Found one person: " + tempDevice);
+                    source.printLine("Found one person: " + tempDevice);
                     return tempDevice;
                 default:
-                    IOPipe.printLine("Found " + deviceList.size() + " persons.");
-                    String deviceIdOrName = IOPipe.getNotNullLineByDialog("Enter device ID or vendor / model name part:");
+                    source.printLine("Found " + deviceList.size() + " persons.");
+                    String deviceIdOrName = source.askNonEmptyString("Enter device ID or vendor / model name part:");
                     try {
                         deviceList.removeIf(person -> person.getId() != Integer.parseInt(deviceIdOrName));
                     } catch (NumberFormatException e) {
@@ -136,51 +120,38 @@ public class Utils {
         }
     }
 
-    public static void printShopList(Collection<InvoiceLine> orderItems) {
-        if (orderItems.isEmpty()) {
-            IOPipe.printLine("Shop list is empty.");
-            return;
-        }
-        IOPipe.printLine("            Items            | Amount |   Total");
-        IOPipe.printLine("--------------------------------------------------");
-        BigDecimal total = BigDecimal.ZERO;
-        for (InvoiceLine invoiceLine : orderItems) {
-            total = total.add(invoiceLine.getInternalSum());
-            String formattedName = Utils.rightPad(invoiceLine.getDevice().toString(), 29);
-            String formattedAmount = Utils.leftPad(String.valueOf(invoiceLine.getAmount()), 7);
-            String formattedInternalSum = Utils.leftPad(invoiceLine.getInternalSum().toString(), 11);
-            IOPipe.printLine(formattedName + "|" + formattedAmount + " |" + formattedInternalSum);
-        }
-        String formattedTotal = Utils.leftPad(total.toString(), 43);
-        IOPipe.printLine(" Total:" + formattedTotal);
-        IOPipe.printLine();
+    /**
+     * Parses all the string arguments as {@code LocalDate} values and returns them as array.
+     *
+     * @param dates strings which will be translated with {@link LocalDate#parse(CharSequence, DateTimeFormatter) LocalDate.parse()}
+     *              where each date should have the next representation: {@code d*MM*yyyy}, where {@code *} is any non-digit delimiter
+     * @return the {@code LocalDate} array of given strings
+     * @throws DateTimeParseException if any of strings is not a valid representation of a LocalDate.
+     */
+    public static LocalDate[] convertToLocalDate(String... dates) throws DateTimeParseException {
+        return Arrays.stream(dates).map(date -> LocalDate.parse(date.replaceAll("\\D+", "-"),
+                DateTimeFormatter.ofPattern("d-MM-yyyy"))).toArray(LocalDate[]::new);
     }
 
-    public static LocalDate[] convertToDate(String... dates) {
-        LocalDate[] returning = new LocalDate[dates.length];
-        for (int i = 0; i < dates.length; i++)
-            returning[i] = LocalDate.parse(dates[i].replaceAll("\\D+", "-"),
-                    DateTimeFormatter.ofPattern("d-MM-yyyy"));
-        return returning;
+    /**
+     * Parses all the string arguments as {@code BigDecimal} values and returns them as array.
+     *
+     * @param values strings which will be translated with {@link BigDecimal#BigDecimal(String s) BigDecimal::new}
+     * @return the {@code BigDecimal} array of given strings
+     * @throws NumberFormatException if any of strings is not a valid representation of a BigDecimal.
+     */
+    public static BigDecimal[] convertToBigDecimal(String... values) throws NumberFormatException {
+        return Arrays.stream(values).map(BigDecimal::new).toArray(BigDecimal[]::new);
     }
 
-    public static int[] convertToInt(String... ints) {
-        int[] returning = new int[ints.length];
-        for (int i = 0; i < ints.length; i++)
-            returning[i] = Integer.parseInt(ints[i]);
-        return returning;
-    }
-
-    public static BigDecimal[] convertToBigDecimal(String... bigDecimals) {
-        BigDecimal[] returning = new BigDecimal[bigDecimals.length];
-        for (int i = 0; i < bigDecimals.length; i++)
-            returning[i] = new BigDecimal(bigDecimals[i]);
-        return returning;
-    }
-
-    public static void printReceipt(Invoice invoice) {
-        IOPipe.printLine(" Shopping date: " + invoice.getDate());
-        IOPipe.printLine(" Customer name: " + invoice.getPerson());
-        Utils.printShopList(invoice.getInvoiceItems());
+    /**
+     * Parses all the string arguments as a signed decimal integers and returns them as primitive array.
+     *
+     * @param strings strings which will be parsed with {@link Integer#parseInt(String s) Integer.parseInt()}
+     * @return the integer array of given strings
+     * @throws NumberFormatException if any of strings does not contain a parsable integer.
+     */
+    public static int[] convertToInt(String... strings) throws NumberFormatException {
+        return Arrays.stream(strings).mapToInt(Integer::parseInt).toArray();
     }
 }

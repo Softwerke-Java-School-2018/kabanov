@@ -1,6 +1,7 @@
 package com.softwerke.salesregister;
 
-import com.softwerke.salesregister.console.IOPipe;
+import com.softwerke.salesregister.console.ConsoleIOStream;
+import com.softwerke.salesregister.console.IOStream;
 import com.softwerke.salesregister.menu.InternalData;
 import com.softwerke.salesregister.menu.MainMenu;
 import com.softwerke.salesregister.menu.base.Menu;
@@ -16,6 +17,8 @@ class Main {
     public static final String USERNAME = "%username%";
 
     public static void main(String[] args) {
+        IOStream ioStream = new ConsoleIOStream(System.in, System.out);
+
         Storage storage = new ArrayListStorage();
         DaoPerson daoPerson = new DaoPerson(storage);
         DaoDevice daoDevice = new DaoDevice(storage);
@@ -23,9 +26,9 @@ class Main {
         new StorageInitializer(daoPerson, daoDevice, daoInvoice);
 
         /* Setting the link for database */
-        Menu.setInternalData(new InternalData(daoPerson, daoDevice, daoInvoice));
+        Menu.setInternalData(new InternalData(ioStream, daoPerson, daoDevice, daoInvoice));
 
-        IOPipe.printLine("Hello, " + USERNAME + ".");
+        ioStream.printLine("Hello, " + USERNAME + ".");
 
         new MainMenu().execute();
     }

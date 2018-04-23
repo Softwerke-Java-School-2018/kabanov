@@ -1,11 +1,19 @@
 package com.softwerke.salesregister.menu.base;
 
-public abstract class MenuItem {
-    final String label;
+public class MenuItem {
+    private final String label;
+    private final Runnable menuAction;
 
-    protected MenuItem(String label) {
+    public MenuItem(String label, Runnable menuAction) {
         this.label = label;
+        this.menuAction = menuAction;
     }
 
-    protected abstract void runItem();
+    void runItem() {
+        menuAction.run();
+    }
+
+    String getLabel() {
+        return label;
+    }
 }

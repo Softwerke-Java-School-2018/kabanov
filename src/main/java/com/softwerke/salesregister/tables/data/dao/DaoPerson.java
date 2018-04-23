@@ -28,7 +28,11 @@ public class DaoPerson extends Dao {
         return storage.getPersonList().size();
     }
 
-    public Stream<Person> getPersonStream() {
+    public Stream<Person> persons() {
         return storage.getPersonList().stream();
+    }
+
+    public void clearStorage() {
+        storage.getPersonList().clear();
     }
 }

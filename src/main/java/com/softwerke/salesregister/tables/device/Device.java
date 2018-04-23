@@ -2,6 +2,7 @@ package com.softwerke.salesregister.tables.device;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Device {
     private final int id;
@@ -149,6 +150,11 @@ public class Device {
         }
 
         public Device build() {
+            if (id == -1 || Objects.equals(model, "N/A") || Objects.equals(vendor, "N/A") ||
+                    Objects.isNull(color) || Objects.isNull(deviceType) ||
+                    Objects.equals(productionDate, LocalDate.MIN) || Objects.equals(price, BigDecimal.ZERO)) {
+                throw new RuntimeException("Builder isn't filled!");
+            }
             return new Device(model, vendor, color, productionDate, deviceType, price.toString(), id, isDeleted);
         }
     }

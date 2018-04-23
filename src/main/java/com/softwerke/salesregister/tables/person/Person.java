@@ -1,6 +1,7 @@
 package com.softwerke.salesregister.tables.person;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Person {
     private final int id;
@@ -64,9 +65,9 @@ public class Person {
 
         public PersonBuilder() {
             id = -1;
-            firstName = "N/A";
-            lastName = "N/A";
-            birthDate = LocalDate.MIN;
+            firstName = null;
+            lastName = null;
+            birthDate = null;
             isDeleted = true;
         }
 
@@ -106,6 +107,9 @@ public class Person {
         }
 
         public Person build() {
+            if (id == -1 || Objects.isNull(firstName) || Objects.isNull(lastName) || Objects.isNull(birthDate)) {
+                throw new RuntimeException("Builder isn't filled!");
+            }
             return new Person(firstName, lastName, birthDate, id, isDeleted);
         }
     }

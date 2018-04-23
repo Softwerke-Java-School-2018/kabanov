@@ -2,7 +2,8 @@ package com.softwerke.salesregister.menu.checkout;
 
 
 import com.softwerke.salesregister.Utils;
-import com.softwerke.salesregister.console.IOPipe;
+import com.softwerke.salesregister.console.ConsoleIOStream;
+import com.softwerke.salesregister.console.Formatter;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.tables.device.Device;
@@ -13,90 +14,68 @@ import java.util.Objects;
 
 public class OrderCheckoutMenu extends Menu {
     public OrderCheckoutMenu() {
-        /* Order checkout menu actions */
-        super("-- Order checkout menu --", new MenuItem[]{
-                new MenuItem("Select the customer") {
-                    @Override
-                    public void runItem() {
-                        internalData.currentPerson = Utils.selectPerson(internalData.daoPerson.getPersonStream());
-                        if (Objects.isNull(internalData.currentPerson)) {
-                            internalData.currentPerson = new Person.PersonBuilder().build();
-                        }
+        super("-- Order checkout menu --",
+                new MenuItem("Select the customer", () -> {
+                    internalData.currentPerson =
+                            Utils.selectPerson(internalData.daoPerson.persons(), internalData.ioStream);
+                    if (Objects.isNull(internalData.currentPerson)) {
+                        internalData.currentPerson = new Person.PersonBuilder().build();
                     }
-                },
+                }),
 
-                new MenuItem("Add item") {
-                    @Override
-                    public void runItem() {
-                        int deviceId = IOPipe.getIntegerByDialog("Enter the device ID to sell:");
-                        for (InvoiceLine orderItem : internalData.orderItems)
-                            if (orderItem.getDevice().getId() == deviceId) {
-                                IOPipe.printLine("Device with this ID has already been added to shop list.");
-                                return;
-                            }
-                        Device device;
-                        try {
-                            device = internalData.daoDevice.getDevice(deviceId);
-                            if (device.getId() == -1) {
-                                IOPipe.printLine(IOPipe.ENTRY_IS_DELETED);
-                                return;
-                            }
-                        } catch (IndexOutOfBoundsException e) {
-                            IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
+                new MenuItem("Add item", () -> {
+                    int deviceId = internalData.ioStream.askInt("Enter the device ID to sell:");
+                    for (InvoiceLine orderItem : internalData.orderItems) {
+                        if (orderItem.getDevice().getId() == deviceId) {
+                            internalData.ioStream.printLine("Device with this ID has already been added to shop list.");
                             return;
                         }
-                        int amount = IOPipe.getIntegerByDialog("Enter the device's amount to sell:");
-                        if (amount < 1) {
-                            IOPipe.printLine(IOPipe.WRONG_DATA_TEXT);
+                    }
+                    Device device;
+                    try {
+                        device = internalData.daoDevice.getDevice(deviceId);
+                        if (device.isDeleted()) {
+                            internalData.ioStream.printLine(ConsoleIOStream.ENTRY_IS_DELETED);
                             return;
                         }
-                        internalData.orderItems.add(new InvoiceLine(device, amount));
-                        IOPipe.printLine(IOPipe.SUCCESSFUL);
-
+                    } catch (IndexOutOfBoundsException e) {
+                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        return;
                     }
-                },
-
-                new MenuItem("Print shop list") {
-                    @Override
-                    public void runItem() {
-                        Utils.printShopList(internalData.orderItems);
+                    int amount = internalData.ioStream.askInt("Enter the device's amount to sell:");
+                    if (amount < 1) {
+                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        return;
                     }
-                },
+                    internalData.orderItems.add(new InvoiceLine(device, amount));
+                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                }),
 
-                new MenuItem("Select the sale date") {
-                    @Override
-                    public void runItem() {
-                        internalData.invoiceDate = IOPipe.getLocalDateByDialog("Enter the sale date:");
+                new MenuItem("Print shop list",
+                        () -> Formatter.printShopList(internalData.orderItems, internalData.ioStream)),
+
+                new MenuItem("Select the sale date",
+                        () -> internalData.invoiceDate = internalData.ioStream.askLocalDate("Enter the sale date:")),
+
+                new MenuItem("Remove item", () -> {
+                    if (internalData.orderItems.isEmpty()) {
+                        internalData.ioStream.printLine("Shop list is empty: nothing to remove.");
+                        return;
                     }
-                },
+                    int deviceId = internalData.ioStream.askInt("Enter the device id for removing:");
+                    internalData.orderItems.removeIf(x -> x.getDevice().getId() == deviceId);
+                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                }),
 
-                new MenuItem("Remove item") {
-                    @Override
-                    public void runItem() {
-                        if (internalData.orderItems.isEmpty()) {
-                            IOPipe.printLine("Shop list is empty: nothing to remove.");
-                            return;
-                        }
-                        int deviceId = IOPipe.getIntegerByDialog("Enter the device id for removing:");
-                        internalData.orderItems.removeIf(x -> x.getDevice().getId() == deviceId);
-                        IOPipe.printLine(IOPipe.SUCCESSFUL);
-
+                new MenuItem("Proceed", () -> {
+                    if (internalData.currentPerson.isDeleted() || internalData.orderItems.isEmpty()) {
+                        internalData.ioStream.printLine("Customer isn't set or shop list is empty.");
+                        return;
                     }
-                },
-
-                new MenuItem("Proceed") {
-                    @Override
-                    public void runItem() {
-                        if (internalData.currentPerson.isDeleted() || internalData.orderItems.isEmpty()) {
-                            IOPipe.printLine("Customer isn't set or shop list is empty.");
-                            return;
-                        }
-                        internalData.daoInvoice
-                                .sell(internalData.currentPerson, internalData.orderItems, internalData.invoiceDate);
-                        IOPipe.printLine(IOPipe.SUCCESSFUL);
-                        incrementRollback();
-                    }
-                },
-        });
+                    internalData.daoInvoice
+                            .sell(internalData.currentPerson, internalData.orderItems, internalData.invoiceDate);
+                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                    incrementRollback();
+                }));
     }
 }
