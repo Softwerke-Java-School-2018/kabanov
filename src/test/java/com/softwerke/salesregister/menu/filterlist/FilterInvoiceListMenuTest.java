@@ -1,6 +1,7 @@
 package com.softwerke.salesregister.menu.filterlist;
 
 import com.softwerke.salesregister.Utils;
+import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.tables.data.dao.DaoDevice;
 import com.softwerke.salesregister.tables.data.dao.DaoInvoice;
 import com.softwerke.salesregister.tables.data.dao.DaoPerson;
@@ -15,6 +16,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.fail;
 
 public class FilterInvoiceListMenuTest {
     private static DaoPerson daoPerson;
@@ -31,7 +35,11 @@ public class FilterInvoiceListMenuTest {
 
     @Before
     public void fillStorage() {
-        new StorageInitializer(daoPerson, daoDevice, daoInvoice);
+        try {
+            new StorageInitializer(daoPerson, daoDevice, daoInvoice);
+        } catch (BuilderNotInitializedException e) {
+            fail();
+        }
     }
 
     @After
@@ -47,7 +55,7 @@ public class FilterInvoiceListMenuTest {
         IntStream ids = daoInvoice.invoices()
                 .filter(invoice -> Utils.isBetween(bounds[0], invoice.getId(), bounds[1])).mapToInt(Invoice::getId);
         int[] idArray = ids.toArray();
-        Assert.assertArrayEquals(idArray, new int[]{1, 2, 3});
+        assertArrayEquals(idArray, new int[]{1, 2, 3});
     }
 
     @Test
@@ -59,7 +67,7 @@ public class FilterInvoiceListMenuTest {
                 .filter(invoice -> Utils.isBetween(bounds[0], invoice.getDate(), bounds[1]))
                 .map(Invoice::getDate);
         LocalDate[] datesArray = dates.toArray(LocalDate[]::new);
-        Assert.assertArrayEquals(datesArray, new LocalDate[]{
+        assertArrayEquals(datesArray, new LocalDate[]{
                 LocalDate.of(2017, 4, 19),
                 LocalDate.of(2017, 8, 6),
                 LocalDate.of(2017, 12, 24),
@@ -75,7 +83,7 @@ public class FilterInvoiceListMenuTest {
                 .filter(invoice -> Utils.isBetween(bounds[0], invoice.getTotalSum(), bounds[1]))
                 .map(Invoice::getTotalSum);
         BigDecimal[] datesArray = dates.toArray(BigDecimal[]::new);
-        Assert.assertArrayEquals(datesArray, new BigDecimal[]{
+        assertArrayEquals(datesArray, new BigDecimal[]{
                 new BigDecimal("93950.00"),
                 new BigDecimal("296910.00"),
                 new BigDecimal("142970.00"),
@@ -89,7 +97,7 @@ public class FilterInvoiceListMenuTest {
                         devices -> Stream.of(DeviceType.LAPTOP, DeviceType.PLAYER).anyMatch(
                                 type -> type.equals(devices.getDevice().getDeviceType()))));
         Invoice[] result = invoices.toArray(Invoice[]::new);
-        Assert.assertArrayEquals(result, new Invoice[]{
+        assertArrayEquals(result, new Invoice[]{
                 daoInvoice.getInvoice(0),
                 daoInvoice.getInvoice(2),
                 daoInvoice.getInvoice(3),

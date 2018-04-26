@@ -3,6 +3,7 @@ package com.softwerke.salesregister.menu.editlist;
 import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.console.ConsoleIOStream;
 import com.softwerke.salesregister.console.Formatter;
+import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.menu.edititem.EditDeviceMenu;
@@ -42,11 +43,13 @@ public class EditDeviceListMenu extends Menu {
                                 .id(internalData.daoDevice.getSize())
                                 .isDeleted(false);
                         internalData.daoDevice.addDevice(builder.build());
+                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
                     } catch (IllegalArgumentException e) {
                         internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
-                        return;
+                    } catch (BuilderNotInitializedException e) {
+                        // internalData.ioStream.logSomething();
+                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
                     }
-                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
                 }),
 
                 new MenuItem("Edit device", () -> {

@@ -1,5 +1,6 @@
 package com.softwerke.salesregister.tables.data.storage;
 
+import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.tables.data.dao.DaoDevice;
 import com.softwerke.salesregister.tables.data.dao.DaoInvoice;
 import com.softwerke.salesregister.tables.data.dao.DaoPerson;
@@ -8,15 +9,19 @@ import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.device.DeviceType;
 import com.softwerke.salesregister.tables.invoice.InvoiceLine;
 import com.softwerke.salesregister.tables.person.Person;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class StorageInitializer {
-    public StorageInitializer(DaoPerson daoPerson, DaoDevice daoDevice, DaoInvoice daoInvoice) {
+    public StorageInitializer(DaoPerson daoPerson, DaoDevice daoDevice, DaoInvoice daoInvoice)
+            throws BuilderNotInitializedException {
+        if (!ObjectUtils.allNotNull(daoDevice, daoInvoice, daoPerson)) {
+            throw new IllegalArgumentException("One or more arguments is null!");
+        }
         Person.PersonBuilder pBuilder = new Person.PersonBuilder().isDeleted(false);
         pBuilder.firstName("Vasiliy")
                 .lastName("Petrov")
@@ -118,37 +123,36 @@ public class StorageInitializer {
                 .id(6);
         daoDevice.addDevice(dBuilder.build());
 
-        Random randDays = new Random(System.currentTimeMillis());
         List<InvoiceLine> order;
 
         order = new ArrayList<>();
         order.add(new InvoiceLine(daoDevice.getDevice(1), 1));
         order.add(new InvoiceLine(daoDevice.getDevice(4), 2));
-        daoInvoice.sell(daoPerson.getPerson(3), order, LocalDate.of(2018,2,10));
+        daoInvoice.sell(daoPerson.getPerson(3), order, LocalDate.of(2018, 2, 10));
 
         order = new ArrayList<>();
         order.add(new InvoiceLine(daoDevice.getDevice(3), 3));
-        daoInvoice.sell(daoPerson.getPerson(2), order, LocalDate.of(2017,4,19));
+        daoInvoice.sell(daoPerson.getPerson(2), order, LocalDate.of(2017, 4, 19));
 
         order = new ArrayList<>();
         order.add(new InvoiceLine(daoDevice.getDevice(0), 1));
         order.add(new InvoiceLine(daoDevice.getDevice(2), 1));
         order.add(new InvoiceLine(daoDevice.getDevice(5), 1));
-        daoInvoice.sell(daoPerson.getPerson(4), order, LocalDate.of(2018,6,28));
+        daoInvoice.sell(daoPerson.getPerson(4), order, LocalDate.of(2018, 6, 28));
 
         order = new ArrayList<>();
         order.add(new InvoiceLine(daoDevice.getDevice(5), 4));
         order.add(new InvoiceLine(daoDevice.getDevice(6), 1));
-        daoInvoice.sell(daoPerson.getPerson(0), order, LocalDate.of(2017,8,6));
+        daoInvoice.sell(daoPerson.getPerson(0), order, LocalDate.of(2017, 8, 6));
 
         order = new ArrayList<>();
         order.add(new InvoiceLine(daoDevice.getDevice(1), 2));
         order.add(new InvoiceLine(daoDevice.getDevice(2), 2));
-        daoInvoice.sell(daoPerson.getPerson(1), order, LocalDate.of(2018,10,15));
+        daoInvoice.sell(daoPerson.getPerson(1), order, LocalDate.of(2018, 10, 15));
 
         order = new ArrayList<>();
         order.add(new InvoiceLine(daoDevice.getDevice(4), 1));
         order.add(new InvoiceLine(daoDevice.getDevice(5), 1));
-        daoInvoice.sell(daoPerson.getPerson(3), order, LocalDate.of(2017,12,24));
+        daoInvoice.sell(daoPerson.getPerson(3), order, LocalDate.of(2017, 12, 24));
     }
 }

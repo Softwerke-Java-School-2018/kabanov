@@ -1,6 +1,7 @@
 package com.softwerke.salesregister.menu.edititem;
 
 import com.softwerke.salesregister.console.ConsoleIOStream;
+import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.tables.device.Color;
@@ -16,15 +17,25 @@ public class EditDeviceMenu extends Menu {
                 new MenuItem("Update vendor name", () -> {
                     String newName = internalData.ioStream.askNonEmptyString("Enter the new device manufacturer name:");
                     Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
-                    internalData.daoDevice.updateDevice(builder.vendor(newName).build());
-                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                    try {
+                        internalData.daoDevice.updateDevice(builder.vendor(newName).build());
+                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                    } catch (BuilderNotInitializedException e) {
+                        // internalData.ioStream.logSomething();
+                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                    }
                 }),
 
                 new MenuItem("Update model name", () -> {
                     String newName = internalData.ioStream.askNonEmptyString("Enter the new device model name:");
                     Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
-                    internalData.daoDevice.updateDevice(builder.model(newName).build());
-                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                    try {
+                        internalData.daoDevice.updateDevice(builder.model(newName).build());
+                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                    } catch (BuilderNotInitializedException e) {
+                        // internalData.ioStream.logSomething();
+                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                    }
                 }),
 
                 new MenuItem("Update color", () -> {
@@ -36,6 +47,9 @@ public class EditDeviceMenu extends Menu {
                         internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
                     } catch (IllegalArgumentException e) {
                         internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                    } catch (BuilderNotInitializedException e) {
+                        // internalData.ioStream.logSomething();
+                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
                     }
                 }),
 
@@ -48,6 +62,9 @@ public class EditDeviceMenu extends Menu {
                         internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
                     } catch (IllegalArgumentException e) {
                         internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                    } catch (BuilderNotInitializedException e) {
+                        // internalData.ioStream.logSomething();
+                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
                     }
                 }),
 
@@ -60,21 +77,34 @@ public class EditDeviceMenu extends Menu {
                         internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
                     } catch (NumberFormatException e) {
                         internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                    } catch (BuilderNotInitializedException e) {
+                        // internalData.ioStream.logSomething();
+                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
                     }
                 }),
 
                 new MenuItem("Update production date", () -> {
                     LocalDate newDate = internalData.ioStream.askLocalDate("Enter the new device production date (dd-mm-yyyy with any separator):");
                     Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
-                    internalData.daoDevice.updateDevice(builder.productionDate(newDate).build());
-                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                    try {
+                        internalData.daoDevice.updateDevice(builder.productionDate(newDate).build());
+                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                    } catch (BuilderNotInitializedException e) {
+                        // internalData.ioStream.logSomething();
+                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                    }
                 }),
 
                 new MenuItem("Delete device", () -> {
                     Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
-                    internalData.daoDevice.updateDevice(builder.isDeleted(true).build());
-                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
-                    Menu.incrementRollback();
+                    try {
+                        internalData.daoDevice.updateDevice(builder.isDeleted(true).build());
+                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                        Menu.incrementRollback();
+                    } catch (BuilderNotInitializedException e) {
+                        // internalData.ioStream.logSomething();
+                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                    }
                 }));
     }
 }

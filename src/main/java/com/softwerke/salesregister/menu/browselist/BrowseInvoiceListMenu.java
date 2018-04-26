@@ -22,10 +22,10 @@ public class BrowseInvoiceListMenu extends Menu {
                     internalData.invoices = internalData.invoiceList.stream().filter(invoice -> !invoice.isDeleted());
                     try {
                         new FilterInvoiceListMenu().execute();
-                    } catch (NumberFormatException | DateTimeParseException e) {
-                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        internalData.invoiceList = internalData.invoices.collect(Collectors.toList());
+                    } catch (IllegalArgumentException | DateTimeParseException e) {
+                        internalData.ioStream.ask(ConsoleIOStream.WRONG_DATA_TEXT);
                     }
-                    internalData.invoiceList = internalData.invoices.collect(Collectors.toList());
                 }),
 
                 new MenuItem("Reset current list", internalData::resetInvoiceList),

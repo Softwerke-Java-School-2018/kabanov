@@ -6,8 +6,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Invoice {
@@ -19,11 +20,11 @@ public class Invoice {
     private final boolean isDeleted;
 
     public Invoice(Person person, List<InvoiceLine> invoiceItems, LocalDate date, int id, boolean isDeleted) {
+        Objects.requireNonNull(invoiceItems);
+        this.invoiceItems = invoiceItems.stream().filter(Objects::nonNull).collect(Collectors.toList());
         this.id = id;
-        this.person = person;
-        this.invoiceItems = new ArrayList<>();
-        this.invoiceItems.addAll(invoiceItems);
-        this.date = date;
+        this.person = Objects.requireNonNull(person);
+        this.date = Objects.requireNonNull(date);
         this.isDeleted = isDeleted;
         this.totalSum = invoiceItems.stream()
                 .map(invoice -> invoice.getInternalSum().multiply(BigDecimal.valueOf(invoice.getAmount())))
@@ -36,6 +37,10 @@ public class Invoice {
 
     public Person getPerson() {
         return person;
+    }
+
+    public String getPersonName() {
+        return person.toString();
     }
 
     public List<InvoiceLine> getInvoiceItems() {

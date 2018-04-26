@@ -4,6 +4,7 @@ package com.softwerke.salesregister.menu.checkout;
 import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.console.ConsoleIOStream;
 import com.softwerke.salesregister.console.Formatter;
+import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.tables.device.Device;
@@ -19,7 +20,12 @@ public class OrderCheckoutMenu extends Menu {
                     internalData.currentPerson =
                             Utils.selectPerson(internalData.daoPerson.persons(), internalData.ioStream);
                     if (Objects.isNull(internalData.currentPerson)) {
-                        internalData.currentPerson = new Person.PersonBuilder().build();
+                        try {
+                            internalData.currentPerson = new Person.PersonBuilder().build();
+                        } catch (BuilderNotInitializedException e) {
+                            // internalData.ioStream.logSomething();
+                            internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                        }
                     }
                 }),
 

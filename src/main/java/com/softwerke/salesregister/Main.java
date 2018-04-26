@@ -2,6 +2,7 @@ package com.softwerke.salesregister;
 
 import com.softwerke.salesregister.console.ConsoleIOStream;
 import com.softwerke.salesregister.console.IOStream;
+import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.menu.InternalData;
 import com.softwerke.salesregister.menu.MainMenu;
 import com.softwerke.salesregister.menu.base.Menu;
@@ -23,7 +24,13 @@ class Main {
         DaoPerson daoPerson = new DaoPerson(storage);
         DaoDevice daoDevice = new DaoDevice(storage);
         DaoInvoice daoInvoice = new DaoInvoice(storage);
-        new StorageInitializer(daoPerson, daoDevice, daoInvoice);
+        try {
+            new StorageInitializer(daoPerson, daoDevice, daoInvoice);
+        } catch (BuilderNotInitializedException e) {
+            // internalData.ioStream.logSomething();
+            ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+            return;
+        }
 
         /* Setting the link for database */
         Menu.setInternalData(new InternalData(ioStream, daoPerson, daoDevice, daoInvoice));

@@ -1,11 +1,12 @@
 package com.softwerke.salesregister.console;
 
-import javax.annotation.Nullable;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Objects;
 
 public class ConsoleIOStream implements IOStream {
 
@@ -13,27 +14,31 @@ public class ConsoleIOStream implements IOStream {
     private final BufferedWriter writer;
 
     public ConsoleIOStream(InputStream in, OutputStream out) {
+        if (!ObjectUtils.allNotNull(in, out)) {
+            throw new IllegalArgumentException("One or more arguments is null!");
+        }
         reader = new BufferedReader(new InputStreamReader(in));
         writer = new BufferedWriter(new OutputStreamWriter(out));
     }
 
     public void printLine(String message) {
         try {
-            writer.write(message + System.getProperty("line.separator"));
+            if (!StringUtils.isBlank(message)) {
+                writer.write(message);
+            }
+            writer.write(System.lineSeparator());
             writer.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to System.out!");
+            throw new RuntimeException("Can't write to output stream!");
         }
     }
 
     public void printLine() {
-        printLine("");
+        printLine(null);
     }
 
-    public String ask(@Nullable String message) {
-        if (Objects.nonNull(message) && !message.trim().equals("")) {
-            printLine(message);
-        }
+    public String ask(String message) {
+        printLine(message);
         try {
             return reader.readLine();
         } catch (IOException e) {
@@ -49,7 +54,7 @@ public class ConsoleIOStream implements IOStream {
     @Override
     public String askNonEmptyString(String message) {
         String answer = ask(message);
-        while (answer.length() < 1) {
+        while (StringUtils.isEmpty(answer)) {
             printLine(WRONG_DATA_TEXT);
             answer = ask(message);
         }

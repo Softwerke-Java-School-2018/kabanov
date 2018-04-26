@@ -1,50 +1,110 @@
 package com.softwerke.salesregister.console;
 
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class ConsoleIOStreamTest {
     private static ConsoleIOStream console;
+    private static ByteArrayOutputStream outputStream;
+    public static final String STUB = "stub!";
 
-    private static void setConsole(String input) {
+    private static void initConsoleWithInputText(String input) {
         try {
-            console = new ConsoleIOStream(IOUtils.toInputStream(input, "UTF-8"), System.out);
+            outputStream = new ByteArrayOutputStream();
+            console = new ConsoleIOStream(IOUtils.toInputStream(input, "UTF-8"), outputStream);
         } catch (IOException e) {
-            Assert.fail();
+            fail();
         }
     }
 
-    @Test
-    public void askLocalDateTest() {
-        setConsole("20 10 2010");
-
-        Assert.assertEquals(console.askLocalDate("stub"), LocalDate.parse("2010-10-20"));
-
-        setConsole("21 - 11 - 2011");
-
-        Assert.assertEquals(console.askLocalDate("stub"), LocalDate.parse("2011-11-21"));
-
-        setConsole("22_12_2012");
-
-        Assert.assertEquals(console.askLocalDate("stub"), LocalDate.parse("2012-12-22"));
+    @Test(expected = IllegalArgumentException.class)
+    public void consoleIOStreamTestNull() {
+        new ConsoleIOStream(null, null);
     }
 
     @Test
-    public void askLocalDateTestBadInput() {
-        setConsole("20 10 0000\n20 10 2010");
+    public void printLineTest() throws UnsupportedEncodingException {
+        initConsoleWithInputText("");
+        console.printLine(null);
+        assertEquals(System.lineSeparator(), outputStream.toString("UTF-8"));
 
-        Assert.assertEquals(console.askLocalDate("stub"), LocalDate.parse("2010-10-20"));
+        initConsoleWithInputText("");
+        console.printLine("");
+        assertEquals(System.lineSeparator(), outputStream.toString("UTF-8"));
 
-        setConsole("21 - 11 - 2011 - 2018\n21 - 11 - 2011");
+        initConsoleWithInputText("");
+        console.printLine("\n\t");
+        assertEquals(System.lineSeparator(), outputStream.toString("UTF-8"));
 
-        Assert.assertEquals(console.askLocalDate("stub"), LocalDate.parse("2011-11-21"));
+        initConsoleWithInputText("");
+        console.printLine(STUB);
+        assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
+    }
 
-        setConsole("22_12_2012_2028\n22_12_2012");
+    @Test
+    public void askTest0() throws UnsupportedEncodingException {
+        initConsoleWithInputText(STUB);
 
-        Assert.assertEquals(console.askLocalDate("stub"), LocalDate.parse("2012-12-22"));
+        String answer = console.ask(null);
+
+        assertEquals(STUB, answer);
+        assertEquals(System.lineSeparator(), outputStream.toString("UTF-8"));
+    }
+
+    @Test
+    public void askTest1() throws UnsupportedEncodingException {
+        initConsoleWithInputText(STUB);
+
+        String answer = console.ask(STUB);
+
+        assertEquals(STUB, answer);
+        assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
+    }
+
+    @Test
+    public void askLocalDateTest() throws UnsupportedEncodingException {
+        initConsoleWithInputText("20 10 2010");
+
+        assertEquals(LocalDate.parse("2010-10-20"), console.askLocalDate(STUB));
+        assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
+
+        initConsoleWithInputText("21 - 11 - 2011");
+
+        assertEquals(LocalDate.parse("2011-11-21"), console.askLocalDate(STUB));
+        assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
+
+        initConsoleWithInputText("22_12_2012");
+
+        assertEquals(LocalDate.parse("2012-12-22"), console.askLocalDate(STUB));
+        assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
+    }
+
+    @Test
+    public void askLocalDateTestBadInput() throws UnsupportedEncodingException {
+        initConsoleWithInputText("20 10 0000\n20 10 2010");
+
+        assertEquals(LocalDate.parse("2010-10-20"), console.askLocalDate(STUB));
+        assertEquals(STUB + System.lineSeparator() + IOStream.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
+                outputStream.toString("UTF-8"));
+
+        initConsoleWithInputText("21 - 11 - 2011 - 2018\n21 - 11 - 2011");
+
+        assertEquals(console.askLocalDate(STUB), LocalDate.parse("2011-11-21"));
+        assertEquals(STUB + System.lineSeparator() + IOStream.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
+                outputStream.toString("UTF-8"));
+
+        initConsoleWithInputText("22_12_2012_2028\n22_12_2012");
+
+        assertEquals(console.askLocalDate(STUB), LocalDate.parse("2012-12-22"));
+        assertEquals(STUB + System.lineSeparator() + IOStream.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
+                outputStream.toString("UTF-8"));
     }
 }

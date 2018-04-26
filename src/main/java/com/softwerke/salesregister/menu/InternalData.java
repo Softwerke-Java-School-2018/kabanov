@@ -11,6 +11,7 @@ import com.softwerke.salesregister.tables.person.Person;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,10 +38,10 @@ public class InternalData {
     public Stream<Invoice> invoices;
 
     public InternalData(IOStream ioStream, DaoPerson daoPerson, DaoDevice daoDevice, DaoInvoice daoInvoice) {
-        this.ioStream = ioStream;
-        this.daoPerson = daoPerson;
-        this.daoDevice = daoDevice;
-        this.daoInvoice = daoInvoice;
+        this.ioStream = Objects.requireNonNull(ioStream);
+        this.daoPerson = Objects.requireNonNull(daoPerson);
+        this.daoDevice = Objects.requireNonNull(daoDevice);
+        this.daoInvoice = Objects.requireNonNull(daoInvoice);
     }
 
     public void resetPersonList() {

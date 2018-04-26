@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 public class FilterInvoiceListMenu extends Menu {
     public FilterInvoiceListMenu() {
         super("-- Filter invoice history menu --",
-                new MenuItem("Filter by ID", () -> {
+                new MenuItem("Add filter by ID", () -> {
                     String answer = internalData.ioStream.ask("Enter invoice ID range to filter (\"X Y\", \"X\" or \"*\" for any ID)");
                     String[] splitAnswer = Utils.splitInTwo(answer, "0", String.valueOf(Integer.MAX_VALUE));
                     int[] bounds = Utils.convertToInt(splitAnswer);
@@ -20,7 +20,7 @@ public class FilterInvoiceListMenu extends Menu {
                             invoice -> Utils.isBetween(bounds[0], invoice.getId(), bounds[1]));
                 }),
 
-                new MenuItem("Filter by invoice date", () -> {
+                new MenuItem("Add filter by invoice date", () -> {
                     String answer = internalData.ioStream.ask("Enter invoice date range to filter (\"X Y\", \"X\" or \"*\" for any date, format: dd-mm-yyyy)");
                     String[] splitAnswer = Utils.splitInTwo(answer, "01-01-0001", "31-12-9999");
                     LocalDate[] bounds = Utils.convertToLocalDate(splitAnswer);
@@ -28,7 +28,7 @@ public class FilterInvoiceListMenu extends Menu {
                             invoice -> Utils.isBetween(bounds[0], invoice.getDate(), bounds[1]));
                 }),
 
-                new MenuItem("Filter by total", () -> {
+                new MenuItem("Add filter by total", () -> {
                     String answer = internalData.ioStream.ask("Enter total range to filter (\"X Y\", \"X\" or \"*\" for any total)");
                     String[] splitAnswer = Utils.splitInTwo(answer, "0.00", "99999999.99");
                     BigDecimal[] bounds = Utils.convertToBigDecimal(splitAnswer);
@@ -36,7 +36,7 @@ public class FilterInvoiceListMenu extends Menu {
                             invoice -> Utils.isBetween(bounds[0], invoice.getTotalSum(), bounds[1]));
                 }),
 
-                new MenuItem("Filter by person ID", () -> {
+                new MenuItem("Add filter by person ID", () -> {
                     String answer = internalData.ioStream.ask("Enter person ID range to filter (\"X Y\", \"X\" or \"*\" for any ID)");
                     String[] splitAnswer = Utils.splitInTwo(answer, "0", String.valueOf(Integer.MAX_VALUE));
                     int[] bounds = Utils.convertToInt(splitAnswer);
@@ -44,7 +44,7 @@ public class FilterInvoiceListMenu extends Menu {
                             invoice -> Utils.isBetween(bounds[0], invoice.getPerson().getId(), bounds[1]));
                 }),
 
-                new MenuItem("Filter by device ID", () -> {
+                new MenuItem("Add filter by device ID", () -> {
                     String answer = internalData.ioStream.ask("Enter device ID range to filter (\"X Y\", \"X\" or \"*\" for any ID)");
                     String[] splitAnswer = Utils.splitInTwo(answer, "0", String.valueOf(Integer.MAX_VALUE));
                     int[] bounds = Utils.convertToInt(splitAnswer);
@@ -52,12 +52,12 @@ public class FilterInvoiceListMenu extends Menu {
                             device -> Utils.isBetween(bounds[0], device.getDevice().getId(), bounds[1])));
                 }),
 
-                new MenuItem("Filter by device type", () -> {
+                new MenuItem("Add filter by device type", () -> {
                     String answer = internalData.ioStream.ask(
                             "Enter preferred device types to filter or \"*\" for any device type " +
                                     "(device types should be separated by any non-character symbol[s], " +
                                     "returns all the sales containing at least one device of entered type).");
-                    Stream<DeviceType> preferredTypes = Utils.convertToEnumInstances(answer, DeviceType.class);
+                    Stream<DeviceType> preferredTypes = Utils.parseToEnums(answer, DeviceType.class);
                     internalData.invoices = internalData.invoices.filter(
                             invoice -> invoice.getInvoices().anyMatch(
                                     devices -> preferredTypes.anyMatch(

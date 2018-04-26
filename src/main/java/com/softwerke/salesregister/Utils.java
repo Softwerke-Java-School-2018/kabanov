@@ -3,23 +3,38 @@ package com.softwerke.salesregister;
 import com.softwerke.salesregister.console.IOStream;
 import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.person.Person;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nullable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Utils {
 
-    @Nullable
+    /**
+     * Splits given string in two, related by space.
+     *
+     * @param valueToSplit      string to be split, may be an {@code *} wildcard character
+     * @param defaultLeftValue  default left-value in case of {@code *} input, nullable
+     * @param defaultRightValue default right-value in case of {@code *} input, nullable
+     * @return the array of two {@code String}'s get from split input value, or from
+     * default values, or null if there was not two values separated by a space
+     * @throws IllegalArgumentException input string is a null.
+     */
+
     public static String[] splitInTwo(String valueToSplit, String defaultLeftValue, String defaultRightValue) {
-        valueToSplit = valueToSplit.trim();
-        if (valueToSplit.trim().equals("*")) {
+        if (StringUtils.isBlank(valueToSplit)) {
+            throw new IllegalArgumentException("Given value is null or empty!");
+        }
+        valueToSplit = StringUtils.strip(valueToSplit);                     /* Remove leading/trailing whitespace */
+        if (valueToSplit.equals("*")) {
             return new String[]{defaultLeftValue, defaultRightValue};
         } else {
             String[] splitValue = valueToSplit.split("\\s+");
@@ -37,10 +52,22 @@ public class Utils {
         }
     }
 
-    public static <T extends Enum<T>> Stream<T> convertToEnumInstances(String valueToConvert, Class<T> clazz)
-            throws IllegalArgumentException {
+    /**
+     * Splits given string in two, related by space.
+     *
+     * @param valueToConvert string to be split and casted, may be an {@code *} wildcard character
+     * @param clazz          enum class to which words will be casted
+     * @return stream of enum instances of class {@code clazz}
+     * @throws IllegalArgumentException input string is a null.
+     */
+
+    public static <T extends Enum<T>> Stream<T> parseToEnums(String valueToConvert, Class<T> clazz) {
+        if (StringUtils.isBlank(valueToConvert) || Objects.isNull(clazz)) {
+            throw new IllegalArgumentException("Given value is null or empty!");
+        }
+        valueToConvert = StringUtils.strip(valueToConvert);                 /* Remove leading/trailing whitespace */
         /* If line is an asterisk wildcard, return all the enumerators */
-        if (valueToConvert.trim().equals("*")) {
+        if (valueToConvert.equals("*")) {
             return Arrays.stream(clazz.getEnumConstants());
         } else {
             /* Otherwise - split and cast */
@@ -50,6 +77,9 @@ public class Utils {
     }
 
     public static <T> boolean isBetween(Comparable<T> leftLimit, T value, Comparable<T> rightLimit) {
+        if (!ObjectUtils.allNotNull(leftLimit, value, rightLimit)) {
+            throw new IllegalArgumentException("One or more arguments is null!");
+        }
         return rightLimit.compareTo(value) > -1 && leftLimit.compareTo(value) < 1;
     }
 
@@ -60,7 +90,11 @@ public class Utils {
      * @param personStream stream of elements, which will be cured inside as {@code List}
      * @return the {@code Person} matching required name/ID or null if there is no such element
      */
+
     public static Person selectPerson(Stream<Person> personStream, IOStream source) {
+        if (!ObjectUtils.allNotNull(personStream, source)) {
+            throw new IllegalArgumentException("One or more arguments is null!");
+        }
         List<Person> personList = personStream.filter(person -> !person.isDeleted()).collect(Collectors.toList());
         while (true) {
             int personListSize = personList.size();
@@ -93,7 +127,11 @@ public class Utils {
      * @param deviceStream stream of elements, which will be cured inside as {@code List}
      * @return the {@code Device} matching required name/ID or null if there is no such element
      */
+
     public static Device selectDevice(Stream<Device> deviceStream, IOStream source) {
+        if (!ObjectUtils.allNotNull(deviceStream, source)) {
+            throw new IllegalArgumentException("One or more arguments is null!");
+        }
         List<Device> deviceList = deviceStream.filter(device -> !device.isDeleted())
                 .collect(Collectors.toList());
         while (true) {
@@ -129,6 +167,9 @@ public class Utils {
      * @throws DateTimeParseException if any of strings is not a valid representation of a LocalDate.
      */
     public static LocalDate[] convertToLocalDate(String... dates) throws DateTimeParseException {
+        if (Objects.isNull(dates) || !ObjectUtils.allNotNull((Object[]) dates)) {
+            throw new IllegalArgumentException("Arguments is null!");
+        }
         return Arrays.stream(dates).map(date -> LocalDate.parse(date.replaceAll("\\D+", "-"),
                 DateTimeFormatter.ofPattern("d-MM-yyyy"))).toArray(LocalDate[]::new);
     }
@@ -141,6 +182,9 @@ public class Utils {
      * @throws NumberFormatException if any of strings is not a valid representation of a BigDecimal.
      */
     public static BigDecimal[] convertToBigDecimal(String... values) throws NumberFormatException {
+        if (Objects.isNull(values) || !ObjectUtils.allNotNull((Object[]) values)) {
+            throw new IllegalArgumentException("Arguments is null!");
+        }
         return Arrays.stream(values).map(BigDecimal::new).toArray(BigDecimal[]::new);
     }
 
@@ -152,6 +196,9 @@ public class Utils {
      * @throws NumberFormatException if any of strings does not contain a parsable integer.
      */
     public static int[] convertToInt(String... strings) throws NumberFormatException {
+        if (Objects.isNull(strings) || !ObjectUtils.allNotNull((Object[]) strings)) {
+            throw new IllegalArgumentException("Arguments is null!");
+        }
         return Arrays.stream(strings).mapToInt(Integer::parseInt).toArray();
     }
 }

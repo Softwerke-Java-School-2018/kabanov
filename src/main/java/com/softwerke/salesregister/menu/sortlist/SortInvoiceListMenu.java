@@ -37,12 +37,12 @@ public class SortInvoiceListMenu extends Menu {
                     incrementRollback();
                 }),
 
-                new MenuItem("Sort by last name", () -> {
+                new MenuItem("Sort by name", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.invoiceList.sort(isOrderAscending
-                            /* IntelliJ IDEA reports an error; though there isn't any */
-                            ? Comparator.comparing(invoice -> invoice.getPerson().getLastName())
-                            : Comparator.comparing(invoice -> invoice.getPerson().getLastName()));
+                            ? Comparator.comparing(Invoice::getPersonName)
+                            : Comparator.comparing(Invoice::getPersonName).reversed());
+                    incrementRollback();
                     incrementRollback();
                 }));
     }

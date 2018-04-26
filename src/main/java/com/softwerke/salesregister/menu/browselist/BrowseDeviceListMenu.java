@@ -21,10 +21,10 @@ public class BrowseDeviceListMenu extends Menu {
                     internalData.devices = internalData.deviceList.stream().filter(device -> !device.isDeleted());
                     try {
                         new FilterDeviceListMenu().execute();
-                    } catch (NumberFormatException | DateTimeParseException e) {
-                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        internalData.deviceList = internalData.devices.collect(Collectors.toList());
+                    } catch (IllegalArgumentException | DateTimeParseException e) {
+                        internalData.ioStream.ask(ConsoleIOStream.WRONG_DATA_TEXT);
                     }
-                    internalData.deviceList = internalData.devices.collect(Collectors.toList());
                 }),
 
                 new MenuItem("Reset current list", internalData::resetDeviceList),

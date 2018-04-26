@@ -1,5 +1,6 @@
 package com.softwerke.salesregister.menu.sortlist;
 
+import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.tables.data.dao.DaoDevice;
 import com.softwerke.salesregister.tables.data.dao.DaoInvoice;
 import com.softwerke.salesregister.tables.data.dao.DaoPerson;
@@ -7,10 +8,16 @@ import com.softwerke.salesregister.tables.data.storage.ArrayListStorage;
 import com.softwerke.salesregister.tables.data.storage.Storage;
 import com.softwerke.salesregister.tables.data.storage.StorageInitializer;
 import com.softwerke.salesregister.tables.person.Person;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.Comparator;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.fail;
 
 public class SortPersonListTest {
     private static DaoPerson daoPerson;
@@ -27,7 +34,11 @@ public class SortPersonListTest {
 
     @Before
     public void fillStorage() {
-        new StorageInitializer(daoPerson, daoDevice, daoInvoice);
+        try {
+            new StorageInitializer(daoPerson, daoDevice, daoInvoice);
+        } catch (BuilderNotInitializedException e) {
+            fail();
+        }
     }
 
     @After
@@ -43,7 +54,7 @@ public class SortPersonListTest {
                 .sorted(Comparator.comparingInt(Person::getId).reversed())
                 .mapToInt(Person::getId)
                 .toArray();
-        Assert.assertArrayEquals(personIdArray, new int[]{5, 4, 3, 2, 1, 0});
+        assertArrayEquals(personIdArray, new int[]{5, 4, 3, 2, 1, 0});
     }
 
     @Test
@@ -52,7 +63,7 @@ public class SortPersonListTest {
                 .sorted(Comparator.comparing(Person::getBirthDate))
                 .map(Person::getBirthDate)
                 .toArray(LocalDate[]::new);
-        Assert.assertArrayEquals(personDateArray, new LocalDate[]{
+        assertArrayEquals(personDateArray, new LocalDate[]{
                 LocalDate.parse("1962-07-16"),
                 LocalDate.parse("1970-02-27"),
                 LocalDate.parse("1971-12-05"),

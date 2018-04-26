@@ -4,6 +4,7 @@ import com.softwerke.salesregister.tables.data.storage.Storage;
 import com.softwerke.salesregister.tables.person.Person;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class DaoPerson extends Dao {
@@ -13,10 +14,11 @@ public class DaoPerson extends Dao {
 
     public void addPerson(Person person) {
         List<Person> personList = storage.getPersonList();
-        personList.add(person);
+        personList.add(Objects.requireNonNull(person));
     }
 
     public void updatePerson(Person person) {
+        Objects.requireNonNull(person);
         storage.getPersonList().set(person.getId(), person);
     }
 

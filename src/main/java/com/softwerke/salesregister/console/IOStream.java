@@ -10,6 +10,7 @@ public interface IOStream {
     String PRESS_ANYKEY_TEXT = "Enter something to continue...";
     String ENTER_SORT_ORDER_TEXT = "Enter \"Y\" to set ascending order, otherwise - descending.";
     String SUCCESSFUL = "Operation successful.";
+    String PROGRAM_ERROR = "Program error occurred. Changes didn't apply.";
 
     void printLine(String message);
 

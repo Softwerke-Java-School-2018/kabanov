@@ -1,10 +1,17 @@
 package com.softwerke.salesregister.tables.data.dao;
 
+import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.tables.data.storage.ArrayListStorage;
 import com.softwerke.salesregister.tables.data.storage.Storage;
 import com.softwerke.salesregister.tables.data.storage.StorageInitializer;
 import com.softwerke.salesregister.tables.person.Person;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class DaoPersonTest {
     private static DaoPerson daoPerson;
@@ -21,7 +28,11 @@ public class DaoPersonTest {
 
     @Before
     public void fillStorage() {
-        new StorageInitializer(daoPerson, daoDevice, daoInvoice);
+        try {
+            new StorageInitializer(daoPerson, daoDevice, daoInvoice);
+        } catch (BuilderNotInitializedException e) {
+            fail();
+        }
     }
 
     @After
@@ -33,39 +44,49 @@ public class DaoPersonTest {
 
     @Test
     public void testPersonUpdate() {
-        Person arkadiyZolotukhin = daoPerson.getPerson(3);
-        Person.PersonBuilder builder = Person.PersonBuilder.setupFromPerson(arkadiyZolotukhin);
+        Person arkadiy = daoPerson.getPerson(3);
+        Person.PersonBuilder builder = Person.PersonBuilder.setupFromPerson(arkadiy);
 
-        Person annaKuznetsova = builder.firstName("Anna").lastName("Kuznetsova").build();
+        Person anna = null;
+        try {
+            anna = builder.firstName("Anna").lastName("Kuznetsova").build();
+        } catch (BuilderNotInitializedException e) {
+            fail();
+        }
 
-        daoPerson.updatePerson(annaKuznetsova);
+        daoPerson.updatePerson(anna);
 
-        Person arkadiyZolotukhinRenamed = daoPerson.getPerson(3);
+        Person arkadiyRenamed = daoPerson.getPerson(3);
 
-        Assert.assertEquals(arkadiyZolotukhinRenamed.getId(),           arkadiyZolotukhinRenamed.getId());
-        Assert.assertEquals(arkadiyZolotukhinRenamed.getBirthDate(),    arkadiyZolotukhinRenamed.getBirthDate());
-        Assert.assertEquals(arkadiyZolotukhinRenamed.isDeleted(),       arkadiyZolotukhinRenamed.isDeleted());
+        assertEquals(arkadiyRenamed.getId(),           arkadiyRenamed.getId());
+        assertEquals(arkadiyRenamed.getBirthDate(),    arkadiyRenamed.getBirthDate());
+        assertEquals(arkadiyRenamed.isDeleted(),       arkadiyRenamed.isDeleted());
 
-        Assert.assertEquals(arkadiyZolotukhinRenamed.getFirstName(), "Anna");
-        Assert.assertEquals(arkadiyZolotukhinRenamed.getLastName(), "Kuznetsova");
+        assertEquals(arkadiyRenamed.getFirstName(), "Anna");
+        assertEquals(arkadiyRenamed.getLastName(), "Kuznetsova");
     }
 
     @Test
     public void testPersonDelete() {
-        Person arkadiyZolotukhin = daoPerson.getPerson(3);
-        Person.PersonBuilder builder = Person.PersonBuilder.setupFromPerson(arkadiyZolotukhin);
+        Person arkadiy = daoPerson.getPerson(3);
+        Person.PersonBuilder builder = Person.PersonBuilder.setupFromPerson(arkadiy);
 
-        Person arkadiyZolotukhinDeleted = builder.isDeleted(true).build();
+        Person arkadiyDeleted = null;
+        try {
+            arkadiyDeleted = builder.isDeleted(true).build();
+        } catch (BuilderNotInitializedException e) {
+            fail();
+        }
 
-        daoPerson.updatePerson(arkadiyZolotukhinDeleted);
+        daoPerson.updatePerson(arkadiyDeleted);
 
-        arkadiyZolotukhinDeleted = daoPerson.getPerson(3);
+        arkadiyDeleted = daoPerson.getPerson(3);
 
-        Assert.assertEquals(arkadiyZolotukhinDeleted.getId(),           arkadiyZolotukhin.getId());
-        Assert.assertEquals(arkadiyZolotukhinDeleted.getBirthDate(),    arkadiyZolotukhin.getBirthDate());
-        Assert.assertEquals(arkadiyZolotukhinDeleted.getFirstName(),    arkadiyZolotukhin.getFirstName());
-        Assert.assertEquals(arkadiyZolotukhinDeleted.getLastName(),     arkadiyZolotukhin.getLastName());
+        assertEquals(arkadiyDeleted.getId(),           arkadiy.getId());
+        assertEquals(arkadiyDeleted.getBirthDate(),    arkadiy.getBirthDate());
+        assertEquals(arkadiyDeleted.getFirstName(),    arkadiy.getFirstName());
+        assertEquals(arkadiyDeleted.getLastName(),     arkadiy.getLastName());
 
-        Assert.assertEquals(arkadiyZolotukhinDeleted.isDeleted(), true);
+        assertEquals(arkadiyDeleted.isDeleted(), true);
     }
 }

@@ -1,8 +1,10 @@
 package com.softwerke.salesregister.tables.device;
 
+import com.softwerke.salesregister.exception.BuilderNotInitializedException;
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
 public class Device {
     private final int id;
@@ -50,6 +52,10 @@ public class Device {
         return model;
     }
 
+    public String getLabelText() {
+        return vendor + " " + model;
+    }
+
     public Color getColor() {
         return color;
     }
@@ -87,12 +93,12 @@ public class Device {
 
         public DeviceBuilder() {
             id = -1;
-            model = "N/A";
-            vendor = "N/A";
+            model = null;
+            vendor = null;
             color = null;
             deviceType = null;
-            productionDate = LocalDate.MIN;
-            price = BigDecimal.ZERO;
+            productionDate = null;
+            price = null;
             isDeleted = true;
         }
 
@@ -149,11 +155,9 @@ public class Device {
             return this;
         }
 
-        public Device build() {
-            if (id == -1 || Objects.equals(model, "N/A") || Objects.equals(vendor, "N/A") ||
-                    Objects.isNull(color) || Objects.isNull(deviceType) ||
-                    Objects.equals(productionDate, LocalDate.MIN) || Objects.equals(price, BigDecimal.ZERO)) {
-                throw new RuntimeException("Builder isn't filled!");
+        public Device build() throws BuilderNotInitializedException {
+            if (id == -1 || !ObjectUtils.allNotNull(model, vendor, color, deviceType, productionDate, price)) {
+                throw new BuilderNotInitializedException("Builder isn't filled!");
             }
             return new Device(model, vendor, color, productionDate, deviceType, price.toString(), id, isDeleted);
         }

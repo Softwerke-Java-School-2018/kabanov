@@ -3,6 +3,7 @@ package com.softwerke.salesregister.tables.invoice;
 import com.softwerke.salesregister.tables.device.Device;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class InvoiceLine {
     private final Device device;
@@ -10,6 +11,10 @@ public class InvoiceLine {
     private final BigDecimal internalSum;
 
     public InvoiceLine(Device device, int amount) {
+        Objects.requireNonNull(device);
+        if (amount < 1) {
+            throw new IllegalArgumentException("Devices amount should be greater than zero!");
+        }
         this.device = device;
         this.amount = amount;
         this.internalSum = device.getPrice().multiply(BigDecimal.valueOf(amount));

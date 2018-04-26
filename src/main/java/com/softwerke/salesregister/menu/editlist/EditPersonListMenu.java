@@ -3,6 +3,7 @@ package com.softwerke.salesregister.menu.editlist;
 import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.console.ConsoleIOStream;
 import com.softwerke.salesregister.console.Formatter;
+import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.menu.edititem.EditPersonMenu;
@@ -28,7 +29,13 @@ public class EditPersonListMenu extends Menu {
                             .birthDate(birthDate)
                             .id(internalData.daoPerson.getSize())
                             .isDeleted(false);
-                    internalData.daoPerson.addPerson(builder.build());
+                    try {
+                        internalData.daoPerson.addPerson(builder.build());
+                    } catch (BuilderNotInitializedException e) {
+                        // internalData.ioStream.logSomething();
+                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                        return;
+                    }
                     internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
                 }),
 

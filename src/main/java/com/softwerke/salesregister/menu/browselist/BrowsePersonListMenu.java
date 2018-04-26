@@ -23,7 +23,7 @@ public class BrowsePersonListMenu extends Menu {
                     try {
                         new FilterPersonListMenu().execute();
                     } catch (DateTimeParseException e) {
-                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        internalData.ioStream.ask(ConsoleIOStream.WRONG_DATA_TEXT);
                     }
                     internalData.personList = internalData.persons.collect(Collectors.toList());
                 }),

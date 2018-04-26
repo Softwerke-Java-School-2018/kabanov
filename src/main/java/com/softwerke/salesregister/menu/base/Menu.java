@@ -3,6 +3,8 @@ package com.softwerke.salesregister.menu.base;
 import com.softwerke.salesregister.console.ConsoleIOStream;
 import com.softwerke.salesregister.menu.InternalData;
 
+import java.util.Objects;
+
 public class Menu {
 
     protected static InternalData internalData;
@@ -11,11 +13,11 @@ public class Menu {
     private String descriptionText;
 
     protected Menu(String descriptionText, MenuItem... actions) {
-        if (actions.length > 9 || actions.length == 0) {
+        if (Objects.isNull(actions) || actions.length > 9 || actions.length == 0) {
             throw new IllegalArgumentException();
         }
+        this.descriptionText = Objects.requireNonNull(descriptionText);
         this.actions = actions;
-        this.descriptionText = descriptionText;
     }
 
     protected static void incrementRollback() {
@@ -28,6 +30,7 @@ public class Menu {
 
     public void execute() {
         while (true) {
+            /* Print menu labels */
             internalData.ioStream.printLine(descriptionText);
             for (int i = 1; i <= actions.length; i++) {
                 internalData.ioStream.printLine(i + " - " + actions[i - 1].getLabel());
@@ -37,24 +40,20 @@ public class Menu {
             int parsedCommand;
             try {
                 parsedCommand = Integer.parseInt(internalData.ioStream.ask());
-            } catch (NumberFormatException e) {
+                if (parsedCommand > actions.length || parsedCommand < 0) {
+                    throw new IllegalArgumentException();
+                }
+            } catch (IllegalArgumentException e) {
                 /* Input error */
                 internalData.ioStream.printLine(ConsoleIOStream.WRONG_COMMAND_TEXT);
                 continue;
             }
             if (parsedCommand == 0) {
-                /* Exiting menu */
-                return;
+                return;                                     /* Entered "0", exit menu */
             }
-            if (parsedCommand > actions.length) {
-                /* Input error */
-                internalData.ioStream.printLine(ConsoleIOStream.WRONG_COMMAND_TEXT);
-                continue;
-            }
-            actions[parsedCommand - 1].runItem();
+            actions[parsedCommand - 1].runItem();           /* Execute menu item */
             if (rollback > 0) {
-                /* Exiting menu */
-                rollback--;
+                rollback--;                                 /* Exiting menu */
                 return;
             }
         }

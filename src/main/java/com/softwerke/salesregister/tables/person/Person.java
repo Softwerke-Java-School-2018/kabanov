@@ -1,7 +1,9 @@
 package com.softwerke.salesregister.tables.person;
 
+import com.softwerke.salesregister.exception.BuilderNotInitializedException;
+import org.apache.commons.lang3.ObjectUtils;
+
 import java.time.LocalDate;
-import java.util.Objects;
 
 public class Person {
     private final int id;
@@ -35,6 +37,10 @@ public class Person {
         return lastName;
     }
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
     public String getFirstNameLowerCase() {
         return firstNameLowerCase;
     }
@@ -53,7 +59,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return firstName.charAt(0) + ". " + lastName;
+        return lastName + " " + firstName.charAt(0) + ".";
     }
 
     public static class PersonBuilder {
@@ -106,9 +112,9 @@ public class Person {
             return this;
         }
 
-        public Person build() {
-            if (id == -1 || Objects.isNull(firstName) || Objects.isNull(lastName) || Objects.isNull(birthDate)) {
-                throw new RuntimeException("Builder isn't filled!");
+        public Person build() throws BuilderNotInitializedException {
+            if (id == -1 || !ObjectUtils.allNotNull(firstName, lastName, birthDate)) {
+                throw new BuilderNotInitializedException("Builder isn't filled!");
             }
             return new Person(firstName, lastName, birthDate, id, isDeleted);
         }
