@@ -31,10 +31,10 @@ public class PersonTest {
             fail();
         }
 
-        assertEquals(person.getId(), 2);
-        assertEquals(person.getFirstName(), "Name");
-        assertEquals(person.getLastName(), "Surname");
-        assertEquals(person.getBirthDate(), LocalDate.parse("1981-10-01"));
-        assertFalse(person.isDeleted());
+        assertEquals(person.id, 2);
+        assertEquals(person.firstName, "Name");
+        assertEquals(person.lastName, "Surname");
+        assertEquals(person.birthDate, LocalDate.parse("1981-10-01"));
+        assertFalse(person.isDeleted);
     }
 }

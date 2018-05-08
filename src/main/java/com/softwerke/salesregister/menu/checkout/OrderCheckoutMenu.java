@@ -32,7 +32,7 @@ public class OrderCheckoutMenu extends Menu {
                 new MenuItem("Add item", () -> {
                     int deviceId = internalData.ioStream.askInt("Enter the device ID to sell:");
                     for (InvoiceLine orderItem : internalData.orderItems) {
-                        if (orderItem.getDevice().getId() == deviceId) {
+                        if (orderItem.device.id == deviceId) {
                             internalData.ioStream.printLine("Device with this ID has already been added to shop list.");
                             return;
                         }
@@ -40,7 +40,7 @@ public class OrderCheckoutMenu extends Menu {
                     Device device;
                     try {
                         device = internalData.daoDevice.getDevice(deviceId);
-                        if (device.isDeleted()) {
+                        if (device.isDeleted) {
                             internalData.ioStream.printLine(ConsoleIOStream.ENTRY_IS_DELETED);
                             return;
                         }
@@ -58,7 +58,7 @@ public class OrderCheckoutMenu extends Menu {
                 }),
 
                 new MenuItem("Print shop list",
-                        () -> Formatter.printShopList(internalData.orderItems, internalData.ioStream)),
+                        () -> Formatter.printShopList(internalData.orderItems.stream(), internalData.ioStream)),
 
                 new MenuItem("Select the sale date",
                         () -> internalData.invoiceDate = internalData.ioStream.askLocalDate("Enter the sale date:")),
@@ -69,12 +69,12 @@ public class OrderCheckoutMenu extends Menu {
                         return;
                     }
                     int deviceId = internalData.ioStream.askInt("Enter the device id for removing:");
-                    internalData.orderItems.removeIf(x -> x.getDevice().getId() == deviceId);
+                    internalData.orderItems.removeIf(x -> x.device.id == deviceId);
                     internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
                 }),
 
                 new MenuItem("Proceed", () -> {
-                    if (internalData.currentPerson.isDeleted() || internalData.orderItems.isEmpty()) {
+                    if (internalData.currentPerson.isDeleted || internalData.orderItems.isEmpty()) {
                         internalData.ioStream.printLine("Customer isn't set or shop list is empty.");
                         return;
                     }

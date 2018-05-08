@@ -53,7 +53,8 @@ public class FilterInvoiceListMenuTest {
     public void invoiceIdRangeSearchTest() {
         int[] bounds = new int[]{1, 3};
         IntStream ids = daoInvoice.invoices()
-                .filter(invoice -> Utils.isBetween(bounds[0], invoice.getId(), bounds[1])).mapToInt(Invoice::getId);
+                .filter(invoice -> Utils.isBetween(bounds[0], invoice.id, bounds[1]))
+                .mapToInt(invoice -> invoice.id);
         int[] idArray = ids.toArray();
         assertArrayEquals(idArray, new int[]{1, 2, 3});
     }
@@ -64,8 +65,8 @@ public class FilterInvoiceListMenuTest {
                 LocalDate.of(2017, 1, 1),
                 LocalDate.of(2017, 12, 31)};
         Stream<LocalDate> dates = daoInvoice.invoices()
-                .filter(invoice -> Utils.isBetween(bounds[0], invoice.getDate(), bounds[1]))
-                .map(Invoice::getDate);
+                .filter(invoice -> Utils.isBetween(bounds[0], invoice.date, bounds[1]))
+                .map(invoice -> invoice.date);
         LocalDate[] datesArray = dates.toArray(LocalDate[]::new);
         assertArrayEquals(datesArray, new LocalDate[]{
                 LocalDate.of(2017, 4, 19),
@@ -80,8 +81,8 @@ public class FilterInvoiceListMenuTest {
                 new BigDecimal(70000),
                 new BigDecimal(300000)};
         Stream<BigDecimal> dates = daoInvoice.invoices()
-                .filter(invoice -> Utils.isBetween(bounds[0], invoice.getTotalSum(), bounds[1]))
-                .map(Invoice::getTotalSum);
+                .filter(invoice -> Utils.isBetween(bounds[0], invoice.totalSum, bounds[1]))
+                .map(invoice -> invoice.totalSum);
         BigDecimal[] datesArray = dates.toArray(BigDecimal[]::new);
         assertArrayEquals(datesArray, new BigDecimal[]{
                 new BigDecimal("93950.00"),
@@ -95,7 +96,7 @@ public class FilterInvoiceListMenuTest {
         Stream<Invoice> invoices = daoInvoice.invoices().filter(
                 invoice -> invoice.getInvoices().anyMatch(
                         devices -> Stream.of(DeviceType.LAPTOP, DeviceType.PLAYER).anyMatch(
-                                type -> type.equals(devices.getDevice().getDeviceType()))));
+                                type -> type.equals(devices.device.deviceType))));
         Invoice[] result = invoices.toArray(Invoice[]::new);
         assertArrayEquals(result, new Invoice[]{
                 daoInvoice.getInvoice(0),

@@ -6,9 +6,9 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class InvoiceLine {
-    private final Device device;
-    private final int amount;
-    private final BigDecimal internalSum;
+    public final Device device;
+    public final int amount;
+    public final BigDecimal internalSum;
 
     public InvoiceLine(Device device, int amount) {
         Objects.requireNonNull(device);
@@ -17,18 +17,6 @@ public class InvoiceLine {
         }
         this.device = device;
         this.amount = amount;
-        this.internalSum = device.getPrice().multiply(BigDecimal.valueOf(amount));
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public Device getDevice() {
-        return device;
-    }
-
-    public BigDecimal getInternalSum() {
-        return internalSum;
+        this.internalSum = device.price.multiply(BigDecimal.valueOf(amount));
     }
 }

@@ -17,7 +17,7 @@ public class FilterInvoiceListMenu extends Menu {
                     String[] splitAnswer = Utils.splitInTwo(answer, "0", String.valueOf(Integer.MAX_VALUE));
                     int[] bounds = Utils.convertToInt(splitAnswer);
                     internalData.invoices = internalData.invoices.filter(
-                            invoice -> Utils.isBetween(bounds[0], invoice.getId(), bounds[1]));
+                            invoice -> Utils.isBetween(bounds[0], invoice.id, bounds[1]));
                 }),
 
                 new MenuItem("Add filter by invoice date", () -> {
@@ -25,7 +25,7 @@ public class FilterInvoiceListMenu extends Menu {
                     String[] splitAnswer = Utils.splitInTwo(answer, "01-01-0001", "31-12-9999");
                     LocalDate[] bounds = Utils.convertToLocalDate(splitAnswer);
                     internalData.invoices = internalData.invoices.filter(
-                            invoice -> Utils.isBetween(bounds[0], invoice.getDate(), bounds[1]));
+                            invoice -> Utils.isBetween(bounds[0], invoice.date, bounds[1]));
                 }),
 
                 new MenuItem("Add filter by total", () -> {
@@ -33,7 +33,7 @@ public class FilterInvoiceListMenu extends Menu {
                     String[] splitAnswer = Utils.splitInTwo(answer, "0.00", "99999999.99");
                     BigDecimal[] bounds = Utils.convertToBigDecimal(splitAnswer);
                     internalData.invoices = internalData.invoices.filter(
-                            invoice -> Utils.isBetween(bounds[0], invoice.getTotalSum(), bounds[1]));
+                            invoice -> Utils.isBetween(bounds[0], invoice.totalSum, bounds[1]));
                 }),
 
                 new MenuItem("Add filter by person ID", () -> {
@@ -41,7 +41,7 @@ public class FilterInvoiceListMenu extends Menu {
                     String[] splitAnswer = Utils.splitInTwo(answer, "0", String.valueOf(Integer.MAX_VALUE));
                     int[] bounds = Utils.convertToInt(splitAnswer);
                     internalData.invoices = internalData.invoices.filter(
-                            invoice -> Utils.isBetween(bounds[0], invoice.getPerson().getId(), bounds[1]));
+                            invoice -> Utils.isBetween(bounds[0], invoice.person.id, bounds[1]));
                 }),
 
                 new MenuItem("Add filter by device ID", () -> {
@@ -49,7 +49,7 @@ public class FilterInvoiceListMenu extends Menu {
                     String[] splitAnswer = Utils.splitInTwo(answer, "0", String.valueOf(Integer.MAX_VALUE));
                     int[] bounds = Utils.convertToInt(splitAnswer);
                     internalData.invoices = internalData.invoices.filter(invoice -> invoice.getInvoices().anyMatch(
-                            device -> Utils.isBetween(bounds[0], device.getDevice().getId(), bounds[1])));
+                            device -> Utils.isBetween(bounds[0], device.device.id, bounds[1])));
                 }),
 
                 new MenuItem("Add filter by device type", () -> {
@@ -61,7 +61,7 @@ public class FilterInvoiceListMenu extends Menu {
                     internalData.invoices = internalData.invoices.filter(
                             invoice -> invoice.getInvoices().anyMatch(
                                     devices -> preferredTypes.anyMatch(
-                                            type -> type.equals(devices.getDevice().getDeviceType()))));
+                                            type -> type.equals(devices.device.deviceType))));
                 }));
     }
 }

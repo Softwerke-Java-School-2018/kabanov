@@ -95,7 +95,7 @@ public class Utils {
         if (!ObjectUtils.allNotNull(personStream, source)) {
             throw new IllegalArgumentException("One or more arguments is null!");
         }
-        List<Person> personList = personStream.filter(person -> !person.isDeleted()).collect(Collectors.toList());
+        List<Person> personList = personStream.filter(person -> !person.isDeleted).collect(Collectors.toList());
         while (true) {
             int personListSize = personList.size();
             switch (personListSize) {
@@ -110,11 +110,11 @@ public class Utils {
                     source.printLine("Found " + personList.size() + " persons.");
                     String personIdOrName = source.askNonEmptyString("Enter person ID or name part:");
                     try {
-                        personList.removeIf(person -> person.getId() != Integer.parseInt(personIdOrName));
+                        personList.removeIf(person -> person.id != Integer.parseInt(personIdOrName));
                     } catch (NumberFormatException e) {
                         personList.removeIf(person ->
-                                !person.getFirstNameLowerCase().contains(personIdOrName) &&
-                                        !person.getLastNameLowerCase().contains(personIdOrName));
+                                !person.firstNameLowerCase.contains(personIdOrName) &&
+                                        !person.lastNameLowerCase.contains(personIdOrName));
                     }
             }
         }
@@ -132,7 +132,7 @@ public class Utils {
         if (!ObjectUtils.allNotNull(deviceStream, source)) {
             throw new IllegalArgumentException("One or more arguments is null!");
         }
-        List<Device> deviceList = deviceStream.filter(device -> !device.isDeleted())
+        List<Device> deviceList = deviceStream.filter(device -> !device.isDeleted)
                 .collect(Collectors.toList());
         while (true) {
             int personListSize = deviceList.size();
@@ -148,11 +148,11 @@ public class Utils {
                     source.printLine("Found " + deviceList.size() + " persons.");
                     String deviceIdOrName = source.askNonEmptyString("Enter device ID or vendor / model name part:");
                     try {
-                        deviceList.removeIf(person -> person.getId() != Integer.parseInt(deviceIdOrName));
+                        deviceList.removeIf(person -> person.id != Integer.parseInt(deviceIdOrName));
                     } catch (NumberFormatException e) {
                         deviceList.removeIf(device ->
-                                !device.getModelLowerCase().contains(deviceIdOrName) &&
-                                        !device.getVendorLowerCase().contains(deviceIdOrName));
+                                !device.modelLowerCase.contains(deviceIdOrName) &&
+                                        !device.vendorLowerCase.contains(deviceIdOrName));
                     }
             }
         }

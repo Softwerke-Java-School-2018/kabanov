@@ -12,12 +12,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Invoice {
-    private final int id;
-    private final Person person;
+    public final int id;
+    public final Person person;
+    public final LocalDate date;
+    public final BigDecimal totalSum;
+    public final boolean isDeleted;
+
     private final List<InvoiceLine> invoiceItems;
-    private final LocalDate date;
-    private final BigDecimal totalSum;
-    private final boolean isDeleted;
 
     public Invoice(Person person, List<InvoiceLine> invoiceItems, LocalDate date, int id, boolean isDeleted) {
         Objects.requireNonNull(invoiceItems);
@@ -27,43 +28,15 @@ public class Invoice {
         this.date = Objects.requireNonNull(date);
         this.isDeleted = isDeleted;
         this.totalSum = invoiceItems.stream()
-                .map(invoice -> invoice.getInternalSum().multiply(BigDecimal.valueOf(invoice.getAmount())))
+                .map(invoice -> invoice.internalSum.multiply(BigDecimal.valueOf(invoice.amount)))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public String getPersonName() {
-        return person.toString();
-    }
-
-    public List<InvoiceLine> getInvoiceItems() {
-        return invoiceItems;
-    }
-
     public Stream<InvoiceLine> getInvoices() {
-        return invoiceItems.stream().unordered();
+        return invoiceItems.stream();
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public BigDecimal getTotalSum() {
-        return totalSum;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public Invoice getDisabledCopy() {
+    public Invoice getDeletedCopy() {
         return new Invoice(person, invoiceItems, date, id, false);
     }
 

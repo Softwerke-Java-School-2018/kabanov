@@ -33,14 +33,14 @@ public class MainMenu extends Menu {
                 new MenuItem("Edit person list", () -> new EditPersonListMenu().execute()),
 
                 new MenuItem("Delete invoice from history", () -> {
-                    List<Invoice> invoices = internalData.daoInvoice.invoices().collect(Collectors.toList());
-                    if (invoices.isEmpty()) {
+                    List<Invoice> invoiceList = internalData.daoInvoice.invoices().collect(Collectors.toList());
+                    if (invoiceList.isEmpty()) {
                         internalData.ioStream.printLine("Invoice history is empty yet. Nothing to delete.");
                         return;
                     }
                     int idForDelete = internalData.ioStream.askInt("Enter invoice ID for removing:");
-                    if (idForDelete < invoices.size()) {
-                        internalData.daoInvoice.updateInvoice(invoices.get(idForDelete).getDisabledCopy());
+                    if (idForDelete < invoiceList.size()) {
+                        internalData.daoInvoice.updateInvoice(invoiceList.get(idForDelete).getDeletedCopy());
                         internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
                         return;
                     }

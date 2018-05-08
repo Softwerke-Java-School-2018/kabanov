@@ -6,13 +6,13 @@ import org.apache.commons.lang3.ObjectUtils;
 import java.time.LocalDate;
 
 public class Person {
-    private final int id;
-    private final String firstName;
-    private final String lastName;
-    private final String firstNameLowerCase;
-    private final String lastNameLowerCase;
-    private final LocalDate birthDate;
-    private final boolean isDeleted;
+    public final int id;
+    public final String firstName;
+    public final String lastName;
+    public final String firstNameLowerCase;
+    public final String lastNameLowerCase;
+    public final LocalDate birthDate;
+    public final boolean isDeleted;
 
 
     private Person(String firstName, String lastName, LocalDate birthDate, int id, boolean isDeleted) {
@@ -25,40 +25,11 @@ public class Person {
         this.isDeleted = isDeleted;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
     public String getFullName() {
         return firstName + " " + lastName;
     }
 
-    public String getFirstNameLowerCase() {
-        return firstNameLowerCase;
-    }
-
-    public String getLastNameLowerCase() {
-        return lastNameLowerCase;
-    }
-
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    @Override
-    public String toString() {
+    public String getShortName() {
         return lastName + " " + firstName.charAt(0) + ".";
     }
 

@@ -7,16 +7,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Device {
-    private final int id;
-    private final String model;
-    private final String vendor;
-    private final String modelLowerCase;
-    private final String vendorLowerCase;
-    private final Color color;
-    private final LocalDate productionDate;
-    private final DeviceType deviceType;
-    private final BigDecimal price;
-    private final boolean isDeleted;
+    public final int id;
+    public final String model;
+    public final String vendor;
+    public final String modelLowerCase;
+    public final String vendorLowerCase;
+    public final Color color;
+    public final LocalDate productionDate;
+    public final DeviceType deviceType;
+    public final BigDecimal price;
+    public final boolean isDeleted;
 
     private Device(String model, String vendor, Color color, LocalDate productionDate,
                    DeviceType deviceType, String price, int id, boolean isDeleted) {
@@ -32,48 +32,8 @@ public class Device {
         this.isDeleted = isDeleted;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public LocalDate getProductionDate() {
-        return productionDate;
-    }
-
-    public String getVendor() {
-        return vendor;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public String getLabelText() {
+    public String getLabel() {
         return vendor + " " + model;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public DeviceType getDeviceType() {
-        return deviceType;
-    }
-
-    public String getModelLowerCase() {
-        return modelLowerCase;
-    }
-
-    public String getVendorLowerCase() {
-        return vendorLowerCase;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
     }
 
     @Override

@@ -16,10 +16,10 @@ public class BrowsePersonListMenu extends Menu {
         super("-- Browse and search in person list menu --",
                 new MenuItem("Print current list",
                         () -> Formatter.printFormatPerson(internalData.personList.stream()
-                                .filter(person -> !person.isDeleted()), internalData.ioStream)),
+                                .filter(person -> !person.isDeleted), internalData.ioStream)),
 
                 new MenuItem("Apply filter to current list", () -> {
-                    internalData.persons = internalData.personList.stream().filter(person -> !person.isDeleted());
+                    internalData.persons = internalData.personList.stream().filter(person -> !person.isDeleted);
                     try {
                         new FilterPersonListMenu().execute();
                     } catch (DateTimeParseException e) {

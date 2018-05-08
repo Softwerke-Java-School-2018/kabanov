@@ -17,7 +17,7 @@ public class EditPersonListMenu extends Menu {
         super("-- Edit person list menu --",
                 new MenuItem("Print person list",
                         () -> Formatter.printFormatPerson(internalData.daoPerson.persons()
-                                .filter(person -> !person.isDeleted()), internalData.ioStream)),
+                                .filter(person -> !person.isDeleted), internalData.ioStream)),
 
                 new MenuItem("Add person", () -> {
                     String firstName = internalData.ioStream.askNonEmptyString("Enter person's first name:");
