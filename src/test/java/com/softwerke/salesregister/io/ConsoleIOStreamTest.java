@@ -8,8 +8,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class ConsoleIOStreamTest {
     private static ConsoleIOStream console;
@@ -70,11 +69,25 @@ public class ConsoleIOStreamTest {
     }
 
     @Test
+    public void askTest2() throws UnsupportedEncodingException {
+        initConsoleWithInputText(STUB);
+
+        String answer = console.ask();
+
+        assertEquals(STUB, answer);
+        assertEquals("" + System.lineSeparator(), outputStream.toString("UTF-8"));
+    }
+
+    @Test
     public void askLocalDateTest() throws UnsupportedEncodingException {
-        initConsoleWithInputText("20 10 2010");
+        initConsoleWithInputText(System.lineSeparator() + "20 10 2010");
 
         assertEquals(LocalDate.parse("2010-10-20"), console.askLocalDate(STUB));
-        assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
+        assertEquals(STUB + System.lineSeparator() +
+                        StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() +
+                        STUB + System.lineSeparator(),
+
+                outputStream.toString("UTF-8"));
 
         initConsoleWithInputText("21 - 11 - 2011");
 
@@ -84,6 +97,34 @@ public class ConsoleIOStreamTest {
         initConsoleWithInputText("22_12_2012");
 
         assertEquals(LocalDate.parse("2012-12-22"), console.askLocalDate(STUB));
+        assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
+    }
+
+    @Test
+    public void askIntTest() throws UnsupportedEncodingException {
+        initConsoleWithInputText("heh" + System.lineSeparator() + "20");
+
+        assertEquals(Integer.parseInt("20"), console.askInt(STUB));
+        assertEquals(STUB + System.lineSeparator() +
+                StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() +
+                STUB + System.lineSeparator(),
+
+                outputStream.toString("UTF-8"));
+    }
+
+    @Test
+    public void askBooleanTest1() throws UnsupportedEncodingException {
+        initConsoleWithInputText("Y");
+
+        assertTrue(console.askBoolean(STUB));
+        assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
+    }
+
+    @Test
+    public void askBooleanTest2() throws UnsupportedEncodingException {
+        initConsoleWithInputText("n");
+
+        assertFalse(console.askBoolean(STUB));
         assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
     }
 

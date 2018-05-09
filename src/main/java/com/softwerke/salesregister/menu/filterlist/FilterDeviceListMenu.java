@@ -1,32 +1,39 @@
 package com.softwerke.salesregister.menu.filterlist;
 
-import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.tables.device.Color;
 import com.softwerke.salesregister.tables.device.DeviceType;
+import com.softwerke.salesregister.utils.Interval;
+import com.softwerke.salesregister.utils.Utils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
 public class FilterDeviceListMenu extends Menu {
     public FilterDeviceListMenu() {
         super("-- Filter device list menu --",
                 new MenuItem("Add filter by ID", () -> {
-                    String answer = internalData.ioStream.ask("Enter device ID range to filter (\"X Y\", \"X\" or \"*\" for any ID)");
-                    String[] splitAnswer = Utils.splitInTwo(answer, "0", String.valueOf(Integer.MAX_VALUE));
-                    int[] bounds = Utils.convertToInt(splitAnswer);
-                    internalData.devices = internalData.devices.filter(
-                            device -> Utils.isBetween(bounds[0], device.getId(), bounds[1]));
+                    String answer = internalData.ioStream.ask("Enter device ID range to filter (\"X Y\", \"X\" or \"*\" for any ID)").trim();
+                    if (!"*".equals(answer)) {
+                        Interval<Integer> interval = new Interval<Integer>(answer, Integer::new);
+                        internalData.devices = internalData.devices
+                                .filter(device -> interval.contains(device.getId()));
+                    }
                 }),
 
                 new MenuItem("Add filter by production date", () -> {
-                    String answer = internalData.ioStream.ask("Enter production date range to filter (\"X Y\", \"X\" or \"*\" for any date, format: dd-mm-yyyy)");
-                    String[] splitAnswer = Utils.splitInTwo(answer, "01-01-0001", "31-12-9999");
-                    LocalDate[] bounds = Utils.convertToLocalDate(splitAnswer);
-                    internalData.devices = internalData.devices.filter(
-                            device -> Utils.isBetween(bounds[0], device.getProductionDate(), bounds[1]));
+                    String answer = internalData.ioStream.ask("Enter production date range to filter (\"X Y\", \"X\" or \"*\" for any date, format: dd-mm-yyyy)").trim();
+                    if (!"*".equals(answer)) {
+                        Interval<ChronoLocalDate> interval = new Interval<ChronoLocalDate>(answer,
+                                string -> LocalDate.parse(string.replaceAll("\\D+", "-"),
+                                        DateTimeFormatter.ofPattern("d-MM-yyyy")));
+                        internalData.devices = internalData.devices
+                                .filter(device -> interval.contains(device.getProductionDate()));
+                    }
                 }),
 
                 new MenuItem("Add filter by vendor", () -> {
@@ -44,11 +51,12 @@ public class FilterDeviceListMenu extends Menu {
                 }),
 
                 new MenuItem("Add filter by price", () -> {
-                    String answer = internalData.ioStream.ask("Enter price range to filter (\"X Y\", \"X\" or \"*\" for any price)");
-                    String[] splitAnswer = Utils.splitInTwo(answer, "0.00", "99999999.99");
-                    BigDecimal[] bounds = Utils.convertToBigDecimal(splitAnswer);
-                    internalData.devices = internalData.devices.filter(
-                            invoice -> Utils.isBetween(bounds[0], invoice.getPrice(), bounds[1]));
+                    String answer = internalData.ioStream.ask("Enter price range to filter (\"X Y\", \"X\" or \"*\" for any price)").trim();
+                    if (!"*".equals(answer)) {
+                        Interval<BigDecimal> interval = new Interval<BigDecimal>(answer, BigDecimal::new);
+                        internalData.devices = internalData.devices
+                                .filter(device -> interval.contains(device.getPrice()));
+                    }
                 }),
 
                 new MenuItem("Add filter by color", () -> {

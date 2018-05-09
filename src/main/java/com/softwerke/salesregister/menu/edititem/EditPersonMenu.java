@@ -32,7 +32,7 @@ public class EditPersonMenu extends Menu {
                 }),
 
                 new MenuItem("Delete person", () -> {
-                    Person newPerson = internalData.currentPerson.copyWithNewIsDeleted(false);
+                    Person newPerson = internalData.currentPerson.copyWithNewIsDeleted(true);
                     internalData.daoPerson.updatePerson(newPerson);
                     internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                     Menu.incrementRollback();

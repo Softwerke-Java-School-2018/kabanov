@@ -52,12 +52,12 @@ public class DaoPersonTest {
 
         Person arkadiyRenamed = daoPerson.getPerson(3);
 
-        assertEquals(arkadiyRenamed.getId(), arkadiyRenamed.getId());
-        assertEquals(arkadiyRenamed.getBirthDate(), arkadiyRenamed.getBirthDate());
-        assertEquals(arkadiyRenamed.isDeleted(), arkadiyRenamed.isDeleted());
+        assertEquals(anna.getId(), arkadiyRenamed.getId());
+        assertEquals(anna.getBirthDate(), arkadiyRenamed.getBirthDate());
+        assertEquals(anna.isDeleted(), arkadiyRenamed.isDeleted());
 
-        assertEquals(arkadiyRenamed.getFirstName(), "Anna");
-        assertEquals(arkadiyRenamed.getLastName(), "Kuznetsova");
+        assertEquals("Anna", arkadiyRenamed.getFirstName());
+        assertEquals("Kuznetsova", arkadiyRenamed.getLastName());
     }
 
     @Test
@@ -70,11 +70,11 @@ public class DaoPersonTest {
 
         arkadiyDeleted = daoPerson.getPerson(3);
 
-        assertEquals(arkadiyDeleted.getId(), arkadiy.getId());
-        assertEquals(arkadiyDeleted.getBirthDate(), arkadiy.getBirthDate());
-        assertEquals(arkadiyDeleted.getFirstName(), arkadiy.getFirstName());
-        assertEquals(arkadiyDeleted.getLastName(), arkadiy.getLastName());
+        assertEquals(arkadiy.getId(), arkadiyDeleted.getId());
+        assertEquals(arkadiy.getBirthDate(), arkadiyDeleted.getBirthDate());
+        assertEquals(arkadiy.getFirstName(), arkadiyDeleted.getFirstName());
+        assertEquals(arkadiy.getLastName(), arkadiyDeleted.getLastName());
 
-        assertEquals(arkadiyDeleted.isDeleted(), true);
+        assertEquals(true, arkadiyDeleted.isDeleted());
     }
 }

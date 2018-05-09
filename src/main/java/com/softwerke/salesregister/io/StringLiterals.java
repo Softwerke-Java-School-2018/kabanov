@@ -10,6 +10,7 @@ public class StringLiterals {
     public static final String ENTER_SORT_ORDER_TEXT = "Enter \"Y\" to set ascending order, otherwise - descending.";
     public static final String SUCCESSFUL = "Operation successful.";
     public static final String PROGRAM_ERROR = "Program error occurred. Changes didn't apply.";
+    public static final String USERNAME = "%username%";
 
     private StringLiterals() {
     }

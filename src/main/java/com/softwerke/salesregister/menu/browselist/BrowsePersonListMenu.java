@@ -1,7 +1,6 @@
 package com.softwerke.salesregister.menu.browselist;
 
 import com.softwerke.salesregister.io.Formatter;
-import com.softwerke.salesregister.io.ConsoleIOStream;
 import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
@@ -23,7 +22,7 @@ public class BrowsePersonListMenu extends Menu {
                     internalData.persons = internalData.personList.stream().filter(person -> !person.isDeleted());
                     try {
                         new FilterPersonListMenu().execute();
-                    } catch (DateTimeParseException e) {
+                    } catch (IllegalArgumentException | DateTimeParseException e) {
                         internalData.ioStream.ask(StringLiterals.WRONG_DATA_TEXT);
                     }
                     internalData.personList = internalData.persons.collect(Collectors.toList());

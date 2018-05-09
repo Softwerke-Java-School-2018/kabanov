@@ -1,28 +1,20 @@
 package com.softwerke.salesregister.menu.checkout;
 
 
-import com.softwerke.salesregister.Utils;
-import com.softwerke.salesregister.io.ConsoleIOStream;
 import com.softwerke.salesregister.io.Formatter;
-import com.softwerke.salesregister.io.Logger;
 import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.invoice.InvoiceLine;
+import com.softwerke.salesregister.utils.Utils;
 
 import java.util.Objects;
 
 public class OrderCheckoutMenu extends Menu {
     public OrderCheckoutMenu() {
         super("-- Order checkout menu --",
-                new MenuItem("Select the customer", () -> {
-                    internalData.currentPerson =
-                            Utils.selectPerson(internalData.daoPerson.persons(), internalData.ioStream);
-                    if (Objects.isNull(internalData.currentPerson)) {
-                        Logger.info("No person was found [OrderCheckoutMenu]");
-                    }
-                }),
+                new MenuItem("Select the customer", () -> internalData.currentPerson = Utils.selectPerson(internalData.daoPerson.persons(), internalData.ioStream)),
 
                 new MenuItem("Add item", () -> {
                     int deviceId = internalData.ioStream.askInt("Enter the device ID to sell:");
@@ -69,7 +61,7 @@ public class OrderCheckoutMenu extends Menu {
                 }),
 
                 new MenuItem("Proceed", () -> {
-                    if (internalData.currentPerson.isDeleted() || internalData.orderItems.isEmpty()) {
+                    if (Objects.isNull(internalData.currentPerson) || internalData.orderItems.isEmpty()) {
                         internalData.ioStream.printLine("Customer isn't set or shop list is empty.");
                         return;
                     }

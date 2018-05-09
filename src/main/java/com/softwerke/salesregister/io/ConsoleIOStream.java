@@ -16,7 +16,7 @@ public class ConsoleIOStream implements IOStream {
     public ConsoleIOStream(InputStream in, OutputStream out) {
         if (!ObjectUtils.allNotNull(in, out)) {
             Logger.fatal("One or more arguments is null! [ConsoleIOStream constructor]");
-            throw new IllegalArgumentException("One or more arguments is null!");
+            throw new IllegalArgumentException(StringLiterals.NULL_ARG_EXC);
         }
         reader = new BufferedReader(new InputStreamReader(in));
         writer = new BufferedWriter(new OutputStreamWriter(out));
@@ -45,6 +45,7 @@ public class ConsoleIOStream implements IOStream {
             return reader.readLine();
         } catch (IOException e) {
             printLine("Occurred an input error.");
+            Logger.error("Occurred an input error.");
             return "";
         }
     }

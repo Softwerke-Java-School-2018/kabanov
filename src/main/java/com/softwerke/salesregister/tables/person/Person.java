@@ -84,8 +84,8 @@ public class Person {
 
     public static Person of(int id, String firstName, String lastName, LocalDate birthDate, boolean isDeleted) {
         if (id == -1 || !ObjectUtils.allNotNull(firstName, lastName, birthDate)) {
-            Logger.fatal("One or more argiments are invalid! [Person factory]");
-            throw new IllegalArgumentException("One or more argiments are invalid!");
+            Logger.fatal("One or more arguments are invalid! [Person factory]");
+            throw new IllegalArgumentException("One or more arguments are invalid!");
         }
         return new Person(firstName, lastName, birthDate, id, isDeleted);
     }

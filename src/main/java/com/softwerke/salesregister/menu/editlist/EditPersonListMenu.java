@@ -1,7 +1,6 @@
 package com.softwerke.salesregister.menu.editlist;
 
-import com.softwerke.salesregister.Utils;
-import com.softwerke.salesregister.io.ConsoleIOStream;
+import com.softwerke.salesregister.utils.Utils;
 import com.softwerke.salesregister.io.Formatter;
 import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;

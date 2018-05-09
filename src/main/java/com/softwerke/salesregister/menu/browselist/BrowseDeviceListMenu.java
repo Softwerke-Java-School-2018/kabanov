@@ -1,7 +1,6 @@
 package com.softwerke.salesregister.menu.browselist;
 
 import com.softwerke.salesregister.io.Formatter;
-import com.softwerke.salesregister.io.ConsoleIOStream;
 import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;

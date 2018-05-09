@@ -1,6 +1,5 @@
 package com.softwerke.salesregister.menu.filterlist;
 
-import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.tables.data.dao.DaoDevice;
 import com.softwerke.salesregister.tables.data.dao.DaoInvoice;
@@ -10,6 +9,7 @@ import com.softwerke.salesregister.tables.data.storage.Storage;
 import com.softwerke.salesregister.tables.data.storage.StorageInitializer;
 import com.softwerke.salesregister.tables.device.DeviceType;
 import com.softwerke.salesregister.tables.invoice.Invoice;
+import com.softwerke.salesregister.utils.Interval;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -17,6 +17,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -54,20 +55,21 @@ public class FilterInvoiceListMenuTest {
 
     @Test
     public void invoiceIdRangeSearchTest() {
-        int[] bounds = new int[]{1, 3};
+        Interval<Integer> interval = new Interval<>(1, 3);
         IntStream ids = daoInvoice.invoices()
-                .filter(invoice -> Utils.isBetween(bounds[0], invoice.getId(), bounds[1])).mapToInt(Invoice::getId);
+                .filter(invoice -> interval.contains(invoice.getId()))
+                .mapToInt(Invoice::getId);
         int[] idArray = ids.toArray();
-        assertArrayEquals(idArray, new int[]{1, 2, 3});
+        assertArrayEquals(new int[]{1, 2, 3}, idArray);
     }
 
     @Test
     public void invoiceDateRangeSearchTest() {
-        LocalDate[] bounds = new LocalDate[]{
+        Interval<ChronoLocalDate> interval = new Interval<>(
                 LocalDate.of(2017, 1, 1),
-                LocalDate.of(2017, 12, 31)};
+                LocalDate.of(2017, 12, 31));
         Stream<LocalDate> dates = daoInvoice.invoices()
-                .filter(invoice -> Utils.isBetween(bounds[0], invoice.getDate(), bounds[1]))
+                .filter(invoice -> interval.contains(invoice.getDate()))
                 .map(Invoice::getDate);
         LocalDate[] datesArray = dates.toArray(LocalDate[]::new);
         assertArrayEquals(new LocalDate[]{
@@ -78,11 +80,11 @@ public class FilterInvoiceListMenuTest {
 
     @Test
     public void invoiceTotalRangeSearchTest() {
-        BigDecimal[] bounds = new BigDecimal[]{
+        Interval<BigDecimal> interval = new Interval<>(
                 new BigDecimal(70000),
-                new BigDecimal(300000)};
+                new BigDecimal(300000));
         Stream<BigDecimal> dates = daoInvoice.invoices()
-                .filter(invoice -> Utils.isBetween(bounds[0], invoice.getTotalSum(), bounds[1]))
+                .filter(invoice -> interval.contains(invoice.getTotalSum()))
                 .map(Invoice::getTotalSum);
         BigDecimal[] datesArray = dates.toArray(BigDecimal[]::new);
         assertArrayEquals(new BigDecimal[]{

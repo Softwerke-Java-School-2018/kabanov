@@ -74,20 +74,20 @@ public class Formatter {
         sink.ask(StringLiterals.PRESS_ANYKEY_TEXT);
     }
 
-    public static void printShopList(Stream<InvoiceLine> invoices, IOStream sink) {
-        if (!ObjectUtils.allNotNull(invoices, sink)) {
+    public static void printShopList(Stream<InvoiceLine> invoiceLines, IOStream sink) {
+        if (!ObjectUtils.allNotNull(invoiceLines, sink)) {
             Logger.fatal("One or more arguments is null! [printShopList method]");
-            throw new IllegalArgumentException("One or more arguments is null!");
+            throw new IllegalArgumentException(StringLiterals.NULL_ARG_EXC);
         }
-        List<InvoiceLine> invoiceLines = invoices.collect(Collectors.toList());
-        if (invoiceLines.isEmpty()) {
+        List<InvoiceLine> invoiceLineList = invoiceLines.collect(Collectors.toList());
+        if (invoiceLineList.isEmpty()) {
             sink.printLine("Shop list is empty.");
             return;
         }
         sink.printLine("            Items            | Amount |   Total");
         sink.printLine("--------------------------------------------------");
         BigDecimal total = BigDecimal.ZERO;
-        for (InvoiceLine invoiceLine : invoiceLines) {
+        for (InvoiceLine invoiceLine : invoiceLineList) {
             if (Objects.isNull(invoiceLine)) {
                 continue;
             }
@@ -105,7 +105,7 @@ public class Formatter {
     public static void printReceipt(Invoice invoice, IOStream sink) {
         if (!ObjectUtils.allNotNull(invoice, sink)) {
             Logger.fatal("One or more arguments is null! [printReceipt method]");
-            throw new IllegalArgumentException("One or more arguments is null!");
+            throw new IllegalArgumentException(StringLiterals.NULL_ARG_EXC);
         }
         sink.printLine(" Shopping date: " + invoice.getDate());
         sink.printLine(" Customer name: " + invoice.getPerson().toString());

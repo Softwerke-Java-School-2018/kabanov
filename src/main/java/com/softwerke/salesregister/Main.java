@@ -17,8 +17,6 @@ import com.softwerke.salesregister.tables.data.storage.StorageInitializer;
 
 
 class Main {
-    public static final String USERNAME = "%username%";
-
     public static void main(String[] args) {
         IOStream ioStream = new ConsoleIOStream(System.in, System.out);
 
@@ -37,7 +35,7 @@ class Main {
         /* Setting the link for database */
         Menu.setInternalData(new InternalData(ioStream, daoPerson, daoDevice, daoInvoice));
 
-        ioStream.printLine("Hello, " + USERNAME + ".");
+        ioStream.printLine("Hello, " + StringLiterals.USERNAME + ".");
 
         new MainMenu().execute();
     }

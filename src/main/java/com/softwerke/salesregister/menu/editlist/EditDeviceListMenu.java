@@ -1,6 +1,6 @@
 package com.softwerke.salesregister.menu.editlist;
 
-import com.softwerke.salesregister.Utils;
+import com.softwerke.salesregister.utils.Utils;
 import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.io.Formatter;
 import com.softwerke.salesregister.io.Logger;

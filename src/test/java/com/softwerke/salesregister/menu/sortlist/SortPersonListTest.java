@@ -54,7 +54,7 @@ public class SortPersonListTest {
                 .sorted(Comparator.comparingInt(Person::getId).reversed())
                 .mapToInt(Person::getId)
                 .toArray();
-        assertArrayEquals(personIdArray, new int[]{5, 4, 3, 2, 1, 0});
+        assertArrayEquals(new int[]{5, 4, 3, 2, 1, 0}, personIdArray);
     }
 
     @Test
@@ -63,13 +63,12 @@ public class SortPersonListTest {
                 .sorted(Comparator.comparing(Person::getBirthDate))
                 .map(Person::getBirthDate)
                 .toArray(LocalDate[]::new);
-        assertArrayEquals(personDateArray, new LocalDate[]{
+        assertArrayEquals(new LocalDate[]{
                 LocalDate.parse("1962-07-16"),
                 LocalDate.parse("1970-02-27"),
                 LocalDate.parse("1971-12-05"),
                 LocalDate.parse("1981-11-02"),
                 LocalDate.parse("1987-04-11"),
-                LocalDate.parse("1993-09-06"),
-        });
+                LocalDate.parse("1993-09-06"),}, personDateArray);
     }
 }

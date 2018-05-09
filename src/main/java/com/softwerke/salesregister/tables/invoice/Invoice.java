@@ -60,7 +60,7 @@ public class Invoice {
     }
 
     public Invoice getDisabledCopy() {
-        return new Invoice(person, invoiceItems, date, id, false);
+        return new Invoice(person, invoiceItems, date, id, true);
     }
 
     @Override

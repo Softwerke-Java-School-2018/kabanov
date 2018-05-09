@@ -1,20 +1,23 @@
 package com.softwerke.salesregister.menu.filterlist;
 
-import com.softwerke.salesregister.Utils;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
+import com.softwerke.salesregister.utils.Interval;
 
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class FilterPersonListMenu extends Menu {
     public FilterPersonListMenu() {
         super("-- Filter device list menu --",
                 new MenuItem("Add filter by ID", () -> {
-                    String answer = internalData.ioStream.ask("Enter person ID range to filter (\"X Y\", \"X\" or \"*\" for any ID)");
-                    String[] splitAnswer = Utils.splitInTwo(answer, "0", String.valueOf(Integer.MAX_VALUE));
-                    int[] bounds = Utils.convertToInt(splitAnswer);
-                    internalData.persons = internalData.persons.filter(
-                            person -> Utils.isBetween(bounds[0], person.getId(), bounds[1]));
+                    String answer = internalData.ioStream.ask("Enter person ID range to filter (\"X Y\", \"X\" or \"*\" for any ID)").trim();
+                    if (!"*".equals(answer)) {
+                        Interval<Integer> interval = new Interval<Integer>(answer, Integer::new);
+                        internalData.persons = internalData.persons
+                                .filter(person -> interval.contains(person.getId()));
+                    }
                 }),
 
                 new MenuItem("Add filter by first name", () -> {
@@ -32,11 +35,14 @@ public class FilterPersonListMenu extends Menu {
                 }),
 
                 new MenuItem("Add filter by birth date", () -> {
-                    String answer = internalData.ioStream.ask("Enter person birth date range to filter (\"X Y\", \"X\" or \"*\" for any date, format: dd-mm-yyyy)");
-                    String[] splitAnswer = Utils.splitInTwo(answer, "01-01-0001", "31-12-9999");
-                    LocalDate[] bounds = Utils.convertToLocalDate(splitAnswer);
-                    internalData.persons = internalData.persons.filter(
-                            person -> Utils.isBetween(bounds[0], person.getBirthDate(), bounds[1]));
+                    String answer = internalData.ioStream.ask("Enter person birth date range to filter (\"X Y\", \"X\" or \"*\" for any date, format: dd-mm-yyyy)").trim();
+                    if (!"*".equals(answer)) {
+                        Interval<ChronoLocalDate> interval = new Interval<ChronoLocalDate>(answer,
+                                string -> LocalDate.parse(string.replaceAll("\\D+", "-"),
+                                        DateTimeFormatter.ofPattern("d-MM-yyyy")));
+                        internalData.persons = internalData.persons
+                                .filter(person -> interval.contains(person.getBirthDate()));
+                    }
                 }));
     }
 }
