@@ -13,56 +13,56 @@ public class SortDeviceListMenu extends Menu {
                 new MenuItem("Sort by ID", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.deviceList.sort(isOrderAscending
-                            ? Comparator.comparingInt((Device device) -> device.id)
-                            : Comparator.comparingInt((Device device) -> device.id).reversed());
+                            ? Comparator.comparingInt(Device::getId)
+                            : Comparator.comparingInt(Device::getId).reversed());
                     incrementRollback();
                 }),
 
                 new MenuItem("Sort by production date", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.deviceList.sort(isOrderAscending
-                            ? Comparator.comparing((Device device) -> device.productionDate)
-                            : Comparator.comparing((Device device) -> device.productionDate).reversed());
+                            ? Comparator.comparing(Device::getProductionDate)
+                            : Comparator.comparing(Device::getProductionDate).reversed());
                     incrementRollback();
                 }),
 
                 new MenuItem("Sort by vendor name", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.deviceList.sort(isOrderAscending
-                            ? Comparator.comparing((Device device) -> device.vendor)
-                            : Comparator.comparing((Device device) -> device.vendor).reversed());
+                            ? Comparator.comparing(Device::getVendor)
+                            : Comparator.comparing(Device::getVendor).reversed());
                     incrementRollback();
                 }),
 
                 new MenuItem("Sort by model name", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.deviceList.sort(isOrderAscending
-                            ? Comparator.comparing((Device device) -> device.model)
-                            : Comparator.comparing((Device device) -> device.model).reversed());
+                            ? Comparator.comparing(Device::getModel)
+                            : Comparator.comparing(Device::getModel).reversed());
                     incrementRollback();
                 }),
 
                 new MenuItem("Sort by color", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.deviceList.sort(isOrderAscending
-                            ? Comparator.comparing((Device device) -> device.color)
-                            : Comparator.comparing((Device device) -> device.color).reversed());
+                            ? Comparator.comparing(Device::getColor)
+                            : Comparator.comparing(Device::getColor).reversed());
                     incrementRollback();
                 }),
 
                 new MenuItem("Sort by device type", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.deviceList.sort(isOrderAscending
-                            ? Comparator.comparing((Device device) -> device.deviceType)
-                            : Comparator.comparing((Device device) -> device.deviceType).reversed());
+                            ? Comparator.comparing(Device::getDeviceType)
+                            : Comparator.comparing(Device::getDeviceType).reversed());
                     incrementRollback();
                 }),
 
                 new MenuItem("Sort by price", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.deviceList.sort(isOrderAscending
-                            ? Comparator.comparing((Device device) -> device.price)
-                            : Comparator.comparing((Device device) -> device.price).reversed());
+                            ? Comparator.comparing(Device::getPrice)
+                            : Comparator.comparing(Device::getPrice).reversed());
                     incrementRollback();
                 }));
     }

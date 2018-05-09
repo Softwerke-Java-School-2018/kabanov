@@ -19,7 +19,7 @@ public class DaoDevice extends Dao {
 
     public void updateDevice(Device device) {
         Objects.requireNonNull(device);
-        storage.getDeviceList().set(device.id, device);
+        storage.getDeviceList().set(device.getId(), device);
     }
 
     public Device getDevice(int id) {

@@ -7,6 +7,7 @@ import com.softwerke.salesregister.tables.person.Person;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,12 +26,12 @@ public class Formatter {
         sink.printLine(" ID | Device vendor / model |   Color   |  Type  | Prod. date |   Price");
         sink.printLine("-------------------------------------------------------------------------");
         deviceList.forEach(device -> sink.printLine(
-                leftPad(device.id, 3) + " | " +
-                        leftPad(device.getLabel(), 21) + " | " +
-                        leftPad(device.color, 9) + " | " +
-                        leftPad(device.deviceType, 6) + " | " +
-                        device.productionDate + " | " +
-                        leftPad(device.price, 9)));
+                leftPad(device.getId(), 3) + " | " +
+                        leftPad(device.getLabelText(), 21) + " | " +
+                        leftPad(device.getColor(), 9) + " | " +
+                        leftPad(device.getDeviceType(), 6) + " | " +
+                        device.getProductionDate() + " | " +
+                        leftPad(device.getPrice(), 9)));
         sink.ask(ConsoleIOStream.PRESS_ANYKEY_TEXT);
     }
 
@@ -46,10 +47,10 @@ public class Formatter {
         sink.printLine(" ID |   Customer name   |    Total    | Invoice date");
         sink.printLine("-----------------------------------------------------");
         invoiceList.forEach(invoice -> sink.printLine(
-                leftPad(invoice.id, 3) + " | " +
-                        leftPad(invoice.person, 17) + " | " +
-                        leftPad(invoice.totalSum, 11) + " |  " +
-                        invoice.date));
+                leftPad(invoice.getId(), 3) + " | " +
+                        leftPad(invoice.getPerson(), 17) + " | " +
+                        leftPad(invoice.getTotalSum(), 11) + " |  " +
+                        invoice.getDate()));
         sink.ask(ConsoleIOStream.PRESS_ANYKEY_TEXT);
     }
 
@@ -65,13 +66,12 @@ public class Formatter {
         sink.printLine(" ID |            Name           | Birth date");
         sink.printLine("--------------------------------------------");
         personList.forEach(person -> sink.printLine(
-                leftPad(person.id, 3) + " | " +
-                        leftPad(person.getFullName(), 25) + " | " + person.birthDate));
+                leftPad(person.getId(), 3) + " | " +
+                        leftPad(person.getFullName(), 25) + " | " + person.getBirthDate()));
         sink.ask(ConsoleIOStream.PRESS_ANYKEY_TEXT);
     }
 
-    public static void printShopList(Stream<InvoiceLine> items, IOStream sink) {
-        List<InvoiceLine> orderItems = items.collect(Collectors.toList());
+    public static void printShopList(Collection<InvoiceLine> orderItems, IOStream sink) {
         if (!ObjectUtils.allNotNull(orderItems, sink)) {
             throw new IllegalArgumentException("One or more arguments is null!");
         }
@@ -86,10 +86,10 @@ public class Formatter {
             if (Objects.isNull(invoiceLine)) {
                 continue;
             }
-            total = total.add(invoiceLine.internalSum);
-            String formattedName = rightPad(invoiceLine.device, 29);
-            String formattedAmount = leftPad(invoiceLine.amount, 7);
-            String formattedInternalSum = leftPad(invoiceLine.internalSum, 11);
+            total = total.add(invoiceLine.getInternalSum());
+            String formattedName = rightPad(invoiceLine.getDevice(), 29);
+            String formattedAmount = leftPad(invoiceLine.getAmount(), 7);
+            String formattedInternalSum = leftPad(invoiceLine.getInternalSum(), 11);
             sink.printLine(formattedName + "|" + formattedAmount + " |" + formattedInternalSum);
         }
         String formattedTotal = leftPad(total, 43);
@@ -101,9 +101,9 @@ public class Formatter {
         if (!ObjectUtils.allNotNull(invoice, sink)) {
             throw new IllegalArgumentException("One or more arguments is null!");
         }
-        sink.printLine(" Shopping date: " + invoice.date);
-        sink.printLine(" Customer name: " + invoice.person.toString());
-        printShopList(invoice.getInvoices(), sink);
+        sink.printLine(" Shopping date: " + invoice.getDate());
+        sink.printLine(" Customer name: " + invoice.getPerson().toString());
+        printShopList(invoice.getInvoiceItems(), sink);
     }
 
     private static String leftPad(Object text, int length) {

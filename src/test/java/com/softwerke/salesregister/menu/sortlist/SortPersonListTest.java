@@ -51,8 +51,8 @@ public class SortPersonListTest {
     @Test
     public void personIdSortTest() {
         int[] personIdArray = daoPerson.persons()
-                .sorted(Comparator.comparingInt((Person person) -> person.id).reversed())
-                .mapToInt(person -> person.id)
+                .sorted(Comparator.comparingInt(Person::getId).reversed())
+                .mapToInt(Person::getId)
                 .toArray();
         assertArrayEquals(personIdArray, new int[]{5, 4, 3, 2, 1, 0});
     }
@@ -60,8 +60,8 @@ public class SortPersonListTest {
     @Test
     public void personBirthDateSortTest() {
         LocalDate[] personDateArray = daoPerson.persons()
-                .sorted(Comparator.comparing((Person person) -> person.birthDate))
-                .map(person -> person.birthDate)
+                .sorted(Comparator.comparing(Person::getBirthDate))
+                .map(Person::getBirthDate)
                 .toArray(LocalDate[]::new);
         assertArrayEquals(personDateArray, new LocalDate[]{
                 LocalDate.parse("1962-07-16"),

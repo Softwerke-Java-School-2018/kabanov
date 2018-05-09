@@ -21,7 +21,7 @@ public class EditDeviceListMenu extends Menu {
         super("-- Edit device list menu --",
                 new MenuItem("Print device list",
                         () -> Formatter.printFormatDevice(internalData.daoDevice.devices()
-                                .filter(device -> !device.isDeleted), internalData.ioStream)),
+                                .filter(device -> !device.isDeleted()), internalData.ioStream)),
 
                 new MenuItem("Add device", () -> {
                     String vendor = internalData.ioStream.askNonEmptyString("Enter device manufacturer:");

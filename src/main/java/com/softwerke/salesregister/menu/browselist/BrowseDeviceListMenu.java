@@ -15,10 +15,10 @@ public class BrowseDeviceListMenu extends Menu {
         super("-- Browse and search in device list menu --",
                 new MenuItem("Print current list",
                         () -> Formatter.printFormatDevice(internalData.deviceList.stream()
-                                .filter(device -> !device.isDeleted), internalData.ioStream)),
+                                .filter(device -> !device.isDeleted()), internalData.ioStream)),
 
                 new MenuItem("Apply filter to current list", () -> {
-                    internalData.devices = internalData.deviceList.stream().filter(device -> !device.isDeleted);
+                    internalData.devices = internalData.deviceList.stream().filter(device -> !device.isDeleted());
                     try {
                         new FilterDeviceListMenu().execute();
                         internalData.deviceList = internalData.devices.collect(Collectors.toList());

@@ -16,10 +16,10 @@ public class BrowseInvoiceListMenu extends Menu {
         super("-- Browse and search in sales history menu --",
                 new MenuItem("Print current list",
                         () -> Formatter.printFormatInvoice(internalData.invoiceList.stream()
-                                .filter(invoice -> !invoice.isDeleted), internalData.ioStream)),
+                                .filter(invoice -> !invoice.isDeleted()), internalData.ioStream)),
 
                 new MenuItem("Apply filter to current list", () -> {
-                    internalData.invoices = internalData.invoiceList.stream().filter(invoice -> !invoice.isDeleted);
+                    internalData.invoices = internalData.invoiceList.stream().filter(invoice -> !invoice.isDeleted());
                     try {
                         new FilterInvoiceListMenu().execute();
                         internalData.invoiceList = internalData.invoices.collect(Collectors.toList());
@@ -35,7 +35,7 @@ public class BrowseInvoiceListMenu extends Menu {
                 new MenuItem("Print sale details", () -> {
                     int saleId = internalData.ioStream.askInt("Enter invoice ID for printing:");
                     Invoice invoice = internalData.daoInvoice.getInvoice(saleId);
-                    if (invoice.isDeleted) {
+                    if (invoice.isDeleted()) {
                         internalData.ioStream.printLine(ConsoleIOStream.ENTRY_IS_DELETED);
                     } else {
                         Formatter.printReceipt(invoice, internalData.ioStream);

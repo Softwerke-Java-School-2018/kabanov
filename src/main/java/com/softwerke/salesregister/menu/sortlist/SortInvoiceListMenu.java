@@ -13,8 +13,8 @@ public class SortInvoiceListMenu extends Menu {
                 new MenuItem("Sort by ID", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.invoiceList.sort(isOrderAscending
-                            ? Comparator.comparingInt((Invoice invoice) -> invoice.id)
-                            : Comparator.comparingInt((Invoice invoice) -> invoice.id).reversed());
+                            ? Comparator.comparingInt(Invoice::getId)
+                            : Comparator.comparingInt(Invoice::getId).reversed());
                     incrementRollback();
                     incrementRollback();
                 }),
@@ -22,8 +22,8 @@ public class SortInvoiceListMenu extends Menu {
                 new MenuItem("Sort by sale date", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.invoiceList.sort(isOrderAscending
-                            ? Comparator.comparing((Invoice invoice) -> invoice.date)
-                            : Comparator.comparing((Invoice invoice) -> invoice.date).reversed());
+                            ? Comparator.comparing(Invoice::getDate)
+                            : Comparator.comparing(Invoice::getDate).reversed());
                     incrementRollback();
                     incrementRollback();
                 }),
@@ -31,8 +31,8 @@ public class SortInvoiceListMenu extends Menu {
                 new MenuItem("Sort by total sum", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.invoiceList.sort(isOrderAscending
-                            ? Comparator.comparing((Invoice invoice) -> invoice.totalSum)
-                            : Comparator.comparing((Invoice invoice) -> invoice.totalSum).reversed());
+                            ? Comparator.comparing(Invoice::getTotalSum)
+                            : Comparator.comparing(Invoice::getTotalSum).reversed());
                     incrementRollback();
                     incrementRollback();
                 }),
@@ -40,8 +40,8 @@ public class SortInvoiceListMenu extends Menu {
                 new MenuItem("Sort by name", () -> {
                     boolean isOrderAscending = internalData.ioStream.askBoolean(IOStream.ENTER_SORT_ORDER_TEXT);
                     internalData.invoiceList.sort(isOrderAscending
-                            ? Comparator.comparing((Invoice invoice) -> invoice.person.getShortName())
-                            : Comparator.comparing((Invoice invoice) -> invoice.person.getShortName()).reversed());
+                            ? Comparator.comparing(Invoice::getPersonName)
+                            : Comparator.comparing(Invoice::getPersonName).reversed());
                     incrementRollback();
                     incrementRollback();
                 }));

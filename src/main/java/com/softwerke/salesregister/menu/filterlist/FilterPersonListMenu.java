@@ -14,21 +14,21 @@ public class FilterPersonListMenu extends Menu {
                     String[] splitAnswer = Utils.splitInTwo(answer, "0", String.valueOf(Integer.MAX_VALUE));
                     int[] bounds = Utils.convertToInt(splitAnswer);
                     internalData.persons = internalData.persons.filter(
-                            person -> Utils.isBetween(bounds[0], person.id, bounds[1]));
+                            person -> Utils.isBetween(bounds[0], person.getId(), bounds[1]));
                 }),
 
                 new MenuItem("Add filter by first name", () -> {
                     String firstName = internalData.ioStream.askNonEmptyString("Enter person first name (or name part) to filter or \"*\" for any name.")
                             .toLowerCase();
                     internalData.persons = internalData.persons.filter(
-                            person -> ("*".equals(firstName) || person.firstNameLowerCase.contains(firstName)));
+                            person -> ("*".equals(firstName) || person.getFirstNameLowerCase().contains(firstName)));
                 }),
 
                 new MenuItem("Add filter by last name", () -> {
                     String lastName = internalData.ioStream.askNonEmptyString("Enter person last name (or name part) to filter or \"*\" for any surname.")
                             .toLowerCase();
                     internalData.persons = internalData.persons.filter(
-                            person -> ("*".equals(lastName) || person.lastNameLowerCase.contains(lastName)));
+                            person -> ("*".equals(lastName) || person.getLastNameLowerCase().contains(lastName)));
                 }),
 
                 new MenuItem("Add filter by birth date", () -> {
@@ -36,7 +36,7 @@ public class FilterPersonListMenu extends Menu {
                     String[] splitAnswer = Utils.splitInTwo(answer, "01-01-0001", "31-12-9999");
                     LocalDate[] bounds = Utils.convertToLocalDate(splitAnswer);
                     internalData.persons = internalData.persons.filter(
-                            person -> Utils.isBetween(bounds[0], person.birthDate, bounds[1]));
+                            person -> Utils.isBetween(bounds[0], person.getBirthDate(), bounds[1]));
                 }));
     }
 }

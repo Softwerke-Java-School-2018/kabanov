@@ -18,7 +18,7 @@ public class FilterDeviceListMenu extends Menu {
                     String[] splitAnswer = Utils.splitInTwo(answer, "0", String.valueOf(Integer.MAX_VALUE));
                     int[] bounds = Utils.convertToInt(splitAnswer);
                     internalData.devices = internalData.devices.filter(
-                            device -> Utils.isBetween(bounds[0], device.id, bounds[1]));
+                            device -> Utils.isBetween(bounds[0], device.getId(), bounds[1]));
                 }),
 
                 new MenuItem("Add filter by production date", () -> {
@@ -26,21 +26,21 @@ public class FilterDeviceListMenu extends Menu {
                     String[] splitAnswer = Utils.splitInTwo(answer, "01-01-0001", "31-12-9999");
                     LocalDate[] bounds = Utils.convertToLocalDate(splitAnswer);
                     internalData.devices = internalData.devices.filter(
-                            device -> Utils.isBetween(bounds[0], device.productionDate, bounds[1]));
+                            device -> Utils.isBetween(bounds[0], device.getProductionDate(), bounds[1]));
                 }),
 
                 new MenuItem("Add filter by vendor", () -> {
                     String vendorMask = internalData.ioStream.askNonEmptyString("Enter vendor name (or name part) to filter or \"*\" for any vendor.")
                             .trim().toLowerCase();
                     internalData.devices = internalData.devices.filter(
-                            device -> ("*".equals(vendorMask) || device.vendorLowerCase.contains(vendorMask)));
+                            device -> ("*".equals(vendorMask) || device.getVendorLowerCase().contains(vendorMask)));
                 }),
 
                 new MenuItem("Add filter by model", () -> {
                     String modelMask = internalData.ioStream.askNonEmptyString("Enter model name (or name part) to filter or \"*\" for any model.")
                             .trim().toLowerCase();
                     internalData.devices = internalData.devices.filter(
-                            device -> ("*".equals(modelMask) || device.vendorLowerCase.contains(modelMask)));
+                            device -> ("*".equals(modelMask) || device.getVendorLowerCase().contains(modelMask)));
                 }),
 
                 new MenuItem("Add filter by price", () -> {
@@ -48,7 +48,7 @@ public class FilterDeviceListMenu extends Menu {
                     String[] splitAnswer = Utils.splitInTwo(answer, "0.00", "99999999.99");
                     BigDecimal[] bounds = Utils.convertToBigDecimal(splitAnswer);
                     internalData.devices = internalData.devices.filter(
-                            invoice -> Utils.isBetween(bounds[0], invoice.price, bounds[1]));
+                            invoice -> Utils.isBetween(bounds[0], invoice.getPrice(), bounds[1]));
                 }),
 
                 new MenuItem("Add filter by color", () -> {
@@ -57,7 +57,7 @@ public class FilterDeviceListMenu extends Menu {
                                     "(colors should be separated by any non-character symbol[s].");
                     Stream<Color> preferredColors = Utils.parseToEnums(answer, Color.class);
                     internalData.devices = internalData.devices.filter(
-                            device -> preferredColors.anyMatch(color -> color.equals(device.color)));
+                            device -> preferredColors.anyMatch(color -> color.equals(device.getColor())));
                 }),
 
                 new MenuItem("Add filter by type", () -> {
@@ -66,7 +66,7 @@ public class FilterDeviceListMenu extends Menu {
                                     "(device types should be separated by any non-character symbol[s].");
                     Stream<DeviceType> preferredTypes = Utils.parseToEnums(answer, DeviceType.class);
                     internalData.devices = internalData.devices.filter(
-                            device -> preferredTypes.anyMatch(type -> type.equals(device.deviceType)));
+                            device -> preferredTypes.anyMatch(type -> type.equals(device.getDeviceType())));
                 }));
     }
 }

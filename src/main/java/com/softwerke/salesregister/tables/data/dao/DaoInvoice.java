@@ -26,7 +26,7 @@ public class DaoInvoice extends Dao {
 
     public void updateInvoice(Invoice invoice) {
         Objects.requireNonNull(invoice);
-        storage.getInvoiceList().set(invoice.id, invoice);
+        storage.getInvoiceList().set(invoice.getId(), invoice);
     }
 
     public Invoice getInvoice(int id) {

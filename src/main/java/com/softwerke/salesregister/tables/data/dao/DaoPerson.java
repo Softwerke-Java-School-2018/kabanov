@@ -19,7 +19,7 @@ public class DaoPerson extends Dao {
 
     public void updatePerson(Person person) {
         Objects.requireNonNull(person);
-        storage.getPersonList().set(person.id, person);
+        storage.getPersonList().set(person.getId(), person);
     }
 
     public Person getPerson(int i) {
