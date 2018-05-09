@@ -1,6 +1,6 @@
 package com.softwerke.salesregister.tables.person;
 
-import com.softwerke.salesregister.exception.BuilderNotInitializedException;
+import com.softwerke.salesregister.io.Logger;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.time.LocalDate;
@@ -57,66 +57,36 @@ public class Person {
         return isDeleted;
     }
 
+    public Person copyWithNewId(int id) {
+        return of(id, this.firstName, this.lastName, this.birthDate, this.isDeleted);
+    }
+
+    public Person copyWithNewFirstName(String firstName) {
+        return of(this.id, firstName, this.lastName, this.birthDate, this.isDeleted);
+    }
+
+    public Person copyWithNewLastName(String lastName) {
+        return of(this.id, this.firstName, lastName, this.birthDate, this.isDeleted);
+    }
+
+    public Person copyWithNewBirthDate(LocalDate birthDate) {
+        return of(this.id, this.firstName, this.lastName, birthDate, this.isDeleted);
+    }
+
+    public Person copyWithNewIsDeleted(boolean isDeleted) {
+        return of(this.id, this.firstName, this.lastName, this.birthDate, isDeleted);
+    }
+
     @Override
     public String toString() {
         return lastName + " " + firstName.charAt(0) + ".";
     }
 
-    public static class PersonBuilder {
-        static int id;
-        static String firstName;
-        static String lastName;
-        static LocalDate birthDate;
-        static boolean isDeleted;
-
-        public PersonBuilder() {
-            id = -1;
-            firstName = null;
-            lastName = null;
-            birthDate = null;
-            isDeleted = true;
+    public static Person of(int id, String firstName, String lastName, LocalDate birthDate, boolean isDeleted) {
+        if (id == -1 || !ObjectUtils.allNotNull(firstName, lastName, birthDate)) {
+            Logger.fatal("One or more argiments are invalid! [Person factory]");
+            throw new IllegalArgumentException("One or more argiments are invalid!");
         }
-
-        public static PersonBuilder setupFromPerson(Person person) {
-            PersonBuilder personBuilder = new PersonBuilder();
-            return personBuilder
-                    .id(person.id)
-                    .firstName(person.firstName)
-                    .lastName(person.lastName)
-                    .birthDate(person.birthDate)
-                    .isDeleted(person.isDeleted);
-        }
-
-        public PersonBuilder id(int id) {
-            PersonBuilder.id = id;
-            return this;
-        }
-
-        public PersonBuilder firstName(String firstName) {
-            PersonBuilder.firstName = firstName;
-            return this;
-        }
-
-        public PersonBuilder lastName(String lastName) {
-            PersonBuilder.lastName = lastName;
-            return this;
-        }
-
-        public PersonBuilder birthDate(LocalDate birthDate) {
-            PersonBuilder.birthDate = birthDate;
-            return this;
-        }
-
-        public PersonBuilder isDeleted(boolean isDeleted) {
-            PersonBuilder.isDeleted = isDeleted;
-            return this;
-        }
-
-        public Person build() throws BuilderNotInitializedException {
-            if (id == -1 || !ObjectUtils.allNotNull(firstName, lastName, birthDate)) {
-                throw new BuilderNotInitializedException("Builder isn't filled!");
-            }
-            return new Person(firstName, lastName, birthDate, id, isDeleted);
-        }
+        return new Person(firstName, lastName, birthDate, id, isDeleted);
     }
 }

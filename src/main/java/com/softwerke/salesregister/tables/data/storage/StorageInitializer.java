@@ -13,8 +13,7 @@ import org.apache.commons.lang3.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class StorageInitializer {
     public StorageInitializer(DaoPerson daoPerson, DaoDevice daoDevice, DaoInvoice daoInvoice)
@@ -22,42 +21,13 @@ public class StorageInitializer {
         if (!ObjectUtils.allNotNull(daoDevice, daoInvoice, daoPerson)) {
             throw new IllegalArgumentException("One or more arguments is null!");
         }
-        Person.PersonBuilder pBuilder = new Person.PersonBuilder().isDeleted(false);
-        pBuilder.firstName("Vasiliy")
-                .lastName("Petrov")
-                .birthDate(LocalDate.of(1971, 12, 5))
-                .id(0);
-        daoPerson.addPerson(pBuilder.build());
 
-        pBuilder.firstName("Peter")
-                .lastName("Zaycev")
-                .birthDate(LocalDate.of(1962, 7, 16))
-                .id(1);
-        daoPerson.addPerson(pBuilder.build());
-
-        pBuilder.firstName("Ivan")
-                .lastName("Smirnov")
-                .birthDate(LocalDate.of(1970, 2, 27))
-                .id(2);
-        daoPerson.addPerson(pBuilder.build());
-
-        pBuilder.firstName("Arkadiy")
-                .lastName("Zolotukhin")
-                .birthDate(LocalDate.of(1993, 9, 6))
-                .id(3);
-        daoPerson.addPerson(pBuilder.build());
-
-        pBuilder.firstName("Elisabeth")
-                .lastName("Bolshevikova")
-                .birthDate(LocalDate.of(1987, 4, 11))
-                .id(4);
-        daoPerson.addPerson(pBuilder.build());
-
-        pBuilder.firstName("Inna")
-                .lastName("Listkova")
-                .birthDate(LocalDate.of(1981, 11, 2))
-                .id(5);
-        daoPerson.addPerson(pBuilder.build());
+        daoPerson.addPerson(Person.of(0, "Vasiliy", "Petrov", LocalDate.of(1971, 12, 5), false));
+        daoPerson.addPerson(Person.of(1, "Peter", "Zaycev", LocalDate.of(1962, 7, 16), false));
+        daoPerson.addPerson(Person.of(2, "Ivan", "Smirnov", LocalDate.of(1970, 2, 27), false));
+        daoPerson.addPerson(Person.of(3, "Arkadiy", "Zolotukhin", LocalDate.of(1993, 9, 6), false));
+        daoPerson.addPerson(Person.of(4, "Elisabeth", "Bolshevikova", LocalDate.of(1987, 4, 11), false));
+        daoPerson.addPerson(Person.of(5, "Inna", "Listkova", LocalDate.of(1981, 11, 2), false));
 
         Device.DeviceBuilder dBuilder = new Device.DeviceBuilder().isDeleted(false);
         dBuilder.model("Galaxy S6")
@@ -123,36 +93,36 @@ public class StorageInitializer {
                 .id(6);
         daoDevice.addDevice(dBuilder.build());
 
-        List<InvoiceLine> order;
+        quickSell(daoInvoice, daoPerson.getPerson(3), LocalDate.of(2018, 2, 10),
+                invoiceLineFactory(daoDevice, 1, 1),
+                invoiceLineFactory(daoDevice, 4, 2));
 
-        order = new ArrayList<>();
-        order.add(new InvoiceLine(daoDevice.getDevice(1), 1));
-        order.add(new InvoiceLine(daoDevice.getDevice(4), 2));
-        daoInvoice.sell(daoPerson.getPerson(3), order, LocalDate.of(2018, 2, 10));
+        quickSell(daoInvoice, daoPerson.getPerson(2), LocalDate.of(2017, 4, 19),
+                invoiceLineFactory(daoDevice, 3, 3));
 
-        order = new ArrayList<>();
-        order.add(new InvoiceLine(daoDevice.getDevice(3), 3));
-        daoInvoice.sell(daoPerson.getPerson(2), order, LocalDate.of(2017, 4, 19));
+        quickSell(daoInvoice, daoPerson.getPerson(4), LocalDate.of(2018, 6, 28),
+                invoiceLineFactory(daoDevice, 0, 1),
+                invoiceLineFactory(daoDevice, 2, 1),
+                invoiceLineFactory(daoDevice, 5, 1));
 
-        order = new ArrayList<>();
-        order.add(new InvoiceLine(daoDevice.getDevice(0), 1));
-        order.add(new InvoiceLine(daoDevice.getDevice(2), 1));
-        order.add(new InvoiceLine(daoDevice.getDevice(5), 1));
-        daoInvoice.sell(daoPerson.getPerson(4), order, LocalDate.of(2018, 6, 28));
+        quickSell(daoInvoice, daoPerson.getPerson(0), LocalDate.of(2017, 8, 6),
+                invoiceLineFactory(daoDevice, 5, 4),
+                invoiceLineFactory(daoDevice, 6, 1));
 
-        order = new ArrayList<>();
-        order.add(new InvoiceLine(daoDevice.getDevice(5), 4));
-        order.add(new InvoiceLine(daoDevice.getDevice(6), 1));
-        daoInvoice.sell(daoPerson.getPerson(0), order, LocalDate.of(2017, 8, 6));
+        quickSell(daoInvoice, daoPerson.getPerson(1), LocalDate.of(2018, 10, 15),
+                invoiceLineFactory(daoDevice, 1, 2),
+                invoiceLineFactory(daoDevice, 2, 2));
 
-        order = new ArrayList<>();
-        order.add(new InvoiceLine(daoDevice.getDevice(1), 2));
-        order.add(new InvoiceLine(daoDevice.getDevice(2), 2));
-        daoInvoice.sell(daoPerson.getPerson(1), order, LocalDate.of(2018, 10, 15));
+        quickSell(daoInvoice, daoPerson.getPerson(3), LocalDate.of(2017, 12, 24),
+                invoiceLineFactory(daoDevice, 4, 1),
+                invoiceLineFactory(daoDevice, 5, 1));
+    }
 
-        order = new ArrayList<>();
-        order.add(new InvoiceLine(daoDevice.getDevice(4), 1));
-        order.add(new InvoiceLine(daoDevice.getDevice(5), 1));
-        daoInvoice.sell(daoPerson.getPerson(3), order, LocalDate.of(2017, 12, 24));
+    private InvoiceLine invoiceLineFactory(DaoDevice daoDevice, int deviceId, int deviceAmount) {
+        return new InvoiceLine(daoDevice.getDevice(deviceId), deviceAmount);
+    }
+
+    private void quickSell(DaoInvoice daoInvoice, Person person, LocalDate date, InvoiceLine... lines) {
+        daoInvoice.sell(person, Arrays.asList(lines), date);
     }
 }

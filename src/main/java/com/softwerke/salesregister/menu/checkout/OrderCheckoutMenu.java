@@ -2,14 +2,14 @@ package com.softwerke.salesregister.menu.checkout;
 
 
 import com.softwerke.salesregister.Utils;
-import com.softwerke.salesregister.console.ConsoleIOStream;
-import com.softwerke.salesregister.console.Formatter;
-import com.softwerke.salesregister.exception.BuilderNotInitializedException;
+import com.softwerke.salesregister.io.ConsoleIOStream;
+import com.softwerke.salesregister.io.Formatter;
+import com.softwerke.salesregister.io.Logger;
+import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.invoice.InvoiceLine;
-import com.softwerke.salesregister.tables.person.Person;
 
 import java.util.Objects;
 
@@ -20,12 +20,7 @@ public class OrderCheckoutMenu extends Menu {
                     internalData.currentPerson =
                             Utils.selectPerson(internalData.daoPerson.persons(), internalData.ioStream);
                     if (Objects.isNull(internalData.currentPerson)) {
-                        try {
-                            internalData.currentPerson = new Person.PersonBuilder().build();
-                        } catch (BuilderNotInitializedException e) {
-                            // internalData.ioStream.logSomething();
-                            internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
-                        }
+                        Logger.info("No person was found [OrderCheckoutMenu]");
                     }
                 }),
 
@@ -41,24 +36,24 @@ public class OrderCheckoutMenu extends Menu {
                     try {
                         device = internalData.daoDevice.getDevice(deviceId);
                         if (device.isDeleted()) {
-                            internalData.ioStream.printLine(ConsoleIOStream.ENTRY_IS_DELETED);
+                            internalData.ioStream.printLine(StringLiterals.ENTRY_IS_DELETED);
                             return;
                         }
                     } catch (IndexOutOfBoundsException e) {
-                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        internalData.ioStream.printLine(StringLiterals.WRONG_DATA_TEXT);
                         return;
                     }
                     int amount = internalData.ioStream.askInt("Enter the device's amount to sell:");
                     if (amount < 1) {
-                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        internalData.ioStream.printLine(StringLiterals.WRONG_DATA_TEXT);
                         return;
                     }
                     internalData.orderItems.add(new InvoiceLine(device, amount));
-                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                    internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                 }),
 
                 new MenuItem("Print shop list",
-                        () -> Formatter.printShopList(internalData.orderItems, internalData.ioStream)),
+                        () -> Formatter.printShopList(internalData.orderItems.stream(), internalData.ioStream)),
 
                 new MenuItem("Select the sale date",
                         () -> internalData.invoiceDate = internalData.ioStream.askLocalDate("Enter the sale date:")),
@@ -70,7 +65,7 @@ public class OrderCheckoutMenu extends Menu {
                     }
                     int deviceId = internalData.ioStream.askInt("Enter the device id for removing:");
                     internalData.orderItems.removeIf(x -> x.getDevice().getId() == deviceId);
-                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                    internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                 }),
 
                 new MenuItem("Proceed", () -> {
@@ -80,7 +75,7 @@ public class OrderCheckoutMenu extends Menu {
                     }
                     internalData.daoInvoice
                             .sell(internalData.currentPerson, internalData.orderItems, internalData.invoiceDate);
-                    internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                    internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                     incrementRollback();
                 }));
     }

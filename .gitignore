@@ -1,5 +1,7 @@
 *.iml
+*.bat
 .idea/
 out/
+logs/
 target/
 src/META-INF/

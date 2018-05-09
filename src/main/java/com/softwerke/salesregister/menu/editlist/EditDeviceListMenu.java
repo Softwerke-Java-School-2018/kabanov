@@ -1,9 +1,10 @@
 package com.softwerke.salesregister.menu.editlist;
 
 import com.softwerke.salesregister.Utils;
-import com.softwerke.salesregister.console.ConsoleIOStream;
-import com.softwerke.salesregister.console.Formatter;
 import com.softwerke.salesregister.exception.BuilderNotInitializedException;
+import com.softwerke.salesregister.io.Formatter;
+import com.softwerke.salesregister.io.Logger;
+import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.menu.edititem.EditDeviceMenu;
@@ -43,12 +44,12 @@ public class EditDeviceListMenu extends Menu {
                                 .id(internalData.daoDevice.getSize())
                                 .isDeleted(false);
                         internalData.daoDevice.addDevice(builder.build());
-                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                        internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                     } catch (IllegalArgumentException e) {
-                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        internalData.ioStream.printLine(StringLiterals.WRONG_DATA_TEXT);
                     } catch (BuilderNotInitializedException e) {
-                        // internalData.ioStream.logSomething();
-                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                        Logger.error("Builder in is not initialized! [EditDeviceListMenu]" + e);
+                        internalData.ioStream.printLine(StringLiterals.PROGRAM_ERROR);
                     }
                 }),
 

@@ -1,4 +1,4 @@
-package com.softwerke.salesregister.console;
+package com.softwerke.salesregister.io;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +15,7 @@ public class ConsoleIOStream implements IOStream {
 
     public ConsoleIOStream(InputStream in, OutputStream out) {
         if (!ObjectUtils.allNotNull(in, out)) {
+            Logger.fatal("One or more arguments is null! [ConsoleIOStream constructor]");
             throw new IllegalArgumentException("One or more arguments is null!");
         }
         reader = new BufferedReader(new InputStreamReader(in));
@@ -29,7 +30,8 @@ public class ConsoleIOStream implements IOStream {
             writer.write(System.lineSeparator());
             writer.flush();
         } catch (IOException e) {
-            throw new RuntimeException("Can't write to output stream!");
+            Logger.fatal("Can't write to output stream!");
+            System.exit(-1);
         }
     }
 
@@ -55,7 +57,7 @@ public class ConsoleIOStream implements IOStream {
     public String askNonEmptyString(String message) {
         String answer = ask(message);
         while (StringUtils.isEmpty(answer)) {
-            printLine(WRONG_DATA_TEXT);
+            printLine(StringLiterals.WRONG_DATA_TEXT);
             answer = ask(message);
         }
         return answer;
@@ -68,7 +70,7 @@ public class ConsoleIOStream implements IOStream {
             try {
                 return LocalDate.parse(dateFormatted, DateTimeFormatter.ofPattern("d-MM-yyyy"));
             } catch (DateTimeParseException exception) {
-                printLine(WRONG_DATA_TEXT);
+                printLine(StringLiterals.WRONG_DATA_TEXT);
             }
         }
     }
@@ -80,7 +82,7 @@ public class ConsoleIOStream implements IOStream {
                 String inputLine = askNonEmptyString(message);
                 return Integer.parseInt(inputLine);
             } catch (NumberFormatException e) {
-                printLine(WRONG_DATA_TEXT);
+                printLine(StringLiterals.WRONG_DATA_TEXT);
             }
         }
     }

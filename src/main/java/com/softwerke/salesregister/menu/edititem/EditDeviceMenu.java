@@ -1,6 +1,7 @@
 package com.softwerke.salesregister.menu.edititem;
 
-import com.softwerke.salesregister.console.ConsoleIOStream;
+import com.softwerke.salesregister.io.StringLiterals;
+import com.softwerke.salesregister.io.Logger;
 import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
@@ -19,10 +20,10 @@ public class EditDeviceMenu extends Menu {
                     Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
                     try {
                         internalData.daoDevice.updateDevice(builder.vendor(newName).build());
-                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                        internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                     } catch (BuilderNotInitializedException e) {
-                        // internalData.ioStream.logSomething();
-                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                        Logger.error("Builder in is not initialized! [EditDeviceMenu - vendor]" + e);
+                        internalData.ioStream.printLine(StringLiterals.PROGRAM_ERROR);
                     }
                 }),
 
@@ -31,10 +32,10 @@ public class EditDeviceMenu extends Menu {
                     Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
                     try {
                         internalData.daoDevice.updateDevice(builder.model(newName).build());
-                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                        internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                     } catch (BuilderNotInitializedException e) {
-                        // internalData.ioStream.logSomething();
-                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                        Logger.error("Builder in is not initialized! [EditDeviceMenu - model]" + e);
+                        internalData.ioStream.printLine(StringLiterals.PROGRAM_ERROR);
                     }
                 }),
 
@@ -44,12 +45,12 @@ public class EditDeviceMenu extends Menu {
                         Device.DeviceBuilder builder =
                                 Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
                         internalData.daoDevice.updateDevice(builder.color(Color.valueOf(newColor)).build());
-                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                        internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                     } catch (IllegalArgumentException e) {
-                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        internalData.ioStream.printLine(StringLiterals.WRONG_DATA_TEXT);
                     } catch (BuilderNotInitializedException e) {
-                        // internalData.ioStream.logSomething();
-                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                        Logger.error("Builder in is not initialized! [EditDeviceMenu - color]" + e);
+                        internalData.ioStream.printLine(StringLiterals.PROGRAM_ERROR);
                     }
                 }),
 
@@ -59,12 +60,12 @@ public class EditDeviceMenu extends Menu {
                         Device.DeviceBuilder builder =
                                 Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
                         internalData.daoDevice.updateDevice(builder.type(DeviceType.valueOf(newType)).build());
-                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                        internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                     } catch (IllegalArgumentException e) {
-                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        internalData.ioStream.printLine(StringLiterals.WRONG_DATA_TEXT);
                     } catch (BuilderNotInitializedException e) {
-                        // internalData.ioStream.logSomething();
-                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                        Logger.error("Builder in is not initialized! [EditDeviceMenu - device type]" + e);
+                        internalData.ioStream.printLine(StringLiterals.PROGRAM_ERROR);
                     }
                 }),
 
@@ -74,12 +75,12 @@ public class EditDeviceMenu extends Menu {
                         Device.DeviceBuilder builder =
                                 Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
                         internalData.daoDevice.updateDevice(builder.price(new BigDecimal(newPrice)).build());
-                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                        internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                     } catch (NumberFormatException e) {
-                        internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                        internalData.ioStream.printLine(StringLiterals.WRONG_DATA_TEXT);
                     } catch (BuilderNotInitializedException e) {
-                        // internalData.ioStream.logSomething();
-                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                        Logger.error("Builder in is not initialized! [EditDeviceMenu - price]" + e);
+                        internalData.ioStream.printLine(StringLiterals.PROGRAM_ERROR);
                     }
                 }),
 
@@ -88,10 +89,10 @@ public class EditDeviceMenu extends Menu {
                     Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
                     try {
                         internalData.daoDevice.updateDevice(builder.productionDate(newDate).build());
-                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                        internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                     } catch (BuilderNotInitializedException e) {
-                        // internalData.ioStream.logSomething();
-                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                        Logger.error("Builder in is not initialized! [EditDeviceMenu - production date]" + e);
+                        internalData.ioStream.printLine(StringLiterals.PROGRAM_ERROR);
                     }
                 }),
 
@@ -99,11 +100,11 @@ public class EditDeviceMenu extends Menu {
                     Device.DeviceBuilder builder = Device.DeviceBuilder.setupFromDevice(internalData.currentDevice);
                     try {
                         internalData.daoDevice.updateDevice(builder.isDeleted(true).build());
-                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                        internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                         Menu.incrementRollback();
                     } catch (BuilderNotInitializedException e) {
-                        // internalData.ioStream.logSomething();
-                        internalData.ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+                        Logger.error("Builder in is not initialized! [EditDeviceMenu - delete]" + e);
+                        internalData.ioStream.printLine(StringLiterals.PROGRAM_ERROR);
                     }
                 }));
     }

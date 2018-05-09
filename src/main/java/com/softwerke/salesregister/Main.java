@@ -1,8 +1,10 @@
 package com.softwerke.salesregister;
 
-import com.softwerke.salesregister.console.ConsoleIOStream;
-import com.softwerke.salesregister.console.IOStream;
 import com.softwerke.salesregister.exception.BuilderNotInitializedException;
+import com.softwerke.salesregister.io.ConsoleIOStream;
+import com.softwerke.salesregister.io.IOStream;
+import com.softwerke.salesregister.io.Logger;
+import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.InternalData;
 import com.softwerke.salesregister.menu.MainMenu;
 import com.softwerke.salesregister.menu.base.Menu;
@@ -27,8 +29,8 @@ class Main {
         try {
             new StorageInitializer(daoPerson, daoDevice, daoInvoice);
         } catch (BuilderNotInitializedException e) {
-            // internalData.ioStream.logSomething();
-            ioStream.printLine(ConsoleIOStream.PROGRAM_ERROR);
+            Logger.fatal("Builder in is not initialized! [main - StorageInitializer]" + e);
+            ioStream.printLine(StringLiterals.PROGRAM_ERROR);
             return;
         }
 

@@ -1,7 +1,8 @@
 package com.softwerke.salesregister.menu.browselist;
 
-import com.softwerke.salesregister.console.Formatter;
-import com.softwerke.salesregister.console.ConsoleIOStream;
+import com.softwerke.salesregister.io.Formatter;
+import com.softwerke.salesregister.io.ConsoleIOStream;
+import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.menu.filterlist.FilterDeviceListMenu;
@@ -23,7 +24,7 @@ public class BrowseDeviceListMenu extends Menu {
                         new FilterDeviceListMenu().execute();
                         internalData.deviceList = internalData.devices.collect(Collectors.toList());
                     } catch (IllegalArgumentException | DateTimeParseException e) {
-                        internalData.ioStream.ask(ConsoleIOStream.WRONG_DATA_TEXT);
+                        internalData.ioStream.ask(StringLiterals.WRONG_DATA_TEXT);
                     }
                 }),
 

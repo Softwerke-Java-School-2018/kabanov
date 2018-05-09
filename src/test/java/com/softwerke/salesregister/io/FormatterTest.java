@@ -1,4 +1,4 @@
-package com.softwerke.salesregister.console;
+package com.softwerke.salesregister.io;
 
 import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.tables.device.Color;
@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.softwerke.salesregister.console.ConsoleIOStreamTest.STUB;
-import static com.softwerke.salesregister.console.Formatter.printFormatDevice;
+import static com.softwerke.salesregister.io.ConsoleIOStreamTest.STUB;
+import static com.softwerke.salesregister.io.Formatter.printFormatDevice;
 import static org.junit.Assert.fail;
 
 public class FormatterTest {

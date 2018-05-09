@@ -43,10 +43,6 @@ public class Invoice {
         return person.toString();
     }
 
-    public List<InvoiceLine> getInvoiceItems() {
-        return invoiceItems;
-    }
-
     public Stream<InvoiceLine> getInvoices() {
         return invoiceItems.stream().unordered();
     }

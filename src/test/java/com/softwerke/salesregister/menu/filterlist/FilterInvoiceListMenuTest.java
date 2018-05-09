@@ -10,7 +10,10 @@ import com.softwerke.salesregister.tables.data.storage.Storage;
 import com.softwerke.salesregister.tables.data.storage.StorageInitializer;
 import com.softwerke.salesregister.tables.device.DeviceType;
 import com.softwerke.salesregister.tables.invoice.Invoice;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -67,11 +70,10 @@ public class FilterInvoiceListMenuTest {
                 .filter(invoice -> Utils.isBetween(bounds[0], invoice.getDate(), bounds[1]))
                 .map(Invoice::getDate);
         LocalDate[] datesArray = dates.toArray(LocalDate[]::new);
-        assertArrayEquals(datesArray, new LocalDate[]{
+        assertArrayEquals(new LocalDate[]{
                 LocalDate.of(2017, 4, 19),
                 LocalDate.of(2017, 8, 6),
-                LocalDate.of(2017, 12, 24),
-        });
+                LocalDate.of(2017, 12, 24),}, datesArray);
     }
 
     @Test
@@ -83,11 +85,10 @@ public class FilterInvoiceListMenuTest {
                 .filter(invoice -> Utils.isBetween(bounds[0], invoice.getTotalSum(), bounds[1]))
                 .map(Invoice::getTotalSum);
         BigDecimal[] datesArray = dates.toArray(BigDecimal[]::new);
-        assertArrayEquals(datesArray, new BigDecimal[]{
+        assertArrayEquals(new BigDecimal[]{
                 new BigDecimal("93950.00"),
                 new BigDecimal("296910.00"),
-                new BigDecimal("142970.00"),
-        });
+                new BigDecimal("142970.00"),}, datesArray);
     }
 
     @Test
@@ -97,11 +98,10 @@ public class FilterInvoiceListMenuTest {
                         devices -> Stream.of(DeviceType.LAPTOP, DeviceType.PLAYER).anyMatch(
                                 type -> type.equals(devices.getDevice().getDeviceType()))));
         Invoice[] result = invoices.toArray(Invoice[]::new);
-        assertArrayEquals(result, new Invoice[]{
+        assertArrayEquals(new Invoice[]{
                 daoInvoice.getInvoice(0),
                 daoInvoice.getInvoice(2),
                 daoInvoice.getInvoice(3),
-                daoInvoice.getInvoice(5),
-        });
+                daoInvoice.getInvoice(5),}, result);
     }
 }

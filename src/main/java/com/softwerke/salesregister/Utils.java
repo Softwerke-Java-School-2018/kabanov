@@ -1,6 +1,6 @@
 package com.softwerke.salesregister;
 
-import com.softwerke.salesregister.console.IOStream;
+import com.softwerke.salesregister.io.IOStream;
 import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.person.Person;
 import org.apache.commons.lang3.ObjectUtils;
@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Utils {
+    private Utils() {
+    }
 
     /**
      * Splits given string in two, related by space.

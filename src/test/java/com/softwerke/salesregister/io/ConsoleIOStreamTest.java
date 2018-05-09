@@ -1,4 +1,4 @@
-package com.softwerke.salesregister.console;
+package com.softwerke.salesregister.io;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -92,19 +92,19 @@ public class ConsoleIOStreamTest {
         initConsoleWithInputText("20 10 0000\n20 10 2010");
 
         assertEquals(LocalDate.parse("2010-10-20"), console.askLocalDate(STUB));
-        assertEquals(STUB + System.lineSeparator() + IOStream.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
+        assertEquals(STUB + System.lineSeparator() + StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
                 outputStream.toString("UTF-8"));
 
         initConsoleWithInputText("21 - 11 - 2011 - 2018\n21 - 11 - 2011");
 
         assertEquals(console.askLocalDate(STUB), LocalDate.parse("2011-11-21"));
-        assertEquals(STUB + System.lineSeparator() + IOStream.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
+        assertEquals(STUB + System.lineSeparator() + StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
                 outputStream.toString("UTF-8"));
 
         initConsoleWithInputText("22_12_2012_2028\n22_12_2012");
 
         assertEquals(console.askLocalDate(STUB), LocalDate.parse("2012-12-22"));
-        assertEquals(STUB + System.lineSeparator() + IOStream.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
+        assertEquals(STUB + System.lineSeparator() + StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
                 outputStream.toString("UTF-8"));
     }
 }

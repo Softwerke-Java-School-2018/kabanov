@@ -1,6 +1,6 @@
 package com.softwerke.salesregister.menu;
 
-import com.softwerke.salesregister.console.IOStream;
+import com.softwerke.salesregister.io.IOStream;
 import com.softwerke.salesregister.tables.data.dao.DaoDevice;
 import com.softwerke.salesregister.tables.data.dao.DaoInvoice;
 import com.softwerke.salesregister.tables.data.dao.DaoPerson;

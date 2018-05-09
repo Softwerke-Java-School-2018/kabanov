@@ -1,35 +1,36 @@
 package com.softwerke.salesregister.tables.person;
 
-import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import org.junit.Test;
 
 import java.time.LocalDate;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class PersonTest {
-    @Test(expected = BuilderNotInitializedException.class)
-    public void testPersonBuilderEmpty() throws BuilderNotInitializedException {
-        Person.PersonBuilder builder = new Person.PersonBuilder();
-        builder.id(2);
-        builder.build();
+    @Test(expected = IllegalArgumentException.class)
+    public void testPersonOfIllegalArgs0() {
+        Person person = Person.of(-1, "Name", "Surname", LocalDate.of(1981, 10, 1), false);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPersonOfIllegalArgs1() {
+        Person person = Person.of(2, null, "Surname", LocalDate.of(1981, 10, 1), false);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPersonOfIllegalArgs2() {
+        Person person = Person.of(2, "Name", null, LocalDate.of(1981, 10, 1), false);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testPersonOfIllegalArgs3() {
+        Person person = Person.of(2, "Name", "Surname", null, false);
     }
 
     @Test
-    public void testPersonBuilder() {
-        Person.PersonBuilder builder = new Person.PersonBuilder();
-        builder.id(2)
-                .firstName("Name")
-                .lastName("Surname")
-                .birthDate(LocalDate.of(1981, 10, 1))
-                .isDeleted(false);
-
-        Person person = null;
-        try {
-            person = builder.build();
-        } catch (BuilderNotInitializedException e) {
-            fail();
-        }
+    public void testPersonOf() {
+        Person person = Person.of(2, "Name", "Surname", LocalDate.of(1981, 10, 1), false);
 
         assertEquals(person.getId(), 2);
         assertEquals(person.getFirstName(), "Name");

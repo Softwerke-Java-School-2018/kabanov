@@ -1,6 +1,6 @@
 package com.softwerke.salesregister.menu.base;
 
-import com.softwerke.salesregister.console.ConsoleIOStream;
+import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.InternalData;
 
 import java.util.Objects;
@@ -45,7 +45,7 @@ public class Menu {
                 }
             } catch (IllegalArgumentException e) {
                 /* Input error */
-                internalData.ioStream.printLine(ConsoleIOStream.WRONG_COMMAND_TEXT);
+                internalData.ioStream.printLine(StringLiterals.WRONG_COMMAND_TEXT);
                 continue;
             }
             if (parsedCommand == 0) {

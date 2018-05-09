@@ -45,22 +45,16 @@ public class DaoPersonTest {
     @Test
     public void testPersonUpdate() {
         Person arkadiy = daoPerson.getPerson(3);
-        Person.PersonBuilder builder = Person.PersonBuilder.setupFromPerson(arkadiy);
 
-        Person anna = null;
-        try {
-            anna = builder.firstName("Anna").lastName("Kuznetsova").build();
-        } catch (BuilderNotInitializedException e) {
-            fail();
-        }
+        Person anna = arkadiy.copyWithNewFirstName("Anna").copyWithNewLastName("Kuznetsova");
 
         daoPerson.updatePerson(anna);
 
         Person arkadiyRenamed = daoPerson.getPerson(3);
 
-        assertEquals(arkadiyRenamed.getId(),           arkadiyRenamed.getId());
-        assertEquals(arkadiyRenamed.getBirthDate(),    arkadiyRenamed.getBirthDate());
-        assertEquals(arkadiyRenamed.isDeleted(),       arkadiyRenamed.isDeleted());
+        assertEquals(arkadiyRenamed.getId(), arkadiyRenamed.getId());
+        assertEquals(arkadiyRenamed.getBirthDate(), arkadiyRenamed.getBirthDate());
+        assertEquals(arkadiyRenamed.isDeleted(), arkadiyRenamed.isDeleted());
 
         assertEquals(arkadiyRenamed.getFirstName(), "Anna");
         assertEquals(arkadiyRenamed.getLastName(), "Kuznetsova");
@@ -69,23 +63,17 @@ public class DaoPersonTest {
     @Test
     public void testPersonDelete() {
         Person arkadiy = daoPerson.getPerson(3);
-        Person.PersonBuilder builder = Person.PersonBuilder.setupFromPerson(arkadiy);
 
-        Person arkadiyDeleted = null;
-        try {
-            arkadiyDeleted = builder.isDeleted(true).build();
-        } catch (BuilderNotInitializedException e) {
-            fail();
-        }
+        Person arkadiyDeleted = arkadiy.copyWithNewIsDeleted(true);
 
         daoPerson.updatePerson(arkadiyDeleted);
 
         arkadiyDeleted = daoPerson.getPerson(3);
 
-        assertEquals(arkadiyDeleted.getId(),           arkadiy.getId());
-        assertEquals(arkadiyDeleted.getBirthDate(),    arkadiy.getBirthDate());
-        assertEquals(arkadiyDeleted.getFirstName(),    arkadiy.getFirstName());
-        assertEquals(arkadiyDeleted.getLastName(),     arkadiy.getLastName());
+        assertEquals(arkadiyDeleted.getId(), arkadiy.getId());
+        assertEquals(arkadiyDeleted.getBirthDate(), arkadiy.getBirthDate());
+        assertEquals(arkadiyDeleted.getFirstName(), arkadiy.getFirstName());
+        assertEquals(arkadiyDeleted.getLastName(), arkadiy.getLastName());
 
         assertEquals(arkadiyDeleted.isDeleted(), true);
     }

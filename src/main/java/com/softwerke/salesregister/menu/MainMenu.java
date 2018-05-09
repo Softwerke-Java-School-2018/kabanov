@@ -1,7 +1,8 @@
 package com.softwerke.salesregister.menu;
 
 
-import com.softwerke.salesregister.console.ConsoleIOStream;
+import com.softwerke.salesregister.io.ConsoleIOStream;
+import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.menu.browselist.BrowseDeviceListMenu;
@@ -41,10 +42,10 @@ public class MainMenu extends Menu {
                     int idForDelete = internalData.ioStream.askInt("Enter invoice ID for removing:");
                     if (idForDelete < invoices.size()) {
                         internalData.daoInvoice.updateInvoice(invoices.get(idForDelete).getDisabledCopy());
-                        internalData.ioStream.printLine(ConsoleIOStream.SUCCESSFUL);
+                        internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                         return;
                     }
-                    internalData.ioStream.printLine(ConsoleIOStream.WRONG_DATA_TEXT);
+                    internalData.ioStream.printLine(StringLiterals.WRONG_DATA_TEXT);
                 }),
 
                 new MenuItem("Browse device list", () -> {

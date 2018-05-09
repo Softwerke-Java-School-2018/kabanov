@@ -1,7 +1,8 @@
 package com.softwerke.salesregister.menu.browselist;
 
-import com.softwerke.salesregister.console.ConsoleIOStream;
-import com.softwerke.salesregister.console.Formatter;
+import com.softwerke.salesregister.io.ConsoleIOStream;
+import com.softwerke.salesregister.io.Formatter;
+import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.menu.filterlist.FilterInvoiceListMenu;
@@ -24,7 +25,7 @@ public class BrowseInvoiceListMenu extends Menu {
                         new FilterInvoiceListMenu().execute();
                         internalData.invoiceList = internalData.invoices.collect(Collectors.toList());
                     } catch (IllegalArgumentException | DateTimeParseException e) {
-                        internalData.ioStream.ask(ConsoleIOStream.WRONG_DATA_TEXT);
+                        internalData.ioStream.ask(StringLiterals.WRONG_DATA_TEXT);
                     }
                 }),
 
@@ -36,7 +37,7 @@ public class BrowseInvoiceListMenu extends Menu {
                     int saleId = internalData.ioStream.askInt("Enter invoice ID for printing:");
                     Invoice invoice = internalData.daoInvoice.getInvoice(saleId);
                     if (invoice.isDeleted()) {
-                        internalData.ioStream.printLine(ConsoleIOStream.ENTRY_IS_DELETED);
+                        internalData.ioStream.printLine(StringLiterals.ENTRY_IS_DELETED);
                     } else {
                         Formatter.printReceipt(invoice, internalData.ioStream);
                     }
