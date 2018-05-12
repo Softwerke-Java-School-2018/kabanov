@@ -1,12 +1,13 @@
 package com.softwerke.salesregister.utils;
 
 import com.softwerke.salesregister.io.IOStream;
-import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.person.Person;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -17,9 +18,18 @@ public class Utils {
     private Utils() {
     }
 
+    /**
+     * Finds index of given char starting from the middle, moving both sides simultaneously.
+     *
+     * @param string string for searching
+     * @param ch     symbol which should be found
+     * @return index of given char if it is found, -1 otherwise
+     * @throws NullPointerException if given string is {@code null}.
+     */
     public static int centerIndexOf(String string, char ch) {
-        if (Objects.isNull(string) || string.length() == 0) {
-            throw new IllegalArgumentException(StringLiterals.NULL_ARG_EXC);
+        Objects.requireNonNull(string);
+        if (string.length() == 0) {
+            return -1;
         }
         int centerIndex = (string.length() - 1) / 2;
         if (string.charAt(centerIndex) == ch) {
@@ -36,7 +46,10 @@ public class Utils {
         return -1;
     }
 
-
+    public static LocalDate parseStringToLocalDate(String parsedString) {
+        return LocalDate.parse(parsedString.replaceAll("\\D+", "-"),
+                DateTimeFormatter.ofPattern("d-M-yyyy"));
+    }
 
     /**
      * Converts given string to stream of instances of {@code clazz} enum.
@@ -85,13 +98,15 @@ public class Utils {
                     return tempPerson;
                 default:
                     source.printLine("Found " + personList.size() + " persons.");
-                    String personIdOrName = source.askNonEmptyString("Enter person ID or name part:");
+                    String personIdOrName = source.askNonEmptyString("Enter person ID or name part:").toLowerCase();
                     try {
-                        personList.removeIf(person -> person.getId() != Integer.parseInt(personIdOrName));
+                        int personId = Integer.parseInt(personIdOrName);
+                        personList.removeIf(person -> person.getId() != personId);
                     } catch (NumberFormatException e) {
-                        personList.removeIf(person ->
-                                !person.getFirstNameLowerCase().contains(personIdOrName) &&
-                                        !person.getLastNameLowerCase().contains(personIdOrName));
+                        String[] names = personIdOrName.split("[^A-Z^a-z]+");
+                        personList.removeIf(person -> !Arrays.stream(names)
+                                .allMatch(name -> person.getLastNameLowerCase().contains(name)
+                                        || person.getFirstNameLowerCase().contains(name)));
                     }
             }
         }
@@ -104,7 +119,6 @@ public class Utils {
      * @param deviceStream stream of elements, which will be cured inside as {@code List}
      * @return the {@code Device} matching required name/ID or null if there is no such element
      */
-
     public static Device selectDevice(Stream<Device> deviceStream, IOStream source) {
         if (!ObjectUtils.allNotNull(deviceStream, source)) {
             throw new IllegalArgumentException("One or more arguments is null!");
@@ -123,13 +137,15 @@ public class Utils {
                     return tempDevice;
                 default:
                     source.printLine("Found " + deviceList.size() + " persons.");
-                    String deviceIdOrName = source.askNonEmptyString("Enter device ID or vendor / model name part:");
+                    String deviceIdOrName = source.askNonEmptyString("Enter device ID or vendor / model name part:").toLowerCase();
                     try {
-                        deviceList.removeIf(person -> person.getId() != Integer.parseInt(deviceIdOrName));
+                        int deviceId = Integer.parseInt(deviceIdOrName);
+                        deviceList.removeIf(person -> person.getId() != deviceId);
                     } catch (NumberFormatException e) {
-                        deviceList.removeIf(device ->
-                                !device.getModelLowerCase().contains(deviceIdOrName) &&
-                                        !device.getVendorLowerCase().contains(deviceIdOrName));
+                        String[] names = deviceIdOrName.split("[^A-Z^a-z]+");
+                        deviceList.removeIf(device -> !Arrays.stream(names)
+                                .allMatch(name -> device.getVendorLowerCase().contains(name)
+                                        || device.getModelLowerCase().contains(name)));
                     }
             }
         }

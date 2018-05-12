@@ -1,12 +1,12 @@
 package com.softwerke.salesregister.menu.editlist;
 
-import com.softwerke.salesregister.utils.Utils;
 import com.softwerke.salesregister.io.Formatter;
 import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.menu.edititem.EditPersonMenu;
 import com.softwerke.salesregister.tables.person.Person;
+import com.softwerke.salesregister.utils.Utils;
 
 import java.time.LocalDate;
 import java.util.Objects;

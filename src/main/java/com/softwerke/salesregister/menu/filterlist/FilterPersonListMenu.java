@@ -3,10 +3,9 @@ package com.softwerke.salesregister.menu.filterlist;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.utils.Interval;
+import com.softwerke.salesregister.utils.Utils;
 
-import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class FilterPersonListMenu extends Menu {
     public FilterPersonListMenu() {
@@ -38,8 +37,7 @@ public class FilterPersonListMenu extends Menu {
                     String answer = internalData.ioStream.ask("Enter person birth date range to filter (\"X Y\", \"X\" or \"*\" for any date, format: dd-mm-yyyy)").trim();
                     if (!"*".equals(answer)) {
                         Interval<ChronoLocalDate> interval = new Interval<ChronoLocalDate>(answer,
-                                string -> LocalDate.parse(string.replaceAll("\\D+", "-"),
-                                        DateTimeFormatter.ofPattern("d-MM-yyyy")));
+                                Utils::parseStringToLocalDate);
                         internalData.persons = internalData.persons
                                 .filter(person -> interval.contains(person.getBirthDate()));
                     }

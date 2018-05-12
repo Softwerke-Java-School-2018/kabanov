@@ -1,6 +1,5 @@
 package com.softwerke.salesregister.menu.editlist;
 
-import com.softwerke.salesregister.utils.Utils;
 import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.io.Formatter;
 import com.softwerke.salesregister.io.Logger;
@@ -11,6 +10,7 @@ import com.softwerke.salesregister.menu.edititem.EditDeviceMenu;
 import com.softwerke.salesregister.tables.device.Color;
 import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.device.DeviceType;
+import com.softwerke.salesregister.utils.Utils;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

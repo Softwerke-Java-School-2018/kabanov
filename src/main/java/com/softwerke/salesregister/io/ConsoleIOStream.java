@@ -1,11 +1,11 @@
 package com.softwerke.salesregister.io;
 
+import com.softwerke.salesregister.utils.Utils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class ConsoleIOStream implements IOStream {
@@ -66,10 +66,9 @@ public class ConsoleIOStream implements IOStream {
 
     public LocalDate askLocalDate(String message) {
         while (true) {
-            String dateRaw = askNonEmptyString(message);
-            String dateFormatted = dateRaw.replaceAll("\\D+", "-");
+            String date = askNonEmptyString(message);
             try {
-                return LocalDate.parse(dateFormatted, DateTimeFormatter.ofPattern("d-MM-yyyy"));
+                return Utils.parseStringToLocalDate(date);
             } catch (DateTimeParseException exception) {
                 printLine(StringLiterals.WRONG_DATA_TEXT);
             }

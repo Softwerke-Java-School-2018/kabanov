@@ -5,6 +5,9 @@ import org.apache.logging.log4j.LogManager;
 public class Logger {
     private static final org.apache.logging.log4j.Logger srLogger = LogManager.getLogger("SalesRegisterLogger");
 
+    private Logger() {
+    }
+
     public static void trace(String string) {
         srLogger.trace(string);
     }
@@ -27,8 +30,5 @@ public class Logger {
 
     public static void fatal(String string) {
         srLogger.fatal(string);
-    }
-
-    private Logger() {
     }
 }

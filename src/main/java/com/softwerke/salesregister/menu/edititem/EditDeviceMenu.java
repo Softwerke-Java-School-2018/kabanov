@@ -1,8 +1,8 @@
 package com.softwerke.salesregister.menu.edititem;
 
-import com.softwerke.salesregister.io.StringLiterals;
-import com.softwerke.salesregister.io.Logger;
 import com.softwerke.salesregister.exception.BuilderNotInitializedException;
+import com.softwerke.salesregister.io.Logger;
+import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
 import com.softwerke.salesregister.tables.device.Color;

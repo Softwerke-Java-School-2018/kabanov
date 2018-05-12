@@ -7,9 +7,7 @@ import com.softwerke.salesregister.utils.Interval;
 import com.softwerke.salesregister.utils.Utils;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.stream.Stream;
 
 public class FilterInvoiceListMenu extends Menu {
@@ -28,8 +26,7 @@ public class FilterInvoiceListMenu extends Menu {
                     String answer = internalData.ioStream.ask("Enter invoice date range to filter (\"X Y\", \"X\" or \"*\" for any date, format: dd-mm-yyyy)").trim();
                     if (!"*".equals(answer)) {
                         Interval<ChronoLocalDate> interval = new Interval<ChronoLocalDate>(answer,
-                                string -> LocalDate.parse(string.replaceAll("\\D+", "-"),
-                                        DateTimeFormatter.ofPattern("d-MM-yyyy")));
+                                Utils::parseStringToLocalDate);
                         internalData.invoices = internalData.invoices
                                 .filter(invoice -> interval.contains(invoice.getDate()));
                     }

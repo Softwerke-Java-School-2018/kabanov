@@ -4,7 +4,6 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
 import static org.junit.Assert.assertFalse;
@@ -45,8 +44,7 @@ public class IntervalTest {
     @Test
     public void intervalTest3() {
         Interval<ChronoLocalDate> stringInterval = new Interval<ChronoLocalDate>("01 10 2010 31 12 2010",
-                string -> LocalDate.parse(string.replaceAll("\\D+", "-"),
-                        DateTimeFormatter.ofPattern("d-MM-yyyy")));
+                Utils::parseStringToLocalDate);
         assertTrue(stringInterval.contains(LocalDate.of(2010, 10, 1)));
         assertTrue(stringInterval.contains(LocalDate.of(2010, 11, 15)));
         assertTrue(stringInterval.contains(LocalDate.of(2010, 12, 31)));
@@ -55,7 +53,7 @@ public class IntervalTest {
 
     @Test
     public void intervalTest4() {
-        Interval<Double> stringInterval = new Interval<Double>("0.99",Double::new);
+        Interval<Double> stringInterval = new Interval<Double>("0.99", Double::new);
         assertTrue(stringInterval.contains(0.99));
         assertFalse(stringInterval.contains(1.0));
         assertFalse(stringInterval.contains(0.98));

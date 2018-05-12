@@ -25,6 +25,14 @@ public class Person {
         this.isDeleted = isDeleted;
     }
 
+    public static Person of(int id, String firstName, String lastName, LocalDate birthDate, boolean isDeleted) {
+        if (id == -1 || !ObjectUtils.allNotNull(firstName, lastName, birthDate)) {
+            Logger.fatal("One or more arguments are invalid! [Person factory]");
+            throw new IllegalArgumentException("One or more arguments are invalid!");
+        }
+        return new Person(firstName, lastName, birthDate, id, isDeleted);
+    }
+
     public int getId() {
         return id;
     }
@@ -80,13 +88,5 @@ public class Person {
     @Override
     public String toString() {
         return lastName + " " + firstName.charAt(0) + ".";
-    }
-
-    public static Person of(int id, String firstName, String lastName, LocalDate birthDate, boolean isDeleted) {
-        if (id == -1 || !ObjectUtils.allNotNull(firstName, lastName, birthDate)) {
-            Logger.fatal("One or more arguments are invalid! [Person factory]");
-            throw new IllegalArgumentException("One or more arguments are invalid!");
-        }
-        return new Person(firstName, lastName, birthDate, id, isDeleted);
     }
 }
