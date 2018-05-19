@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 public class Interval<T extends Comparable<T>> {
-    private final static Logger logger = LogManager.getLogger(Interval.class);
+    private static final Logger logger = LogManager.getLogger(Interval.class);
     private final T leftBound;
     private final T rightBound;
 

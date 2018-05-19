@@ -26,13 +26,13 @@ public class DeviceTest {
                 .isDeleted(false)
                 .build();
 
-        assertEquals(device.getId(), 12345);
-        assertEquals(device.getColor(), Color.RED);
-        assertEquals(device.getDeviceType(), DeviceType.PHONE);
-        assertEquals(device.getModel(), ConsoleIOStreamTest.STUB + ConsoleIOStreamTest.STUB);
-        assertEquals(device.getPrice().toString(), "0.00");
-        assertEquals(device.getProductionDate(), LocalDate.MIN);
-        assertEquals(device.getVendor(), ConsoleIOStreamTest.STUB);
+        assertEquals(12345, device.getId());
+        assertEquals(Color.RED, device.getColor());
+        assertEquals(DeviceType.PHONE, device.getDeviceType());
+        assertEquals(ConsoleIOStreamTest.STUB + ConsoleIOStreamTest.STUB, device.getModel());
+        assertEquals("0.00", device.getPrice().toString());
+        assertEquals(LocalDate.MIN, device.getProductionDate());
+        assertEquals(ConsoleIOStreamTest.STUB, device.getVendor());
         assertFalse(device.isDeleted());
     }
 
@@ -48,13 +48,13 @@ public class DeviceTest {
                 .id(12345)
                 .build();
 
-        assertEquals(device.getId(), 12345);
-        assertEquals(device.getColor(), Color.RED);
-        assertEquals(device.getDeviceType(), DeviceType.PHONE);
-        assertEquals(device.getModel(), ConsoleIOStreamTest.STUB + ConsoleIOStreamTest.STUB);
-        assertEquals(device.getPrice().toString(), "0.00");
-        assertEquals(device.getProductionDate(), LocalDate.MIN);
-        assertEquals(device.getVendor(), ConsoleIOStreamTest.STUB);
+        assertEquals(12345, device.getId());
+        assertEquals(Color.RED, device.getColor());
+        assertEquals(DeviceType.PHONE, device.getDeviceType());
+        assertEquals(ConsoleIOStreamTest.STUB + ConsoleIOStreamTest.STUB, device.getModel());
+        assertEquals("0.00", device.getPrice().toString());
+        assertEquals(LocalDate.MIN, device.getProductionDate());
+        assertEquals(ConsoleIOStreamTest.STUB, device.getVendor());
         assertTrue(device.isDeleted());
     }
 

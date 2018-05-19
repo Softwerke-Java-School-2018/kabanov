@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 
 
 class Main {
-    private final static Logger logger = LogManager.getLogger(Main.class);
+    private static final Logger logger = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) {
         IOStream ioStream = new ConsoleIOStream(System.in, System.out);

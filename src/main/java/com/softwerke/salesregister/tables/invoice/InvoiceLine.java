@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class InvoiceLine {
-    private final static Logger logger = LogManager.getLogger(InvoiceLine.class);
+    private static final Logger logger = LogManager.getLogger(InvoiceLine.class);
     private final Device device;
     private final int amount;
     private final BigDecimal internalSum;

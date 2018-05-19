@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import java.time.LocalDate;
 
 public class Person {
-    private final static Logger logger = LogManager.getLogger(Person.class);
+    private static final Logger logger = LogManager.getLogger(Person.class);
     private final int id;
     private final String firstName;
     private final String lastName;

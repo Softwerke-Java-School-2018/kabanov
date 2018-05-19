@@ -19,7 +19,7 @@ import java.util.Objects;
 
 
 public class EditDeviceListMenu extends Menu {
-    private final static Logger logger = LogManager.getLogger(EditDeviceListMenu.class);
+    private static final Logger logger = LogManager.getLogger(EditDeviceListMenu.class);
 
     public EditDeviceListMenu() {
         super("-- Edit device list menu --",

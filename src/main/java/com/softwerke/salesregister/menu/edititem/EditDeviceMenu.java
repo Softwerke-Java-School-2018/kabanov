@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class EditDeviceMenu extends Menu {
-    private final static Logger logger = LogManager.getLogger(EditDeviceMenu.class);
+    private static final Logger logger = LogManager.getLogger(EditDeviceMenu.class);
 
     public EditDeviceMenu() {
         super("-- Edit device menu --",

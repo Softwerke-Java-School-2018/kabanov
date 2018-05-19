@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Formatter {
-    private final static Logger logger = LogManager.getLogger(Formatter.class);
+    private static final Logger logger = LogManager.getLogger(Formatter.class);
 
     private Formatter() {
     }

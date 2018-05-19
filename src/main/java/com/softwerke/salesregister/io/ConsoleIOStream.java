@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class ConsoleIOStream implements IOStream {
-    private final static Logger logger = LogManager.getLogger(ConsoleIOStream.class);
+    private static final Logger logger = LogManager.getLogger(ConsoleIOStream.class);
     private final BufferedReader reader;
     private final BufferedWriter writer;
 
