@@ -1,6 +1,7 @@
 package com.softwerke.salesregister.menu.base;
 
 import com.softwerke.salesregister.io.ConsoleIOStream;
+import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.InternalData;
 import com.softwerke.salesregister.tables.data.dao.DaoDevice;
 import com.softwerke.salesregister.tables.data.dao.DaoInvoice;
@@ -13,8 +14,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import static com.softwerke.salesregister.io.ConsoleIOStreamTest.STUB;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 public class MenuTest {
@@ -43,42 +46,57 @@ public class MenuTest {
     }
 
     @Test
-    public void menuTest() {
+    public void execute_WrongInput_MessagePrinted() throws UnsupportedEncodingException {
         class TestMenu extends Menu {
             private TestMenu(String descriptionText, MenuItem... actions) {
                 super(descriptionText, actions);
             }
         }
-        initConsoleWithInputText("Z" + System.lineSeparator() + "9" +  System.lineSeparator() + "0");
+        initConsoleWithInputText("Z" + System.lineSeparator() + "9" + System.lineSeparator() + "0");
         Menu.setInternalData(new InternalData(console, daoPerson, daoDevice, daoInvoice));
 
         TestMenu testMenu = new TestMenu(STUB, new MenuItem(STUB, () -> {
         }));
         testMenu.execute();
+
+        assertEquals(STUB + System.lineSeparator() +
+                        "1 - stub!" + System.lineSeparator() +
+                        "0 - Return" + System.lineSeparator() + System.lineSeparator() +
+                        StringLiterals.WRONG_COMMAND_TEXT + System.lineSeparator() +                // Z char
+
+                        STUB + System.lineSeparator() +
+                        "1 - stub!" + System.lineSeparator() +
+                        "0 - Return" + System.lineSeparator() + System.lineSeparator() +
+                        StringLiterals.WRONG_COMMAND_TEXT + System.lineSeparator() +                // 9 char
+
+                        STUB + System.lineSeparator() +
+                        "1 - stub!" + System.lineSeparator() +
+                        "0 - Return" + System.lineSeparator() + System.lineSeparator(),             // 0 char
+                outputStream.toString("UTF-8"));
     }
 
     @Test
-    public void menuTestRollback() {
+    public void execute_CorrectInput_Quit() throws UnsupportedEncodingException {
         class TestMenu extends Menu {
             private TestMenu(String descriptionText, MenuItem... actions) {
                 super(descriptionText, actions);
             }
-
-            private void incrementRollbackTest() {
-                incrementRollback();
-            }
         }
-        initConsoleWithInputText("1");
+        initConsoleWithInputText("0");
         Menu.setInternalData(new InternalData(console, daoPerson, daoDevice, daoInvoice));
 
         TestMenu testMenu = new TestMenu(STUB, new MenuItem(STUB, () -> {
         }));
-        testMenu.incrementRollbackTest();
         testMenu.execute();
+
+        assertEquals(STUB + System.lineSeparator() +
+                        "1 - stub!" + System.lineSeparator() +
+                        "0 - Return" + System.lineSeparator() + System.lineSeparator(),             // 0 char
+                outputStream.toString("UTF-8"));
     }
 
     @Test(expected = NullPointerException.class)
-    public void menuTestForgotInternalData() {
+    public void execute_InternalDataIsNull_NPE() {
         class TestMenu extends Menu {
             private TestMenu(String descriptionText, MenuItem... actions) {
                 super(descriptionText, actions);
@@ -92,7 +110,7 @@ public class MenuTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void menuTestNull0() {
+    public void execute_MenuItemIsNull_IllegalArgumentException() {
         class TestMenu extends Menu {
             private TestMenu() {
                 super(STUB, (MenuItem) null);
@@ -103,7 +121,7 @@ public class MenuTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void menuTestNull1() {
+    public void execute_MenuItemArrayIsNull_IllegalArgumentException() {
         class TestMenu extends Menu {
             private TestMenu() {
                 super(STUB, (MenuItem[]) null);
@@ -114,14 +132,13 @@ public class MenuTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void menuTestNull2() {
+    public void Menu_DescriptionTextIsNull_NPE() {
         class TestMenu extends Menu {
             private TestMenu(MenuItem... actions) {
                 super(null, actions);
             }
         }
-        TestMenu testMenu = new TestMenu(new MenuItem(STUB, () -> {
+        new TestMenu(new MenuItem(STUB, () -> {
         }));
-        testMenu.execute();
     }
 }

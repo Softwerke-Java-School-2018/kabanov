@@ -1,11 +1,13 @@
 package com.softwerke.salesregister.tables.person;
 
-import com.softwerke.salesregister.io.Logger;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 
 public class Person {
+    private final static Logger logger = LogManager.getLogger(Person.class);
     private final int id;
     private final String firstName;
     private final String lastName;
@@ -27,7 +29,7 @@ public class Person {
 
     public static Person of(int id, String firstName, String lastName, LocalDate birthDate, boolean isDeleted) {
         if (id == -1 || !ObjectUtils.allNotNull(firstName, lastName, birthDate)) {
-            Logger.fatal("One or more arguments are invalid! [Person factory]");
+            logger.fatal("One or more arguments are invalid! [Person factory]");
             throw new IllegalArgumentException("One or more arguments are invalid!");
         }
         return new Person(firstName, lastName, birthDate, id, isDeleted);

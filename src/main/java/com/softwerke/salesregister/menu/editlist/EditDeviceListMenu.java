@@ -2,7 +2,6 @@ package com.softwerke.salesregister.menu.editlist;
 
 import com.softwerke.salesregister.exception.BuilderNotInitializedException;
 import com.softwerke.salesregister.io.Formatter;
-import com.softwerke.salesregister.io.Logger;
 import com.softwerke.salesregister.io.StringLiterals;
 import com.softwerke.salesregister.menu.base.Menu;
 import com.softwerke.salesregister.menu.base.MenuItem;
@@ -11,6 +10,8 @@ import com.softwerke.salesregister.tables.device.Color;
 import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.device.DeviceType;
 import com.softwerke.salesregister.utils.Utils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,6 +19,8 @@ import java.util.Objects;
 
 
 public class EditDeviceListMenu extends Menu {
+    private final static Logger logger = LogManager.getLogger(EditDeviceListMenu.class);
+
     public EditDeviceListMenu() {
         super("-- Edit device list menu --",
                 new MenuItem("Print device list",
@@ -48,7 +51,7 @@ public class EditDeviceListMenu extends Menu {
                     } catch (IllegalArgumentException e) {
                         internalData.ioStream.printLine(StringLiterals.WRONG_DATA_TEXT);
                     } catch (BuilderNotInitializedException e) {
-                        Logger.error("Builder in is not initialized! [EditDeviceListMenu]" + e);
+                        logger.error("Builder in is not initialized! [EditDeviceListMenu]" + e);
                         internalData.ioStream.printLine(StringLiterals.PROGRAM_ERROR);
                     }
                 }),

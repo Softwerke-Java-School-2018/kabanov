@@ -11,8 +11,9 @@ import static org.junit.Assert.*;
 
 public class InvoiceTest {
     @Test
-    public void invoiceTest() {
+    public void Invoice_CreatingInvoiceWithEmptyItemsList_Success() {
         Person person = Person.of(0, "Name", "Surname", LocalDate.MIN, false);
+
         Invoice testInvoice = new Invoice(person, new ArrayList<>(), LocalDate.MAX, 0, false);
 
         assertEquals(LocalDate.MAX, testInvoice.getDate());
@@ -24,10 +25,11 @@ public class InvoiceTest {
     }
 
     @Test
-    public void invoiceDisabledCopyTest() {
+    public void getDisabledCopy_CreatingInvoiceAndDeleting_Success() {
         Person person = Person.of(0, "Name", "Surname", LocalDate.MIN, false);
         Invoice testInvoice = new Invoice(person, new ArrayList<>(), LocalDate.MAX, 0, false);
-        testInvoice = testInvoice.getDisabledCopy();
+
+        testInvoice = testInvoice.getDeletedCopy();
 
         assertEquals(LocalDate.MAX, testInvoice.getDate());
         assertEquals(person, testInvoice.getPerson());

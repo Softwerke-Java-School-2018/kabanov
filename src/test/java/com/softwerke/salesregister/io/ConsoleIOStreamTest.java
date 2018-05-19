@@ -25,31 +25,40 @@ public class ConsoleIOStreamTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void consoleIOStreamTestNull() {
+    public void consoleIOStream_NullArgs_ExceptionThrown() {
         new ConsoleIOStream(null, null);
     }
 
     @Test
-    public void printLineTest() throws UnsupportedEncodingException {
+    public void printLine_Null_EmptyString() throws UnsupportedEncodingException {
         initConsoleWithInputText("");
         console.printLine(null);
         assertEquals(System.lineSeparator(), outputStream.toString("UTF-8"));
+    }
 
+    @Test
+    public void printLine_EmptyString_EmptyString() throws UnsupportedEncodingException {
         initConsoleWithInputText("");
         console.printLine("");
         assertEquals(System.lineSeparator(), outputStream.toString("UTF-8"));
+    }
 
+    @Test
+    public void printLine_Spaces_EmptyString() throws UnsupportedEncodingException {
         initConsoleWithInputText("");
         console.printLine("\n\t");
         assertEquals(System.lineSeparator(), outputStream.toString("UTF-8"));
+    }
 
+    @Test
+    public void printLine_Text_Text() throws UnsupportedEncodingException {
         initConsoleWithInputText("");
         console.printLine(STUB);
         assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
     }
 
     @Test
-    public void askTest0() throws UnsupportedEncodingException {
+    public void ask_Null_EmptyString() throws UnsupportedEncodingException {
         initConsoleWithInputText(STUB);
 
         String answer = console.ask(null);
@@ -59,7 +68,7 @@ public class ConsoleIOStreamTest {
     }
 
     @Test
-    public void askTest1() throws UnsupportedEncodingException {
+    public void ask_Text_Text() throws UnsupportedEncodingException {
         initConsoleWithInputText(STUB);
 
         String answer = console.ask(STUB);
@@ -69,7 +78,7 @@ public class ConsoleIOStreamTest {
     }
 
     @Test
-    public void askTest2() throws UnsupportedEncodingException {
+    public void ask_WithoutArguments_EmptyString() throws UnsupportedEncodingException {
         initConsoleWithInputText(STUB);
 
         String answer = console.ask();
@@ -79,73 +88,113 @@ public class ConsoleIOStreamTest {
     }
 
     @Test
-    public void askLocalDateTest() throws UnsupportedEncodingException {
-        initConsoleWithInputText(System.lineSeparator() + "20 10 2010");
+    public void askLocalDate_IllegalValue1_WRONG_DATA_TEXT() throws UnsupportedEncodingException {
+        initConsoleWithInputText("ILLEGAL VALUE" + System.lineSeparator() + "20 10 2010");
 
-        assertEquals(LocalDate.parse("2010-10-20"), console.askLocalDate(STUB));
+        LocalDate answer = console.askLocalDate(STUB);
+
+        assertEquals(LocalDate.of(2010, 10, 20), answer);
+        assertEquals(STUB + System.lineSeparator() +
+                        StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() +
+                        STUB + System.lineSeparator(),
+                outputStream.toString("UTF-8"));
+    }
+
+    @Test
+    public void askLocalDate_IllegalValue2_WRONG_DATA_TEXT() throws UnsupportedEncodingException {
+        initConsoleWithInputText("20 10 0000\n20 10 2010");
+
+        LocalDate answer = console.askLocalDate(STUB);
+
+        assertEquals(LocalDate.of(2010, 10, 20), answer);
+        assertEquals(STUB + System.lineSeparator() + StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
+                outputStream.toString("UTF-8"));
+    }
+
+    @Test
+    public void askLocalDate_IllegalValue3_WRONG_DATA_TEXT() throws UnsupportedEncodingException {
+        initConsoleWithInputText("21 - 11 - 2011 - 2018\n21 - 11 - 2011");
+
+        LocalDate answer = console.askLocalDate(STUB);
+
+        assertEquals(LocalDate.of(2011, 11, 21), answer);
+        assertEquals(STUB + System.lineSeparator() + StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
+                outputStream.toString("UTF-8"));
+    }
+
+    @Test
+    public void askLocalDate_IllegalValue4_WRONG_DATA_TEXT() throws UnsupportedEncodingException {
+        initConsoleWithInputText("22_12_2012_2028\n22_12_2012");
+
+        LocalDate answer = console.askLocalDate(STUB);
+
+        assertEquals(LocalDate.of(2012, 12, 22), answer);
+        assertEquals(STUB + System.lineSeparator() + StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
+                outputStream.toString("UTF-8"));
+    }
+
+    @Test
+    public void askLocalDate_LegalValueFormat1_Success() throws UnsupportedEncodingException {
+        initConsoleWithInputText("21 - 11 - 2011");
+
+        LocalDate answer = console.askLocalDate(STUB);
+
+        assertEquals(LocalDate.of(2011, 11, 21), answer);
+        assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
+
+    }
+
+    @Test
+    public void askLocalDate_LegalValueFormat2_Success() throws UnsupportedEncodingException {
+        initConsoleWithInputText("22_12_2012");
+
+        LocalDate answer = console.askLocalDate(STUB);
+
+        assertEquals(LocalDate.of(2012, 12, 22), answer);
+        assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
+    }
+
+    @Test
+    public void askInt_IllegalValue_WRONG_DATA_TEXT() throws UnsupportedEncodingException {
+        initConsoleWithInputText("heh" + System.lineSeparator() + "20");
+
+        int answer = console.askInt(STUB);
+
+        assertEquals(Integer.parseInt("20"), answer);
         assertEquals(STUB + System.lineSeparator() +
                         StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() +
                         STUB + System.lineSeparator(),
 
                 outputStream.toString("UTF-8"));
+    }
 
-        initConsoleWithInputText("21 - 11 - 2011");
+    @Test
+    public void askInt_LegalValue_Success() throws UnsupportedEncodingException {
+        initConsoleWithInputText("234567889");
 
-        assertEquals(LocalDate.parse("2011-11-21"), console.askLocalDate(STUB));
-        assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
+        int answer = console.askInt(STUB);
 
-        initConsoleWithInputText("22_12_2012");
-
-        assertEquals(LocalDate.parse("2012-12-22"), console.askLocalDate(STUB));
+        assertEquals(234567889, answer);
         assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
     }
 
     @Test
-    public void askIntTest() throws UnsupportedEncodingException {
-        initConsoleWithInputText("heh" + System.lineSeparator() + "20");
-
-        assertEquals(Integer.parseInt("20"), console.askInt(STUB));
-        assertEquals(STUB + System.lineSeparator() +
-                StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() +
-                STUB + System.lineSeparator(),
-
-                outputStream.toString("UTF-8"));
-    }
-
-    @Test
-    public void askBooleanTest1() throws UnsupportedEncodingException {
+    public void askBoolean_Y_True() throws UnsupportedEncodingException {
         initConsoleWithInputText("Y");
 
-        assertTrue(console.askBoolean(STUB));
+        boolean answer = console.askBoolean(STUB);
+
+        assertTrue(answer);
         assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
     }
 
     @Test
-    public void askBooleanTest2() throws UnsupportedEncodingException {
+    public void askBoolean_n_False() throws UnsupportedEncodingException {
         initConsoleWithInputText("n");
 
-        assertFalse(console.askBoolean(STUB));
+        boolean answer = console.askBoolean(STUB);
+
+        assertFalse(answer);
         assertEquals(STUB + System.lineSeparator(), outputStream.toString("UTF-8"));
-    }
-
-    @Test
-    public void askLocalDateTestBadInput() throws UnsupportedEncodingException {
-        initConsoleWithInputText("20 10 0000\n20 10 2010");
-
-        assertEquals(LocalDate.parse("2010-10-20"), console.askLocalDate(STUB));
-        assertEquals(STUB + System.lineSeparator() + StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
-                outputStream.toString("UTF-8"));
-
-        initConsoleWithInputText("21 - 11 - 2011 - 2018\n21 - 11 - 2011");
-
-        assertEquals(console.askLocalDate(STUB), LocalDate.parse("2011-11-21"));
-        assertEquals(STUB + System.lineSeparator() + StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
-                outputStream.toString("UTF-8"));
-
-        initConsoleWithInputText("22_12_2012_2028\n22_12_2012");
-
-        assertEquals(console.askLocalDate(STUB), LocalDate.parse("2012-12-22"));
-        assertEquals(STUB + System.lineSeparator() + StringLiterals.WRONG_DATA_TEXT + System.lineSeparator() + STUB + System.lineSeparator(),
-                outputStream.toString("UTF-8"));
     }
 }

@@ -3,11 +3,11 @@
 
     <Appenders>
         <Console name="ConsoleLogger" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [thread: %t] %-5level %logger{36} - %msg%n"/>
         </Console>
 
         <File name="FileLogger" fileName="logs/log.txt">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [thread: %t] %-5level %logger{36} - %msg%n"/>
         </File>
     </Appenders>
 
@@ -18,7 +18,42 @@
             <AppenderRef ref="ConsoleLogger" level="OFF"/>
         </Root>
 
-        <Logger name= "SalesRegisterLogger" level="ALL" additivity="FALSE">
+        <Logger name="com.softwerke.salesregister.Main" level="ALL" additivity="FALSE">
+            <AppenderRef ref="ConsoleLogger" level="ALL"/>
+            <AppenderRef ref="FileLogger" level="WARN"/>
+        </Logger>
+
+        <Logger name="com.softwerke.salesregister.io.Formatter" level="ALL" additivity="FALSE">
+            <AppenderRef ref="ConsoleLogger" level="ALL"/>
+            <AppenderRef ref="FileLogger" level="WARN"/>
+        </Logger>
+
+        <Logger name="com.softwerke.salesregister.io.ConsoleIOStream" level="ALL" additivity="FALSE">
+            <AppenderRef ref="ConsoleLogger" level="ALL"/>
+            <AppenderRef ref="FileLogger" level="WARN"/>
+        </Logger>
+
+        <Logger name="com.softwerke.salesregister.menu.edititem.EditDeviceMenu" level="ALL" additivity="FALSE">
+            <AppenderRef ref="ConsoleLogger" level="ALL"/>
+            <AppenderRef ref="FileLogger" level="WARN"/>
+        </Logger>
+
+        <Logger name="com.softwerke.salesregister.menu.editlist.EditDeviceListMenu" level="ALL" additivity="FALSE">
+            <AppenderRef ref="ConsoleLogger" level="ALL"/>
+            <AppenderRef ref="FileLogger" level="WARN"/>
+        </Logger>
+
+        <Logger name="com.softwerke.salesregister.utils.Interval" level="ALL" additivity="FALSE">
+            <AppenderRef ref="ConsoleLogger" level="ALL"/>
+            <AppenderRef ref="FileLogger" level="WARN"/>
+        </Logger>
+
+        <Logger name="com.softwerke.salesregister.tables.person.Person" level="ALL" additivity="FALSE">
+            <AppenderRef ref="ConsoleLogger" level="ALL"/>
+            <AppenderRef ref="FileLogger" level="WARN"/>
+        </Logger>
+
+        <Logger name="com.softwerke.salesregister.tables.invoice.InvoiceLine" level="ALL" additivity="FALSE">
             <AppenderRef ref="ConsoleLogger" level="ALL"/>
             <AppenderRef ref="FileLogger" level="WARN"/>
         </Logger>

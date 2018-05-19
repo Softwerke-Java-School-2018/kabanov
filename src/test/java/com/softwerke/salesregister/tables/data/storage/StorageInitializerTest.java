@@ -21,12 +21,12 @@ public class StorageInitializerTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void storageInitializerTestNull() throws BuilderNotInitializedException {
+    public void StorageInitializer_Nulls_IllegalArgumentException() throws BuilderNotInitializedException {
         new StorageInitializer(null, null, null);
     }
 
     @Test
-    public void storageInitializerTest() throws BuilderNotInitializedException {
+    public void StorageInitializer_ValidDAOs_Success() throws BuilderNotInitializedException {
         new StorageInitializer(daoPerson, daoDevice, daoInvoice);
     }
 }

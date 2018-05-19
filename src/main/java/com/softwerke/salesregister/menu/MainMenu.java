@@ -40,7 +40,7 @@ public class MainMenu extends Menu {
                     }
                     int idForDelete = internalData.ioStream.askInt("Enter invoice ID for removing:");
                     if (idForDelete < invoices.size()) {
-                        internalData.daoInvoice.updateInvoice(invoices.get(idForDelete).getDisabledCopy());
+                        internalData.daoInvoice.updateInvoice(invoices.get(idForDelete).getDeletedCopy());
                         internalData.ioStream.printLine(StringLiterals.SUCCESSFUL);
                         return;
                     }

@@ -3,19 +3,21 @@ package com.softwerke.salesregister.io;
 import com.softwerke.salesregister.utils.Utils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
 public class ConsoleIOStream implements IOStream {
-
+    private final static Logger logger = LogManager.getLogger(ConsoleIOStream.class);
     private final BufferedReader reader;
     private final BufferedWriter writer;
 
     public ConsoleIOStream(InputStream in, OutputStream out) {
         if (!ObjectUtils.allNotNull(in, out)) {
-            Logger.fatal("One or more arguments is null! [ConsoleIOStream constructor]");
+            logger.fatal("One or more arguments is null! [ConsoleIOStream constructor]");
             throw new IllegalArgumentException(StringLiterals.NULL_ARG_EXC);
         }
         reader = new BufferedReader(new InputStreamReader(in));
@@ -30,7 +32,7 @@ public class ConsoleIOStream implements IOStream {
             writer.write(System.lineSeparator());
             writer.flush();
         } catch (IOException e) {
-            Logger.fatal("Can't write to output stream!");
+            logger.fatal("Can't write to output stream!");
             System.exit(-1);
         }
     }
@@ -45,7 +47,7 @@ public class ConsoleIOStream implements IOStream {
             return reader.readLine();
         } catch (IOException e) {
             printLine("Occurred an input error.");
-            Logger.error("Occurred an input error.");
+            logger.error("Occurred an input error.");
             return "";
         }
     }

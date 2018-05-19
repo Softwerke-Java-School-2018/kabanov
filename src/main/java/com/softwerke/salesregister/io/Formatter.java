@@ -6,6 +6,8 @@ import com.softwerke.salesregister.tables.invoice.InvoiceLine;
 import com.softwerke.salesregister.tables.person.Person;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Formatter {
+    private final static Logger logger = LogManager.getLogger(Formatter.class);
+
     private Formatter() {
     }
 
@@ -76,7 +80,7 @@ public class Formatter {
 
     public static void printShopList(Stream<InvoiceLine> invoiceLines, IOStream sink) {
         if (!ObjectUtils.allNotNull(invoiceLines, sink)) {
-            Logger.fatal("One or more arguments is null! [printShopList method]");
+            logger.fatal("One or more arguments is null! [printShopList method]");
             throw new IllegalArgumentException(StringLiterals.NULL_ARG_EXC);
         }
         List<InvoiceLine> invoiceLineList = invoiceLines.collect(Collectors.toList());
@@ -104,7 +108,7 @@ public class Formatter {
 
     public static void printReceipt(Invoice invoice, IOStream sink) {
         if (!ObjectUtils.allNotNull(invoice, sink)) {
-            Logger.fatal("One or more arguments is null! [printReceipt method]");
+            logger.fatal("One or more arguments is null! [printReceipt method]");
             throw new IllegalArgumentException(StringLiterals.NULL_ARG_EXC);
         }
         sink.printLine(" Shopping date: " + invoice.getDate());

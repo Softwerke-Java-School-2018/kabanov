@@ -1,13 +1,15 @@
 package com.softwerke.salesregister.utils;
 
-import com.softwerke.salesregister.io.Logger;
 import com.softwerke.salesregister.io.StringLiterals;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
 import java.util.function.Function;
 
 public class Interval<T extends Comparable<T>> {
+    private final static Logger logger = LogManager.getLogger(Interval.class);
     private final T leftBound;
     private final T rightBound;
 
@@ -29,7 +31,7 @@ public class Interval<T extends Comparable<T>> {
      */
     public Interval(String string, Function<String, T> parser) {
         if (!ObjectUtils.allNotNull(string, parser)) {
-            Logger.fatal("One or more arguments is null! [Interval constructor]");
+            logger.fatal("One or more arguments is null! [Interval constructor]");
             throw new IllegalArgumentException(StringLiterals.NULL_ARG_EXC);
         }
         string = string.replaceAll("\\s+", " ");

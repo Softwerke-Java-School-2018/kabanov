@@ -10,8 +10,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class DaoPersonTest {
     private static DaoPerson daoPerson;
@@ -43,7 +42,7 @@ public class DaoPersonTest {
     }
 
     @Test
-    public void testPersonUpdate() {
+    public void updatePerson_ValidValue_Success() {
         Person arkadiy = daoPerson.getPerson(3);
 
         Person anna = arkadiy.copyWithNewFirstName("Anna").copyWithNewLastName("Kuznetsova");
@@ -60,8 +59,13 @@ public class DaoPersonTest {
         assertEquals("Kuznetsova", arkadiyRenamed.getLastName());
     }
 
+    @Test(expected = NullPointerException.class)
+    public void updatePerson_Null_NPE() {
+        daoPerson.updatePerson(null);
+    }
+
     @Test
-    public void testPersonDelete() {
+    public void updatePerson_DeletedPerson_DeletionSuccessful() {
         Person arkadiy = daoPerson.getPerson(3);
 
         Person arkadiyDeleted = arkadiy.copyWithNewIsDeleted(true);
@@ -75,6 +79,6 @@ public class DaoPersonTest {
         assertEquals(arkadiy.getFirstName(), arkadiyDeleted.getFirstName());
         assertEquals(arkadiy.getLastName(), arkadiyDeleted.getLastName());
 
-        assertEquals(true, arkadiyDeleted.isDeleted());
+        assertTrue(arkadiyDeleted.isDeleted());
     }
 }

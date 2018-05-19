@@ -1,12 +1,14 @@
 package com.softwerke.salesregister.tables.invoice;
 
-import com.softwerke.salesregister.io.Logger;
 import com.softwerke.salesregister.tables.device.Device;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.Objects;
 
 public class InvoiceLine {
+    private final static Logger logger = LogManager.getLogger(InvoiceLine.class);
     private final Device device;
     private final int amount;
     private final BigDecimal internalSum;
@@ -14,7 +16,7 @@ public class InvoiceLine {
     public InvoiceLine(Device device, int amount) {
         Objects.requireNonNull(device);
         if (amount < 1) {
-            Logger.fatal("Devices amount should be greater than zero! [InvoiceLine constructor]");
+            logger.fatal("Devices amount should be greater than zero! [InvoiceLine constructor]");
             throw new IllegalArgumentException("Devices amount should be greater than zero!");
         }
         this.device = device;

@@ -13,6 +13,7 @@ import com.softwerke.salesregister.tables.device.Device;
 import com.softwerke.salesregister.tables.person.Person;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -24,9 +25,9 @@ import static org.junit.Assert.*;
 public class UtilsTest {
     private static DaoPerson daoPerson;
     private static DaoDevice daoDevice;
-    private static ConsoleIOStream console;
 
-    private static void initStorage() {
+    @Before
+    public void initStorage() {
         Storage storage = new ArrayListStorage();
         daoPerson = new DaoPerson(storage);
         daoDevice = new DaoDevice(storage);
@@ -38,32 +39,33 @@ public class UtilsTest {
         }
     }
 
-    private static void initConsoleWithInputText(String input) {
+    private static ConsoleIOStream getConsoleWithInputText(String input) {
         try {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            console = new ConsoleIOStream(IOUtils.toInputStream(input, "UTF-8"), outputStream);
+            return new ConsoleIOStream(IOUtils.toInputStream(input, "UTF-8"), outputStream);
         } catch (IOException e) {
             fail();
+            return null;
         }
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testParseToEnumsException() {
+    public void parseToEnums_InvalidString_IllegalArgumentException() {
         assertNull(Utils.parseToEnums("not_a_color", Color.class).toArray());
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testParseToEnumsNull0() {
+    public void parseToEnums_NullClass_IllegalArgumentException() {
         Utils.parseToEnums("red", null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testParseToEnumsNull1() {
+    public void parseToEnums_NullString_IllegalArgumentException() {
         Utils.parseToEnums(null, Color.class);
     }
 
     @Test
-    public void testConvertToEnumInstancesPass() {
+    public void parseToEnums_ValidString_Success() {
         Color[] colors = new Color[]{Color.RED, Color.RED, Color.BLACK, Color.CHAMPAGNE};
 
         Stream<Color> colours = Utils.parseToEnums("red, ReD, BLACK, champagne", Color.class);
@@ -72,12 +74,12 @@ public class UtilsTest {
     }
 
     @Test(expected = NullPointerException.class)
-    public void centerIndexOfTestNull() {
+    public void centerIndexOf_NullString_NPE() {
         Utils.centerIndexOf(null, (char) 0);
     }
 
     @Test
-    public void centerIndexOfTest() {
+    public void centerIndexOf_ValidValues_Success() {
         assertEquals(3, Utils.centerIndexOf("123%567", '%'));
         assertEquals(1, Utils.centerIndexOf("1 34567", ' '));
         assertEquals(6, Utils.centerIndexOf("123456S", 'S'));
@@ -86,10 +88,10 @@ public class UtilsTest {
 
     @Test
     public void parseStringToLocalDateTest() {
-        assertEquals(LocalDate.of(2017,2,10), Utils.parseStringToLocalDate("10 2 2017"));
-        assertEquals(LocalDate.of(2018,3,11), Utils.parseStringToLocalDate("11/3/2018"));
-        assertEquals(LocalDate.of(2020,1,1), Utils.parseStringToLocalDate("01-01-2020"));
-        assertEquals(LocalDate.of(2007,12,12), Utils.parseStringToLocalDate("12 - 12 /= 2007"));
+        assertEquals(LocalDate.of(2017, 2, 10), Utils.parseStringToLocalDate("10 2 2017"));
+        assertEquals(LocalDate.of(2018, 3, 11), Utils.parseStringToLocalDate("11/3/2018"));
+        assertEquals(LocalDate.of(2020, 1, 1), Utils.parseStringToLocalDate("01-01-2020"));
+        assertEquals(LocalDate.of(2007, 12, 12), Utils.parseStringToLocalDate("12 - 12 /= 2007"));
     }
 
     @Test
@@ -97,27 +99,22 @@ public class UtilsTest {
         initStorage();
         Person person;
 
-        initConsoleWithInputText("not a person");
-        person = Utils.selectPerson(daoPerson.persons(), console);
-        assertEquals(null, person);
+        person = Utils.selectPerson(daoPerson.persons(), getConsoleWithInputText("not a person"));
+        assertNull(person);
 
-        initConsoleWithInputText("3");
-        person = Utils.selectPerson(daoPerson.persons(), console);
+        person = Utils.selectPerson(daoPerson.persons(), getConsoleWithInputText("3"));
         assertNotNull(person);
         assertEquals(3, person.getId());
 
-        initConsoleWithInputText("Zaycev");
-        person = Utils.selectPerson(daoPerson.persons(), console);
+        person = Utils.selectPerson(daoPerson.persons(), getConsoleWithInputText("Zaycev"));
         assertNotNull(person);
         assertEquals("Zaycev", person.getLastName());
 
-        initConsoleWithInputText("I\nInna");
-        person = Utils.selectPerson(daoPerson.persons(), console);
+        person = Utils.selectPerson(daoPerson.persons(), getConsoleWithInputText("I\nInna"));
         assertNotNull(person);
         assertEquals("Inna", person.getFirstName());
 
-        initConsoleWithInputText("V Petrov");
-        person = Utils.selectPerson(daoPerson.persons(), console);
+        person = Utils.selectPerson(daoPerson.persons(), getConsoleWithInputText("V Petrov"));
         assertNotNull(person);
         assertEquals("Petrov", person.getLastName());
     }
@@ -127,27 +124,22 @@ public class UtilsTest {
         initStorage();
         Device device;
 
-        initConsoleWithInputText("not a device");
-        device = Utils.selectDevice(daoDevice.devices(), console);
-        assertEquals(null, device);
+        device = Utils.selectDevice(daoDevice.devices(), getConsoleWithInputText("not a device"));
+        assertNull(device);
 
-        initConsoleWithInputText("_xiaomi_");
-        device = Utils.selectDevice(daoDevice.devices(), console);
+        device = Utils.selectDevice(daoDevice.devices(), getConsoleWithInputText("_xiaomi_"));
         assertNotNull(device);
         assertEquals("Xiaomi", device.getVendor());
 
-        initConsoleWithInputText("g\ngalaxy");
-        device = Utils.selectDevice(daoDevice.devices(), console);
+        device = Utils.selectDevice(daoDevice.devices(), getConsoleWithInputText("g\ngalaxy"));
         assertNotNull(device);
         assertEquals("Galaxy S6", device.getModel());
 
-        initConsoleWithInputText("apple X");
-        device = Utils.selectDevice(daoDevice.devices(), console);
+        device = Utils.selectDevice(daoDevice.devices(), getConsoleWithInputText("apple X"));
         assertNotNull(device);
         assertEquals("IPhone X", device.getModel());
 
-        initConsoleWithInputText("5");
-        device = Utils.selectDevice(daoDevice.devices(), console);
+        device = Utils.selectDevice(daoDevice.devices(), getConsoleWithInputText("5"));
         assertNotNull(device);
         assertEquals(5, device.getId());
     }

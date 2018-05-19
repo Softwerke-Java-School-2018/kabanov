@@ -59,7 +59,7 @@ public class Invoice {
         return isDeleted;
     }
 
-    public Invoice getDisabledCopy() {
+    public Invoice getDeletedCopy() {
         return new Invoice(person, invoiceItems, date, id, true);
     }
 
